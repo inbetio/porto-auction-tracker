@@ -434,7 +434,7 @@ function openEditor(ref){
     const note=document.getElementById("noteta").value.trim();
     if(!picked&&!note){delete STATE[ref];} else {STATE[ref]={status:picked,note:note};}
     save(); dlg.close(); render();
-    if(picked==="invest") openSync(); // status update auto-triggers the get-more-info request
+    // Investigate just saves the mark now — Sync is manual (top-right / toolbar button) only.
   };
   dlg.showModal();
 }
