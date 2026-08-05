@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Off-platform leads — closing this month · Citius</title>
+<style>
+  :root{--bg:#0f1419;--panel:#171e26;--panel2:#1e2833;--line:#2a3644;--ink:#e8edf2;--mut:#93a1b0;--mut2:#7d8b9a;
+    --good:#2fbf71;--good-bg:#12251c;--warn:#e0a63a;--warn-bg:#2a2313;--dev:#4a9eff;--dev-bg:#0f1f33;--bad:#e0574a;--bad-bg:#2a1815;--accent:#4a9eff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1200px;margin:0 auto;padding:32px 22px 80px}
+  a.top{color:var(--accent);text-decoration:none;font-size:12.5px}
+  h1{font-size:25px;margin:10px 0 4px;letter-spacing:-.3px}
+  .sub{color:var(--mut2);font-size:13.5px;margin-bottom:20px}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .card .n{font-size:24px;font-weight:700;letter-spacing:-.5px}
+  .card .l{font-size:12px;color:var(--mut2);margin-top:2px}
+  .card.np .n{color:var(--warn)} .card.cf .n{color:var(--dev)} .card.good .n{color:var(--good)}
+  .note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:13px 15px;font-size:12.8px;color:#c4cfd9;margin:14px 0}
+  .note b{color:var(--ink)}
+  .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:14px 0;font-size:12.5px}
+  .toolbar label{color:var(--mut2)}
+  .chip{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:20px;cursor:pointer;font-size:12px;padding:5px 12px;font-weight:600}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#04121f}
+  select{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:12.5px}
+  .spacer{flex:1}
+  .cnt{color:var(--mut2)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut2);text-transform:uppercase;font-size:10.5px;letter-spacing:.5px;font-weight:700;cursor:pointer;user-select:none}
+  tr:hover td{background:var(--panel)}
+  .pill{font-size:10px;padding:2px 7px;border-radius:20px;white-space:nowrap;font-weight:700;display:inline-block}
+  .pill.cf{background:var(--dev-bg);color:var(--dev)} .pill.np{background:var(--warn-bg);color:var(--warn)}
+  .predio{font-size:9px;font-weight:800;letter-spacing:.4px;color:var(--dev);border:1px solid #24456b;border-radius:5px;padding:1px 5px;background:var(--dev-bg)}
+  .metro{font-size:9px;font-weight:800;letter-spacing:.4px;color:var(--good);border:1px solid #2b5a41;border-radius:5px;padding:1px 5px;background:var(--good-bg)}
+  .warn{color:var(--bad);font-size:11px}
+  .proc{font-variant-numeric:tabular-nums;color:var(--mut)}
+  .foot{margin-top:26px;font-size:11.5px;color:var(--mut2);border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:820px){.cards{grid-template-columns:repeat(2,1fr)}.tw{overflow-x:auto}table{min-width:760px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top" href="./index.html">← back to the auction tracker</a>
+  <h1>Off-platform leads — closing this month</h1>
+  <div class="sub">Urban penhora sales in Porto · Braga · Aveiro · Coimbra · Viana do Castelo, sold by <b>sealed bid</b> or <b>private negotiation</b> — Citius is the only public listing. Swept from the executive register, sale date 1–31 Aug 2026. These are <b>leads</b>: valor base, exact deadline and the agente-de-execução contact come from each lot's Citius detail (the "investigate" step).</div>
+
+  <div class="cards">
+    <div class="card good"><div class="n" id="c-total">–</div><div class="l">Urban lots closing August</div></div>
+    <div class="card np"><div class="n" id="c-np">–</div><div class="l">Negociação particular</div></div>
+    <div class="card cf"><div class="n" id="c-cf">–</div><div class="l">Proposta em carta fechada</div></div>
+    <div class="card"><div class="n" id="c-metro">–</div><div class="l">Porto-metro concelhos</div></div>
+  </div>
+
+  <div class="note">
+    <b>How these work.</b> <b>Carta fechada</b> — you hand a sealed written proposal to the agente de execução by the deadline; all are opened together, highest wins. <b>Negociação particular</b> — the AE sells by direct negotiation; you contact them and make an offer. Neither runs on e-leilões, so there are far fewer bidders. To act: I open the lot's Citius detail for the <b>valor base, the deadline and the AE's name + email</b>, then value it against comparables and it graduates into the main tracker.
+  </div>
+
+  <div class="toolbar">
+    <label>Modalidade:</label>
+    <span class="chip on" data-mod="all">All</span>
+    <span class="chip" data-mod="NP">Neg. particular</span>
+    <span class="chip" data-mod="CF">Carta fechada</span>
+    <span class="chip" data-metro="1">Porto metro only</span>
+    <label style="margin-left:8px">Concelho:</label>
+    <select id="concelho"><option value="">All</option></select>
+    <div class="spacer"></div>
+    <span class="cnt" id="cnt"></span>
+  </div>
+
+  <div class="tw">
+  <table>
+    <thead><tr>
+      <th data-k="conc">Concelho</th><th data-k="type">Type</th><th data-k="mod">Modalidade</th>
+      <th data-k="loc">Location (from anúncio)</th><th data-k="proc">Processo</th><th>Flags</th>
+    </tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <b>Two caveats.</b> The property's real location comes from the anúncio, not the court — e.g. one lot filed at a Braga court is actually in <b>Arco da Calheta (Madeira)</b>, flagged below and excluded from the Porto-metro count. And <b>terreno para construção</b> lots are building land, not a finished dwelling — kept because they're prédios urbanos, but tagged.
+  </div>
+
+  <div class="foot">Source: Portal Citius — Venda de Bens Penhorados em Processos Executivos. Figures/dates are confirmed per-lot on the Citius detail before any action. This tool never bids, submits a proposal, or pays.</div>
+</div>
+<script>
+// concelho | processo | modalidade (CF/NP) | predio(1/0) | type | location | metro(1/0) | note
+const LEADS=[
+  ["Anadia","214/11.8T3AND","NP",0,"fração","Av. Nova nº1, fr. A · Curia",0,""],
+  ["Aveiro","380/09.2TBAVR","NP",1,"terreno constr.","Arrotas",0,""],
+  ["Aveiro","380/09.2TBAVR","NP",1,"terreno constr.","Arrotas (verba 2)",0,""],
+  ["Aveiro","380/09.2TBAVR","NP",1,"terreno constr.","Arrotas (verba 3)",0,""],
+  ["Braga","944/07.9TTBRG-B","CF",1,"prédio","propriedade total",0,""],
+  ["Braga (court)","1337/11.9TBRG-A","CF",1,"prédio","Arco da Calheta — MADEIRA",0,"out-of-area"],
+  ["Coimbra","843/03.3TTCBR-A","CF",0,"arrumos","",0,""],
+  ["Coimbra","25/12.3TBOHP","CF",0,"urbano","Oliveira do Hospital",0,""],
+  ["Espinho","782/18.3T9VFR.1","CF",0,"escritório","",1,""],
+  ["Guimarães","30/03.0TCGMR","NP",1,"prédio","fr. de Cepães",0,""],
+  ["Guimarães","1153/14.6T8GMR","NP",1,"prédio","",0,""],
+  ["Guimarães","3137/19.9T8GMR","CF",0,"urbano","",0,""],
+  ["Lousã","32/10.0TALSA","CF",0,"urbano","Montoiro",0,""],
+  ["Lousada","861/14.6T8LOU","CF",0,"fração","",0,""],
+  ["Lousada","4540/05.7TBPRD","CF",0,"fração","",0,""],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (1/5)",0,"building split 5 frações"],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (2/5)",0,""],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (3/5)",0,""],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (4/5)",0,""],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (5/5)",0,""],
+  ["Maia","2534/04.9TBSTS","NP",1,"prédio","Lugar de Paredes ou Carreira",1,""],
+  ["Oliveira de Azeméis","1347/14.4T8OAZ","NP",1,"terreno constr.","",0,""],
+  ["Oliveira de Azeméis","1206/04.9TBSJM","NP",1,"prédio","",0,""],
+  ["Oliveira de Azeméis","731/06.1TBSJM","CF",0,"fração","hab. letra I",0,""],
+  ["Oliveira de Azeméis","593/14.5T8OAZ","NP",0,"fração","letra A · Rua da Igreja 32",0,""],
+  ["Oliveira de Azeméis","2740/05.9TBOAZ","NP",1,"terreno constr.","Lote 18",0,""],
+  ["Oliveira de Azeméis","2740/05.9TBOAZ","NP",1,"terreno constr.","Lote 15",0,""],
+  ["Oliveira de Azeméis","4020/11.1TBVFR","NP",0,"fração","",0,""],
+  ["Ovar","4230/07.6TBAVR","NP",1,"prédio","",0,""],
+  ["Ovar","243/12.4T2OVR","NP",1,"prédio","Esgueira",0,""],
+  ["Ovar","2254/22.2T8OVR","NP",1,"prédio","Sargaçal",0,""],
+  ["Paredes","883/03.2TBPRD","CF",1,"prédio","",1,""],
+  ["Porto","3157/14.0T8PRT","NP",0,"fração","",1,""],
+  ["Porto","4206/17.5T8PRT","CF",1,"prédio","Lugar do Forno de Cima",1,""],
+  ["Santo Tirso","329/10.0TBGDM","CF",1,"fração","Rua David Correia da Silva",1,""],
+  ["Soure","1499/14.3T8CBR","NP",1,"escritório","",0,""],
+  ["Vale de Cambra","268/05.6TBVLC","CF",0,"fração","",0,""],
+  ["Valença","366/10.4TBVLN","CF",1,"prédio","lugar de Lage",0,""],
+  ["Viana do Castelo","1705/06.8TMPRT.1","CF",1,"fração","",1,""],
+  ["Vila do Conde","3715/08.1TBVCD-A","CF",0,"fração","",1,""],
+  ["V. N. Famalicão","2864/14.1T8VNF","NP",1,"prédio","",0,""],
+  ["V. N. Famalicão","1928/14.6T8VNF","NP",1,"prédio","",0,""],
+  ["V. N. Famalicão","4438/05.9TBBCL","CF",1,"fração","",0,""],
+  ["V. N. Famalicão","2487/07.1TJVNF-C","CF",1,"prédio","Lugar de Assento",0,""],
+  ["V. N. Famalicão","249/08.8TBAMR","NP",1,"prédio","Bouça",0,""],
+  ["V. N. Gaia","507/04.0TYVNG","CF",0,"fração","",1,""],
+  ["V. N. Gaia","546/06.7TYVNG","CF",0,"fração","",1,""],
+  ["V. N. Gaia","2924/12.3TBVNG-A","CF",0,"fração","",1,""],
+  ["V. N. Gaia","978/10.6TYVNG","CF",1,"armazém","Rua Outeiro",1,""]
+];
+const MODNAME={CF:"carta fechada",NP:"neg. particular"};
+let fMod="all", fMetro=false, fConc="", sortK="conc", sortDir=1;
+// populate concelho select
+const concs=[...new Set(LEADS.map(l=>l[0]))].sort();
+const sel=document.getElementById("concelho");
+concs.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;sel.appendChild(o);});
+document.getElementById("c-total").textContent=LEADS.length;
+document.getElementById("c-np").textContent=LEADS.filter(l=>l[2]==="NP").length;
+document.getElementById("c-cf").textContent=LEADS.filter(l=>l[2]==="CF").length;
+document.getElementById("c-metro").textContent=LEADS.filter(l=>l[6]===1).length;
+function render(){
+  let rows=LEADS.filter(l=>(fMod==="all"||l[2]===fMod)&&(!fMetro||l[6]===1)&&(!fConc||l[0]===fConc));
+  const ki={conc:0,type:4,mod:2,loc:5,proc:1};
+  rows.sort((a,b)=>{const i=ki[sortK];return (''+a[i]).localeCompare(''+b[i])*sortDir;});
+  document.getElementById("cnt").textContent=rows.length+" of "+LEADS.length;
+  document.getElementById("tb").innerHTML=rows.map(l=>{
+    const flags=(l[3]?'<span class="predio">PRÉDIO</span> ':'')+(l[6]===1?'<span class="metro">PORTO METRO</span> ':'')+(l[7]?'<span class="warn">'+l[7]+'</span>':'');
+    return `<tr><td>${l[0]}</td><td>${l[4]}</td><td><span class="pill ${l[2].toLowerCase()}">${MODNAME[l[2]]}</span></td>`+
+      `<td>${l[5]||'<span style="color:var(--mut2)">—</span>'}</td><td class="proc">${l[1]}</td><td>${flags||''}</td></tr>`;
+  }).join("");
+}
+document.querySelectorAll(".chip[data-mod]").forEach(c=>c.onclick=()=>{fMod=c.dataset.mod;document.querySelectorAll(".chip[data-mod]").forEach(x=>x.classList.toggle("on",x===c));render();});
+const metroChip=document.querySelector(".chip[data-metro]");
+metroChip.onclick=()=>{fMetro=!fMetro;metroChip.classList.toggle("on",fMetro);render();};
+sel.onchange=()=>{fConc=sel.value;render();};
+document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=1;}render();});
+render();
+</script>
+</body>
+</html>

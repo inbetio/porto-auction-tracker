@@ -137,6 +137,7 @@
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin.</div>
   <div class="meta">
     <span><b>Updated:</b> <span id="stamp">05 Aug 2026 · manual sweep</span></span>
+    <span><a href="./leads.html" style="color:var(--accent);text-decoration:none;font-weight:600">🔒 Off-platform leads (closing this month) →</a></span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
     <span><b>Platforms (11):</b> e-leilões · Leilosoc · LeilOn · Avalibérica · Bidleiloeira · Imoloriente · OneFix · INLEX · VLeilões · <span style="color:var(--mut2)">Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
   </div>
@@ -209,7 +210,8 @@
     <span class="tb-count" id="capcount"></span>
     <div class="spacer"></div>
     <button class="tbtn" id="resetbtn">Reset my marks</button>
-    <button class="tbtn primary" id="exportbtn">⤓ Export my marks &amp; notes</button>
+    <button class="tbtn" id="exportbtn">⤓ Export</button>
+    <button class="tbtn primary" id="syncbtn">⟳ Sync</button>
   </div>
   <div class="tablewrap">
   <table>
@@ -219,7 +221,7 @@
   </div>
 
   <div class="note">
-    <b>Mark &amp; annotate any lot.</b> Click <span class="editbtn">✎</span> on a row to set your own status — <b>👁 Watching · 🔍 Investigate · ✓ Bought · ✕ Dismiss</b> — and write your reasoning. It saves in your browser. Hit <b>Export</b> to hand me the whole set so I can act on it and improve the picks. Set a lot to <b>🔍 Investigate</b> and tell me, and I'll pull its documents — edital, caderneta predial, CRP, brochure — for that lot.
+    <b>Mark &amp; annotate any lot.</b> Click <span class="editbtn">✎</span> on a row to set your own status — <b>👁 Watching · 🔍 Investigate · ✓ Bought · ✕ Dismiss</b> — and write your reasoning. It saves in your browser. Setting a lot to <b>🔍 Investigate</b> auto-opens the <b>⟳ Sync</b> request; sending it to me (or just saying “sync”) is what triggers me to pull that lot's documents — edital, caderneta predial, CRP, brochure — value it, re-sweep Citius for anything new closing this month, and redeploy. <b>Sync</b> and <b>Export</b> both hand me your marks; a static page can't call me on its own, so this is how the trigger reaches me.
   </div>
   <div class="note">
     <b>Comparator.</b> Each valued lot shows an estimated market value for the <b>same typology in that location</b> and the margin below it. <b>✓ = verified from documents</b> (I read the caderneta/CRP); <b>~ = rough typology estimate</b> (asking-price band, needs a document check). A dash means the comparison isn't meaningful for that asset (usufruct-only, a minority inheritance share, a surface right, a lease-encumbered unit, or a value still TBC).
@@ -232,6 +234,17 @@
 </div>
 
 <dialog id="editor"><div class="dlg" id="editor-body"></div></dialog>
+<dialog id="syncdlg"><div class="dlg">
+  <h3>⟳ Sync request</h3>
+  <div class="dloc">A static page can't run the scrape itself — this bundles what you want done. <b>Send it to me (or just say “sync”)</b> and I'll: fetch documents + value every <b>🔍 Investigate</b> lot, apply your status changes, re-sweep Citius for new lots closing this month, and redeploy this site.</div>
+  <textarea class="exp" id="sync-area" readonly></textarea>
+  <div class="dlgfoot">
+    <button class="tbtn" id="sync-copy">Copy</button>
+    <button class="tbtn" id="sync-dl">Download .txt</button>
+    <button class="tbtn primary" id="sync-close">Close</button>
+  </div>
+</div></dialog>
+
 <dialog id="expdlg"><div class="dlg">
   <h3>Your marks &amp; notes</h3>
   <div class="dloc">Copy this and paste it back to me — I'll action every status and note, and refine the picks. It's also saved in your browser.</div>
@@ -408,6 +421,7 @@ function openEditor(ref){
     const note=document.getElementById("noteta").value.trim();
     if(!picked&&!note){delete STATE[ref];} else {STATE[ref]={status:picked,note:note};}
     save(); dlg.close(); render();
+    if(picked==="invest") openSync(); // status update auto-triggers the get-more-info request
   };
   dlg.showModal();
 }
@@ -431,10 +445,32 @@ function openExport(){
   document.getElementById("exp-area").value=buildExport();
   document.getElementById("expdlg").showModal();
 }
+function buildSync(){
+  const inv=LOTS.filter(l=>STATE[l.ref]&&STATE[l.ref].status==="invest");
+  const marked=LOTS.filter(l=>STATE[l.ref]&&STATE[l.ref].status&&STATE[l.ref].status!=="invest");
+  let out="SYNC REQUEST — Porto/Norte Auction Tracker\n\n";
+  out+="1) RE-SWEEP: check Citius + e-leilões for new urban lots closing this month (≤€500k except prédios, 5 districts), value them, add to the tracker.\n\n";
+  if(inv.length){
+    out+="2) INVESTIGATE — fetch all documents (edital, caderneta predial, CRP, condições de venda, brochure), then value:\n";
+    out+=inv.map(l=>`   • ${l.type} — ${l.loc} (${l.plat}, ref ${l.ref}) · ${l.url}`+(STATE[l.ref].note?`\n     note: ${STATE[l.ref].note}`:'')).join("\n")+"\n\n";
+  } else { out+="2) INVESTIGATE: (none flagged — set a lot to 🔍 Investigate to queue it)\n\n"; }
+  if(marked.length){
+    out+="3) STATUS CHANGES:\n"+marked.map(l=>`   • ${USTAT[STATE[l.ref].status]} — ${l.type}, ${l.loc} (ref ${l.ref})`+(STATE[l.ref].note?`: ${STATE[l.ref].note}`:'')).join("\n")+"\n";
+  }
+  return out;
+}
+function openSync(){
+  document.getElementById("sync-area").value=buildSync();
+  document.getElementById("syncdlg").showModal();
+}
 
 // ---------- wire ----------
 document.getElementById("capf").onchange=render;
 document.getElementById("exportbtn").onclick=openExport;
+document.getElementById("syncbtn").onclick=openSync;
+document.getElementById("sync-close").onclick=()=>document.getElementById("syncdlg").close();
+document.getElementById("sync-copy").onclick=()=>{const a=document.getElementById("sync-area");a.select();try{document.execCommand("copy")}catch(e){}};
+document.getElementById("sync-dl").onclick=()=>{const b=new Blob([document.getElementById("sync-area").value],{type:"text/plain"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="auction-sync.txt";a.click();};
 document.getElementById("resetbtn").onclick=()=>{
   if(confirm("Clear all your saved statuses and notes on this device?")){STATE={};save();render();}
 };
