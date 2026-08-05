@@ -9,8 +9,24 @@
     --good:#2fbf71;--good-bg:#12251c;--warn:#e0a63a;--warn-bg:#2a2313;--dev:#4a9eff;--dev-bg:#0f1f33;--bad:#e0574a;--bad-bg:#2a1815;--accent:#4a9eff;}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1200px;margin:0 auto;padding:32px 22px 80px}
+  .wrap{max-width:1200px;margin:0 auto;padding:20px 22px 80px}
+  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;background:rgba(15,20,25,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:9px 18px}
+  .topbar .nav{display:flex;gap:6px}
+  .navtab{color:var(--mut);text-decoration:none;font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;border:1px solid transparent}
+  .navtab:hover{color:var(--ink)}
+  .navtab.active{color:var(--ink);background:var(--panel2);border-color:var(--line)}
+  .topbar .grow{flex:1}
+  .synctop{background:var(--accent);border:1px solid var(--accent);color:#04121f;border-radius:8px;cursor:pointer;font-size:13px;padding:7px 16px;font-weight:700}
+  .synctop:hover{filter:brightness(1.08)}
+  dialog{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:0;max-width:520px;width:92%}
+  dialog::backdrop{background:rgba(4,8,12,.7)}
+  .dlg{padding:20px 22px}.dlg h3{margin:0 0 6px}.dlg p{font-size:13px;color:#c4cfd9}
+  .dlgfoot{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+  .tbtn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;cursor:pointer;font-size:12.5px;padding:6px 12px;font-weight:600}
+  .tbtn.primary{background:var(--accent);border-color:var(--accent);color:#04121f}
   a.top{color:var(--accent);text-decoration:none;font-size:12.5px}
+  td a.cit{color:var(--accent);text-decoration:none;font-weight:600}
+  .valp{font-variant-numeric:tabular-nums}
   h1{font-size:25px;margin:10px 0 4px;letter-spacing:-.3px}
   .sub{color:var(--mut2);font-size:13.5px;margin-bottom:20px}
   .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
@@ -42,10 +58,18 @@
 </style>
 </head>
 <body>
+<div class="topbar">
+  <div class="nav">
+    <a class="navtab" href="./index.html">Platforms</a>
+    <a class="navtab active" href="./leads.html">Executivos · penhora</a>
+    <a class="navtab" href="./declarativos.html">Declarativos · documented</a>
+  </div>
+  <div class="grow"></div>
+  <button class="synctop" id="synctop">⟳ Sync</button>
+</div>
 <div class="wrap">
-  <a class="top" href="./index.html">← back to the auction tracker</a>
-  <h1>Off-platform leads — closing this month</h1>
-  <div class="sub">Urban penhora sales in Porto · Braga · Aveiro · Coimbra · Viana do Castelo, sold by <b>sealed bid</b> or <b>private negotiation</b> — Citius is the only public listing. Swept from the executive register, sale date 1–31 Aug 2026. These are <b>leads</b>: valor base, exact deadline and the agente-de-execução contact come from each lot's Citius detail (the "investigate" step).</div>
+  <h1>Executivos (penhora) — off-platform, closing this month</h1>
+  <div class="sub">Urban penhora sales in Porto · Braga · Aveiro · Coimbra · Viana do Castelo, sold by <b>sealed bid</b> or <b>private negotiation</b> — Citius is the only public listing. Swept from the executive register, sale date 1–31 Aug 2026. <b>No documents on the register:</b> valor base is on the list; área, registo &amp; matricial are in "ver mais"; the edital + agente-de-execução contact come from the <b>court</b> (per lot). For lots that come <i>with</i> the document + administrador contact, see the <a href="./declarativos.html" style="color:var(--accent);text-decoration:none">Declarativos</a> tab.</div>
 
   <div class="cards">
     <div class="card good"><div class="n" id="c-total">–</div><div class="l">Urban lots closing August</div></div>
@@ -73,19 +97,31 @@
   <div class="tw">
   <table>
     <thead><tr>
-      <th data-k="conc">Concelho</th><th data-k="type">Type</th><th data-k="mod">Modalidade</th>
-      <th data-k="loc">Location (from anúncio)</th><th data-k="proc">Processo</th><th>Flags</th>
+      <th data-k="conc">Concelho</th><th data-k="type">Type</th><th>Valor base</th><th data-k="mod">Modalidade</th>
+      <th data-k="loc">Location</th><th data-k="proc">Processo</th><th>Flags</th>
     </tr></thead>
     <tbody id="tb"></tbody>
   </table>
   </div>
 
   <div class="note">
-    <b>Two caveats.</b> The property's real location comes from the anúncio, not the court — e.g. one lot filed at a Braga court is actually in <b>Arco da Calheta (Madeira)</b>, flagged below and excluded from the Porto-metro count. And <b>terreno para construção</b> lots are building land, not a finished dwelling — kept because they're prédios urbanos, but tagged.
+    <b>How to find one on Citius.</b> The executivos page has <b>no processo search box</b> — you must select the <b>court shown under each processo</b>, then set <b>Tipo de Bem: Imóvel</b> and <b>Estado: Em venda</b>, and locate the processo in the list. Two gotchas: the <b>court ≠ the property's location</b> (a lot at a Braga court is actually in <b>Arco da Calheta, Madeira</b> — flagged, excluded from Porto-metro), and the court is the <b>comarca</b>, not the town you might expect (e.g. <b>Anadia is Comarca de Aveiro, not Braga</b>). Easiest path: hit <b>Sync</b> and I pull each lot's valor + área + contact onto this page so you don't have to search at all.
   </div>
 
+  <div class="note">
+    <b>Valores &amp; documents.</b> <b>Valor base</b> and <b>espécie</b> fill in on the next <b>⟳ Sync</b> (I re-read each lot's Citius detail). <b>Área, VPT and the agente-de-execução contact</b> come from that same detail; <b>ónus / encargos and the owed amount</b> aren't on the public register — they're in the CRP / execution file, which is the per-lot document fetch. Citius has no per-lot URL, so each <b>Processo ↗</b> opens the executivos search for you to look it up.
+  </div>
   <div class="foot">Source: Portal Citius — Venda de Bens Penhorados em Processos Executivos. Figures/dates are confirmed per-lot on the Citius detail before any action. This tool never bids, submits a proposal, or pays.</div>
 </div>
+<dialog id="syncdlg"><div class="dlg">
+  <h3>⟳ Sync</h3>
+  <p>A static page can't run the scrape itself. <b>Say “sync” to me (Claude, in Chrome)</b> and I'll re-sweep the Citius executivos register for new off-platform urban lots closing this month, fill in each lot's <b>valor base / espécie / área</b>, fetch documents for anything you've marked, and redeploy this page.</p>
+  <div class="dlgfoot"><button class="tbtn primary" id="sync-close">Got it</button></div>
+</div></dialog>
+<script>
+document.getElementById("synctop").onclick=()=>document.getElementById("syncdlg").showModal();
+document.getElementById("sync-close").onclick=()=>document.getElementById("syncdlg").close();
+</script>
 <script>
 // concelho | processo | modalidade (CF/NP) | predio(1/0) | type | location | metro(1/0) | note
 const LEADS=[
@@ -140,6 +176,16 @@ const LEADS=[
   ["V. N. Gaia","978/10.6TYVNG","CF",1,"armazém","Rua Outeiro",1,""]
 ];
 const MODNAME={CF:"carta fechada",NP:"neg. particular"};
+// Enrichment filled on sync (real valor base + espécie + área from the Citius detail). Keyed by processo.
+const ENRICH={};
+const CIT="https://www.citius.mj.pt/portal/consultas/consultasvenda.aspx";
+// Which court to SELECT on Citius (there is no processo search — you pick the court, then Imóvel + Em venda).
+const COMARCA={"Anadia":"de Aveiro","Aveiro":"de Aveiro","Espinho":"de Aveiro","Oliveira de Azeméis":"de Aveiro","Ovar":"de Aveiro","Vale de Cambra":"de Aveiro",
+  "Braga":"de Braga","Braga (court)":"de Braga","Guimarães":"de Braga","V. N. Famalicão":"de Braga",
+  "Coimbra":"de Coimbra","Lousã":"de Coimbra","Soure":"de Coimbra",
+  "Lousada":"do Porto Este","Paredes":"do Porto Este",
+  "Maia":"do Porto","Porto":"do Porto","Santo Tirso":"do Porto","Vila do Conde":"do Porto","V. N. Gaia":"do Porto",
+  "Valença":"de Viana do Castelo","Viana do Castelo":"de Viana do Castelo"};
 let fMod="all", fMetro=false, fConc="", sortK="conc", sortDir=1;
 // populate concelho select
 const concs=[...new Set(LEADS.map(l=>l[0]))].sort();
@@ -156,8 +202,13 @@ function render(){
   document.getElementById("cnt").textContent=rows.length+" of "+LEADS.length;
   document.getElementById("tb").innerHTML=rows.map(l=>{
     const flags=(l[3]?'<span class="predio">PRÉDIO</span> ':'')+(l[6]===1?'<span class="metro">PORTO METRO</span> ':'')+(l[7]?'<span class="warn">'+l[7]+'</span>':'');
-    return `<tr><td>${l[0]}</td><td>${l[4]}</td><td><span class="pill ${l[2].toLowerCase()}">${MODNAME[l[2]]}</span></td>`+
-      `<td>${l[5]||'<span style="color:var(--mut2)">—</span>'}</td><td class="proc">${l[1]}</td><td>${flags||''}</td></tr>`;
+    const e=ENRICH[l[1]]||{};
+    const val=e.base?`<span class="valp">${e.base}</span>${e.especie?`<div style="font-size:10px;color:var(--mut2)">${e.especie}</div>`:''}`:'<span style="color:var(--mut2)">— on sync</span>';
+    const cm=COMARCA[l[0]]||"";
+    const proc=`<a class="cit" href="${CIT}" target="_blank" rel="noopener" title="Opens the Citius executivos search (no processo box) — select the court below, then Imóvel + Em venda, and find this processo">${l[1]} ↗</a>`+
+      (cm?`<div style="font-size:10px;color:var(--mut2)">select court: <b style="color:var(--mut)">${l[0]} · Comarca ${cm}</b></div>`:'');
+    return `<tr><td>${l[0]}</td><td>${l[4]}</td><td>${val}</td><td><span class="pill ${l[2].toLowerCase()}">${MODNAME[l[2]]}</span></td>`+
+      `<td>${l[5]||'<span style="color:var(--mut2)">—</span>'}</td><td>${proc}</td><td>${flags||''}</td></tr>`;
   }).join("");
 }
 document.querySelectorAll(".chip[data-mod]").forEach(c=>c.onclick=()=>{fMod=c.dataset.mod;document.querySelectorAll(".chip[data-mod]").forEach(x=>x.classList.toggle("on",x===c));render();});

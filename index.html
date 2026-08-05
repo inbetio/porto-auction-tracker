@@ -14,7 +14,15 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1300px;margin:0 auto;padding:32px 22px 80px}
+  .wrap{max-width:1300px;margin:0 auto;padding:20px 22px 80px}
+  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;background:rgba(15,20,25,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:9px 18px}
+  .topbar .nav{display:flex;gap:6px}
+  .navtab{color:var(--mut);text-decoration:none;font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;border:1px solid transparent}
+  .navtab:hover{color:var(--ink)}
+  .navtab.active{color:var(--ink);background:var(--panel2);border-color:var(--line)}
+  .topbar .grow{flex:1}
+  .synctop{background:var(--accent);border:1px solid var(--accent);color:#04121f;border-radius:8px;cursor:pointer;font-size:13px;padding:7px 16px;font-weight:700}
+  .synctop:hover{filter:brightness(1.08)}
   h1{font-size:26px;margin:0 0 4px;letter-spacing:-.3px}
   .sub{color:var(--mut2);font-size:13.5px;margin-bottom:22px}
   .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--mut2);
@@ -132,6 +140,15 @@
 </style>
 </head>
 <body>
+<div class="topbar">
+  <div class="nav">
+    <a class="navtab active" href="./index.html">Platforms</a>
+    <a class="navtab" href="./leads.html">Executivos · penhora</a>
+    <a class="navtab" href="./declarativos.html">Declarativos · documented</a>
+  </div>
+  <div class="grow"></div>
+  <button class="synctop" id="synctop">⟳ Sync</button>
+</div>
 <div class="wrap">
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin.</div>
@@ -468,6 +485,7 @@ function openSync(){
 document.getElementById("capf").onchange=render;
 document.getElementById("exportbtn").onclick=openExport;
 document.getElementById("syncbtn").onclick=openSync;
+document.getElementById("synctop").onclick=openSync;
 document.getElementById("sync-close").onclick=()=>document.getElementById("syncdlg").close();
 document.getElementById("sync-copy").onclick=()=>{const a=document.getElementById("sync-area");a.select();try{document.execCommand("copy")}catch(e){}};
 document.getElementById("sync-dl").onclick=()=>{const b=new Blob([document.getElementById("sync-area").value],{type:"text/plain"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="auction-sync.txt";a.click();};
