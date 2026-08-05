@@ -157,7 +157,7 @@
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">05 Aug 2026 · manual sweep</span></span>
+    <span><b>Updated:</b> <span id="stamp">05 Aug 2026 · freguesia re-valuation + LeilOn/Avalibérica/Bidleiloeira sweep</span></span>
     <span><a href="./leads.html" style="color:var(--accent);text-decoration:none;font-weight:600">🔒 Off-platform leads (closing this month) →</a></span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
     <span><b>Platforms (11):</b> e-leilões · Leilosoc · LeilOn · Avalibérica · Bidleiloeira · Imoloriente · OneFix · INLEX · VLeilões · <span style="color:var(--mut2)">Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
@@ -275,6 +275,7 @@
 const TZ="Europe/Lisbon";
 const LOTS=[
   // ---------- PORTO ----------
+  {ref:"LeilOn 1983",plat:"LeilOn",type:"Escritório (fração)",loc:"Porto — Santo Ildefonso (Baixa)",dist:"Porto",val:"base/mín €121,257 · 0 lic.",price:121257,mkt:175000,conf:"r",cb:"Idealista Porto office comps: 30 listings, median €2,909/m². Central Santo Ildefonso (Baixa) mid-band ~€2,600/m² × 72.5 m² ≈ €188k asking → ~€175k net. Entry is €1,672/m² = ~31% under. Commercial/office — verify condition + tenancy from the lot's DOCUMENTAÇÃO tab.",end:"2026-09-11T18:00:00+01:00",url:"https://www.leilon.pt/pt/auction/lot/id/1983",vc:"view",vl:"VIEW −31%",isnew:true},
   {ref:"LO1488552026",plat:"e-leilões",type:"Fração T2 (phys. T1)",loc:"Gaia — Santa Marinha",dist:"Porto",val:"bid €173,685",price:173685,mkt:175000,conf:"r",cb:"Central Gaia small T2/T1 resale band.",end:"2026-08-05T10:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1488552026",vc:"no",vl:"NO — at mkt"},
   {ref:"NP1229942026",plat:"e-leilões",type:"Moradia — ruin/fixer",loc:"Baião — Gestaçô",dist:"Porto",val:"bid €37,000 · mín €62.4k",price:62400,mkt:null,cb:"Ruin — needs a full rebuild; a habitable comp isn't meaningful until works are scoped.",end:"2026-08-06T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1229942026",vc:"low",vl:"RURAL FIXER"},
   {ref:"NP1225122026",plat:"e-leilões",type:"Moradia T3 + pool",loc:"Gaia — Canidelo",dist:"Porto",val:"bid €500k · mín €734.4k",price:734400,mkt:null,cb:"Occupied and above the €500k cap.",end:"2026-08-06T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1225122026",vc:"no",vl:"NO — occupied"},
