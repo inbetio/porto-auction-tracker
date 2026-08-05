@@ -170,19 +170,6 @@
     <div class="card"><div class="n" id="c-total">–</div><div class="l">Lots tracked</div></div>
   </div>
 
-  <h2>Closing calendar — live countdown</h2>
-  <div class="calwrap">
-    <div id="calendar"></div>
-    <div class="callegend">
-      <span>⏱ live countdown</span>
-      <span><span class="newbadge">NEW</span> added since last update</span>
-      <span><span class="pill buy" style="padding:1px 6px">BUY</span></span>
-      <span><span class="pill view" style="padding:1px 6px">VIEW</span></span>
-      <span style="color:var(--good)">−% under market</span>
-      <span style="color:var(--bad)">● &lt; 48 h</span>
-    </div>
-  </div>
-
   <h2>Flagged — full analysis</h2>
 
   <div class="deal hit">
@@ -190,10 +177,11 @@
     <div class="loc">Rua 5 de Outubro 977, 3.º · Fração "M" · <a href="https://www.e-leiloes.pt/evento/LO1500072026" target="_blank" rel="noopener">e-leilões ↗</a> · leilão eletrónico (insolvência) · <b>ends 26 Aug 11:00</b></div>
     <div class="kpis">
       <div class="kpi"><div class="v">€154,545</div><div class="k">Current bid — live (base €130k)</div></div>
-      <div class="kpi"><div class="v">€261,900</div><div class="k">Est. market (incl. garage)</div></div>
-      <div class="kpi"><div class="v g">41%</div><div class="k">Below market</div></div>
+      <div class="kpi"><div class="v">€295,000</div><div class="k">Est. market (Idealista comps)</div></div>
+      <div class="kpi"><div class="v g">48%</div><div class="k">Below market</div></div>
       <div class="kpi"><div class="v g">≤ €190k</div><div class="k">Your bid cap</div></div>
     </div>
+    <p><b>Market value — Idealista comparables.</b> 25 T3 listings in Vila do Conde: median <b>€3,150/m²</b> (asking). At the CPU area of <b>102 m²</b> that's ~€321k asking; net of the ~8% asking-to-sale gap and adding the 15.5 m² garage, a realistic market ≈ <b>€295k</b>. Against the live bid of €154,545 that's <b>~48% under</b> — better than my earlier rough €262k read. <a class="ideal" href="https://www.idealista.pt/comprar-casas/vila-do-conde/com-t3/" target="_blank" rel="noopener">see the comps ↗</a></p>
     <p><b>Docs verified (CPU + CRP).</b> T3, 102 m² + 15.5 m² garage; VPT €106,415; mortgage cancels on the insolvency sale; lease terminated → <b>delivers vacant</b>. Clear buy under ~€190k; a bidder is already active at €154,545.</p>
     <p><span class="tag ok">docs verified</span><span class="tag ok">vacant</span><span class="tag ok">charges cancel</span><span class="tag ok">garage</span><span class="tag risk">bid rising — cap ≤€190k</span></p>
   </div>
@@ -208,7 +196,8 @@
       <div class="kpi"><div class="v w">~43%</div><div class="k">Below market</div></div>
       <div class="kpi"><div class="v w">≤ €80k</div><div class="k">Suggested cap</div></div>
     </div>
-    <p><b>Docs verified.</b> 108 m² ABC / 54 m² privativa, 6-room 2-storey + garage; VPT €34,010. <b>Insolvency → charges cancel; no tenant registered.</b> Location oversold in the listing (peri-urban Adémia, not central). Margin real only if works are light (~€30k) — a gut job erases it. <b>Cap ≤ €80k; ideally near the €70.5k floor.</b></p>
+    <p><b>Market value — Idealista comparables.</b> Coimbra concelho T2/T3 spans a huge <b>€1,085–5,268/m²</b> (median €3,450), but that median is pulled up by the central/university zone. <b>Adémia is peri-urban</b> → the bottom band, ~<b>€1,250/m²</b> × 108 m² ≈ <b>€135k</b> habitable. That's why the listing's framing is oversold — value it at the low end, not the concelho median. <a class="ideal" href="https://www.idealista.pt/comprar-casas/coimbra/com-t2,t3/" target="_blank" rel="noopener">see the comps ↗</a></p>
+    <p><b>Docs verified.</b> 108 m² ABC / 54 m² privativa, 6-room 2-storey + garage; VPT €34,010. <b>Insolvency → charges cancel; no tenant registered.</b> Margin real only if works are light (~€30k) — a gut job erases it. <b>Cap ≤ €80k; ideally near the €70.5k floor.</b></p>
     <p><span class="tag ok">charges cancel</span><span class="tag ok">no tenant</span><span class="tag risk">condition unknown</span><span class="tag risk">view before bidding</span></p>
   </div>
 
@@ -289,7 +278,7 @@ const LOTS=[
   {ref:"NP1229942026",plat:"e-leilões",type:"Moradia — ruin/fixer",loc:"Baião — Gestaçô",dist:"Porto",val:"bid €37,000 · mín €62.4k",price:62400,mkt:null,cb:"Ruin — needs a full rebuild; a habitable comp isn't meaningful until works are scoped.",end:"2026-08-06T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1229942026",vc:"low",vl:"RURAL FIXER"},
   {ref:"NP1225122026",plat:"e-leilões",type:"Moradia T3 + pool",loc:"Gaia — Canidelo",dist:"Porto",val:"bid €500k · mín €734.4k",price:734400,mkt:null,cb:"Occupied and above the €500k cap.",end:"2026-08-06T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1225122026",vc:"no",vl:"NO — occupied"},
   {ref:"DMI-1031/2026",plat:"Leilosoc",type:"Moradia T4 — approved project",loc:"Porto — Campo Alegre",dist:"Porto",val:"base €350k",price:350000,mkt:null,cb:"Dismissed.",end:"2026-08-14T16:59:59Z",url:"https://leilosoc.com/lot/43807/171076",vc:"dismiss",vl:"DISMISSED"},
-  {ref:"9381/15.0T8CBR",plat:"Leilosoc",type:"Moradia (V2/T3)",loc:"Coimbra — Adémia, Trouxemil",dist:"Coimbra",val:"€56k open · 0 bids · mín €70.5k",price:70530,mkt:135000,conf:"v",cb:"Verified: habitable V2/T3, 108 m² ABC; peri-urban Adémia comp. Margin holds only with light works.",end:"2026-08-14T15:59:59Z",url:"https://leilosoc.com/lot/43786/170938",vc:"view",vl:"VIEW −48%"},
+  {ref:"9381/15.0T8CBR",plat:"Leilosoc",type:"Moradia (V2/T3)",loc:"Coimbra — Adémia, Trouxemil",dist:"Coimbra",val:"€56k open · 0 bids · mín €70.5k",price:70530,mkt:135000,conf:"v",cb:"Idealista: Coimbra T2/T3 €1,085–5,268/m²; Adémia is peri-urban → bottom band ~€1,250/m² × 108 m² ≈ €135k habitable. Margin holds only with light works.",end:"2026-08-14T15:59:59Z",url:"https://leilosoc.com/lot/43786/170938",vc:"view",vl:"VIEW −48%"},
   {ref:"NP1237892026",plat:"e-leilões",type:"Moradia T3",loc:"Felgueiras — Jugueiros",dist:"Porto",val:"bid €141,500 · mín €229.5k",price:229500,mkt:185000,conf:"r",cb:"Rural Felgueiras T3 — the €229.5k reserve sits above local resale, so no margin at the floor.",end:"2026-08-18T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1237892026",vc:"low",vl:"LOW — over reserve"},
   {ref:"NP1225572026",plat:"e-leilões",type:"Armazém / indústria",loc:"Matosinhos — S. Mamede Infesta",dist:"Porto",val:"floor €651k",price:651000,mkt:null,cb:"Industrial and above the €500k cap.",end:"2026-08-18T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1225572026",vc:"low",vl:"COMMERCIAL"},
   {ref:"NP1239052026",plat:"e-leilões",type:"Prédio — 3 hab + comércio",loc:"Maia — Castêlo da Maia",dist:"Porto",val:"mín €224,400 · 0 propostas",price:224400,mkt:260000,conf:"v",predio:true,cb:"Verified: sum-of-parts ≈ minimum as tenanted; upside is land, the commercial unit and rent reversion.",end:"2026-08-18T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1239052026",vc:"view",vl:"VIEW"},
@@ -297,7 +286,7 @@ const LOTS=[
   {ref:"NP1216082026",plat:"e-leilões",type:"Oficina / prédio urbano",loc:"Valongo — Campo e Sobrado",dist:"Porto",val:"bid €166,000 · 20yr lease",price:166000,mkt:null,cb:"20-year lease in place — income yes, but encumbered; vacant-possession comp doesn't apply.",end:"2026-08-25T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1216082026",vc:"no",vl:"AVOID — lease"},
   {ref:"NP1234062026",plat:"e-leilões",type:"Quinta — casa + 2 rústicos",loc:"Baião — Mesquinhata",dist:"Porto",val:"mín €165.8k · embargos",price:165800,mkt:null,cb:"Embargos on title — value uncertain until the encumbrance clears.",end:"2026-08-25T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1234062026",vc:"no",vl:"EMBARGOS"},
   {ref:"NP1235312026",plat:"e-leilões",type:"Moradia — usufruto só",loc:"Gondomar — Fânzeres",dist:"Porto",val:"mín €14.9k",price:14900,mkt:null,cb:"Only the usufruct is sold — not the property; no ownership comp.",end:"2026-08-25T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1235312026",vc:"no",vl:"SKIP — usufruct"},
-  {ref:"LO1500072026",plat:"e-leilões",type:"Fração T3 + garagem",loc:"Vila do Conde — centro",dist:"Porto",val:"bid €154,545 · mín €110.5k",price:154545,mkt:261900,conf:"v",cb:"Verified: T3 102 m² + 15.5 m² garage, delivers vacant; central Vila do Conde comp.",end:"2026-08-26T11:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1500072026",vc:"buy",vl:"BUY ≤€190k"},
+  {ref:"LO1500072026",plat:"e-leilões",type:"Fração T3 + garagem",loc:"Vila do Conde — centro",dist:"Porto",val:"bid €154,545 · mín €110.5k",price:154545,mkt:295000,conf:"v",cb:"Idealista: 25 T3 comps in Vila do Conde, median €3,150/m² × 102 m² CPU ≈ €295k (net of asking-to-sale, incl. garage). Delivers vacant.",end:"2026-08-26T11:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1500072026",vc:"buy",vl:"BUY ≤€190k"},
   {ref:"6172/21.3T8GMR",plat:"VLeilões",type:"Quinhão hered. — ≈17.5% of a 6-fogo building",loc:"Porto — Campanhã",dist:"Porto",val:"mín €69,001",price:69001,mkt:null,cb:"An ≈17.5% undivided inheritance share — not the building; no whole-asset comp.",end:"2026-09-01T12:00:00+01:00",url:"https://www.vleiloes.com/?page=leilao&leilao=809&venda=351&tipo=2",vc:"no",vl:"SKIP — minority share",isnew:true},
   {ref:"escritório",plat:"LeilOn",type:"Prédio urbano — escritório",loc:"Porto",dist:"Porto",val:"base €121,257",price:121257,mkt:150000,conf:"r",cb:"Porto office resale band — rough; confirm area and floor.",end:"2026-09-11T18:00:00+01:00",url:"https://www.leilon.pt/pt/auction/lot/id/1983",vc:"low",vl:"OFFICE",isnew:true},
   // ---------- AVEIRO ----------
@@ -387,37 +376,6 @@ function render(){
   document.getElementById("c-view").textContent=LOTS.filter(l=>l.vc==="view").length;
   document.getElementById("c-new").textContent=LOTS.filter(l=>l.isnew).length;
   document.getElementById("c-total").textContent=LOTS.length;
-
-  // ---- calendar: dated groups, then a "no fixed date" group ----
-  const dated=visible.filter(l=>l.end).map(l=>({...l,ts:ts(l)})).sort((a,b)=>a.ts-b.ts);
-  const groups={};
-  dated.forEach(l=>{const k=new Intl.DateTimeFormat("en-CA",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).format(l.ts);(groups[k]=groups[k]||[]).push(l)});
-  function lotRow(l){
-    const c=cd(l.ts!=null?l.ts-now:null);
-    const cls=l.vc==='buy'?' callot--buy':(l.vc==='view'?' callot--view':'');
-    const m=margin(l);
-    const mg=m===null?'':`<span class="cl-mgn ${mgnClass(m)}">${mgnText(m)}</span>`;
-    return `<div class="callot${c.c==='ended'?' ended':''}${isDimmed(l)?' dimmed':''}${cls}">${nb(l)}${pill(l)}${ustatBadge(l.ref)}`+
-      `<a href="${l.url}" target="_blank" rel="noopener">${l.type}</a>`+
-      `<span class="cl-loc">${l.loc}</span><span class="cl-src">${l.plat}</span>`+
-      `<span class="cl-base">${l.val}</span>${mg}<span class="cd ${c.c}">${c.t}</span></div>`;
-  }
-  let cal="";
-  Object.keys(groups).sort().forEach(k=>{
-    const first=groups[k][0].ts;
-    const dd=new Intl.DateTimeFormat("en-GB",{timeZone:TZ,day:"2-digit"}).format(first);
-    const mm=new Intl.DateTimeFormat("en-GB",{timeZone:TZ,month:"short"}).format(first);
-    const wd=new Intl.DateTimeFormat("en-GB",{timeZone:TZ,weekday:"short"}).format(first);
-    const allEnded=groups[k].every(l=>l.ts-now<=0);
-    const rows=groups[k].map(lotRow).join("");
-    cal+=`<div class="calday${allEnded?' ended':''}"><div class="caldate"><div class="d">${dd}</div><div class="m">${mm}</div><div class="wd">${wd}</div></div><div class="callots">${rows}</div></div>`;
-  });
-  const undated=visible.filter(l=>!l.end);
-  if(undated.length){
-    const rows=undated.map(lotRow).join("");
-    cal+=`<div class="calday"><div class="caldate nofix"><div class="d">No fixed date</div><div class="wd">open</div></div><div class="callots">${rows}</div></div>`;
-  }
-  document.getElementById("calendar").innerHTML=cal;
 
   // ---- master table ----
   const all=[...visible].map(l=>({...l,ts:ts(l)})).sort((a,b)=>{
