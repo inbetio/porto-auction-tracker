@@ -135,6 +135,10 @@
   .dlg .exp{width:100%;min-height:200px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
   .dlgfoot{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
   .cmpbasis{font-size:12px;color:var(--mut2);margin-top:4px}
+  .ideal{font-size:10.5px;color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap}
+  .ideal:hover{text-decoration:underline}
+  .docsnote{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#c4cfd9;margin-top:6px}
+  .docsnote a{color:var(--accent);text-decoration:none;font-weight:600}
   @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.kpis{gap:16px}.deal h3{padding-right:0}
     .tablewrap{overflow-x:auto}table{font-size:11.5px;min-width:860px}}
 </style>
@@ -350,6 +354,28 @@ function cd(ms){
   return {t:d>=1?d+"d "+h+"h":(h>=1?h+"h "+m+"m":m+"m"), c:ms<1728e5?"urgent":(ms<6048e5?"soon":"")};
 }
 function fmtDate(ms){return new Intl.DateTimeFormat("en-GB",{timeZone:TZ,day:"2-digit",month:"short"}).format(ms)}
+// ---- Idealista comparator (same concelho + typology from the CPU) ----
+const CONCMAP={"gaia":"vila-nova-de-gaia","v. n. gaia":"vila-nova-de-gaia","vila nova de gaia":"vila-nova-de-gaia","famalicão":"vila-nova-de-famalicao","v. n. famalicão":"vila-nova-de-famalicao","vila nova de famalicão":"vila-nova-de-famalicao"};
+function slugConc(l){
+  let s=l.loc;
+  if(s.includes("—")) s=s.split("—")[0];
+  else if(s.includes(",")) s=s.split(",").pop();
+  s=s.trim();
+  const k=s.toLowerCase();
+  if(CONCMAP[k]) return CONCMAP[k];
+  return (s||l.dist).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+}
+function typo(l){const m=l.type.match(/\bt\s?([0-6])\b/i)||l.type.match(/([0-6])\s*quartos/i);return m?+m[1]:null;}
+function idealKind(l){return /loja|escrit|armaz|ind[úu]str|com[ée]rc/i.test(l.type)?"comprar-comercial":(/terreno|lote/i.test(l.type)?"comprar-terrenos":"comprar-casas");}
+function idealURL(l){const c=slugConc(l),t=typo(l),k=idealKind(l);let u="https://www.idealista.pt/"+k+"/"+c+"/";if(k==="comprar-casas"&&t!=null)u+="com-t"+t+(t<6?",t"+(t+1):"")+"/";return u;}
+function idealShow(l){return !/quinh|usufrut|superf[íi]cie/i.test(l.type);}
+function idealLink(l,label){return idealShow(l)?`<a class="ideal" href="${idealURL(l)}" target="_blank" rel="noopener" title="Idealista — same typology &amp; concelho">${label||"Idealista comps ↗"}</a>`:"";}
+function docsBlock(l){
+  return `<div class="dsec">Documents on the listing</div>`+
+    `<div class="docsnote">Lot page — <a href="${l.url}" target="_blank" rel="noopener">${l.plat} ↗</a> — publishes the <b>Documentos Anexos</b>: caderneta predial (CPU) · certidão do registo predial (CRP) · edital / condições de venda · fotos · planta.`+
+    (idealShow(l)?` Compare against ${idealLink(l,"Idealista ↗")} (same typology + concelho).`:"")+
+    `<br><b>Set 🔍 Investigate</b> → I fetch &amp; attach every document the listing has, read the CPU, and compute the margin from matching Idealista comps.</div>`;
+}
 
 // ---------- render ----------
 function render(){
@@ -406,7 +432,7 @@ function render(){
     tb+=`<tr class="${rowcls.trim()}"><td>${dcell} ${nb(l)}</td>`+
       `<td><a class="reflink" href="${l.url}" target="_blank" rel="noopener">${l.ref}</a><span class="src">${l.plat}</span></td>`+
       `<td>${l.type} ${pd}</td><td>${l.loc} · ${l.dist} ${oc}</td>`+
-      `<td class="num">${l.val}</td><td>${cmpCell(l)}</td><td>${pill(l)}</td>`+
+      `<td class="num">${l.val}</td><td>${cmpCell(l)}${idealShow(l)?'<div>'+idealLink(l,'idealista ↗')+'</div>':''}</td><td>${pill(l)}</td>`+
       `<td>${ustatBadge(l.ref)}${note} <button class="editbtn" data-ref="${encodeURIComponent(l.ref)}">✎</button></td></tr>`;
   });
   document.getElementById("master").innerHTML=tb;
@@ -423,6 +449,7 @@ function openEditor(ref){
   document.getElementById("editor-body").innerHTML=
     `<h3>${l.type}</h3><div class="dloc">${l.loc} · ${l.dist} · ${l.plat} — ${l.val}`+
     `<div class="cmpbasis"><b>Comp basis:</b> ${l.cb||'—'}</div></div>`+
+    docsBlock(l)+
     `<div class="dsec">Your status</div><div class="statrow" id="statrow">${opts}</div>`+
     `<div class="dsec">Your reasoning / notes</div><textarea id="noteta" placeholder="Why watch / investigate / dismiss? What to check, target price, condition, anything for me to act on…">${cur.note||''}</textarea>`+
     `<div class="dlgfoot"><button class="tbtn" id="ed-cancel">Cancel</button><button class="tbtn primary" id="ed-save">Save</button></div>`;
