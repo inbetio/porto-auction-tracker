@@ -496,11 +496,37 @@ function idealKind(l){return /loja|escrit|armaz|ind[úu]str|com[ée]rc/i.test(l.
 function idealURL(l){const c=slugConc(l),t=typo(l),k=idealKind(l);let u="https://www.idealista.pt/"+k+"/"+c+"/";if(k==="comprar-casas"&&t!=null)u+="com-t"+t+(t<6?",t"+(t+1):"")+"/";return u;}
 function idealShow(l){return !/quinh|usufrut|superf[íi]cie/i.test(l.type);}
 function idealLink(l,label){return idealShow(l)?`<a class="ideal" href="${idealURL(l)}" target="_blank" rel="noopener" title="Idealista — same typology &amp; concelho">${label||"Idealista comps ↗"}</a>`:"";}
+// ---------- Per-lot documents (filled on the 07 Aug sync). files[] download in your logged-in browser. ----------
+const DOCS={
+ "verba 7542":{kind:"pdf",summary:"Base €219k · abertura €158,227.50 · <b>mín €186,150</b> · sem licitações · termina 01 Sep 15:05. AE: Nelson Cardoso · 912 449 040.",
+   files:[{l:"Caderneta predial (PDF · 178 KB)",u:"https://www.onefix-leiloeiros.pt/files/5554/verbas_ficheiros"},{l:"Brochura (PDF · 1.1 MB)",u:"https://www.onefix-leiloeiros.pt/files/3606/insolvencias_brochuras"}],
+   note:"Both PDFs are public and download directly."},
+ "NP1239052026":{kind:"rec",summary:"Prédio 220 m² em 885 m² · 3 habitações arrendadas (~€650/mo: 1.º andar €250 desde 2017; R/C ft €200; R/C tras €200) + espaço comercial (ex-talho). Registo: descrição 380 Gemunde · artigo urbano 6335. <b>Sem ónus — título limpo.</b> Processo 1855/21.0T8MAI (Maia JL Cível J4). AE: Lurdes Ribeiro Azenha · 3284@solicitador.net.",
+   files:[{l:"Lot page + 28 fotos ↗",u:"https://www.e-leiloes.pt/evento/NP1239052026"}],
+   note:"e-leilões hosts no attached PDF for this lot — the record above is the full published data; official caderneta/CRP come from the AE."},
+ "LO1500072026":{kind:"rec",summary:"Fração \"M\" habitação · 102 m² + 15.5 m² garagem · CRP Vila do Conde n.º 1761 · artigo 7523 · VPT €106,414.99. <b>1 ónus — cancela na venda de insolvência; entrega devoluta (verificado).</b> AJ: José Rui Giesteira · jose.r.giesteira@aj.caaj.pt.",
+   files:[{l:"Lot page + 15 fotos ↗",u:"https://www.e-leiloes.pt/evento/LO1500072026"}],
+   note:"No attached PDF on e-leilões; caderneta/CRP already read for the verified valuation, official copies via the AJ."},
+ "Perafita":{kind:"list",summary:"Moradia bi-familiar · mín €346k / base €407,058 · termina 31 Aug 12:00.",
+   files:[{l:"Listing + fotos ↗",u:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/moradias/moradia-bi-familiar-perafita-matosinhos/"},{l:"Condições Gerais de Venda ↗",u:"https://www.imoloriente.pt/condicoes-gerais-de-venda/"}],
+   note:"Imoloriente publishes no per-lot caderneta/edital — listing + generic conditions only; caderneta/CRP via the AE."},
+ "Monte Córdova":{kind:"list",summary:"Moradia · base €80k · abertura €40k · <b>mín €50k</b> · termina 01 Sep 12:00.",
+   files:[{l:"Listing + fotos ↗",u:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/moradias/moradia-monte-cordova-santo-tirso/"},{l:"Condições Gerais de Venda ↗",u:"https://www.imoloriente.pt/condicoes-gerais-de-venda/"}],
+   note:"No per-lot caderneta/edital on Imoloriente — listing + generic conditions; caderneta/CRP via the AE."}
+};
+const DOCKIND={pdf:'<span class="doc">📄 PDFs</span>',rec:'<span class="predio">COURT RECORD</span>',list:'<span class="overcap" style="color:var(--warn);border-color:#5a4c2b;background:#2a2313">LISTING</span>'};
 function docsBlock(l){
-  return `<div class="dsec">Documents on the listing</div>`+
-    `<div class="docsnote">Lot page — <a href="${l.url}" target="_blank" rel="noopener">${l.plat} ↗</a> — publishes the <b>Documentos Anexos</b>: caderneta predial (CPU) · certidão do registo predial (CRP) · edital / condições de venda · fotos · planta.`+
-    (idealShow(l)?` Compare against ${idealLink(l,"Idealista ↗")} (same typology + concelho).`:"")+
-    `<br><b>Set 🔍 Investigate</b> → I fetch &amp; attach every document the listing has, read the CPU, and compute the margin from matching Idealista comps.</div>`;
+  const d=DOCS[l.ref];
+  if(d){
+    const files=d.files.map(f=>`<a class="ideal" style="display:inline-block;border:1px solid var(--line);border-radius:8px;padding:6px 11px;margin:5px 6px 0 0" href="${f.u}" target="_blank" rel="noopener">⤓ ${f.l}</a>`).join("");
+    return `<div class="dsec">Documents ${DOCKIND[d.kind]||''}</div>`+
+      `<div class="docsnote">${d.summary}<br>${files}<br><span style="color:var(--mut2)">${d.note}</span>`+
+      (idealShow(l)?`<br>Compare: ${idealLink(l,"Idealista ↗")}.`:"")+`</div>`;
+  }
+  return `<div class="dsec">Documents</div>`+
+    `<div class="docsnote">Lot page — <a href="${l.url}" target="_blank" rel="noopener">${l.plat} ↗</a>. `+
+    (idealShow(l)?`Compare against ${idealLink(l,"Idealista ↗")} (same typology + concelho). `:"")+
+    `<br><b>Set 🔍 Investigate</b> and say "sync" (or keep this session open) → I pull this lot's documents live in your logged-in browser — caderneta, CRP, edital where the platform hosts them, or the full court record where it doesn't — and hand them back.</div>`;
 }
 
 function render(){
