@@ -1,9 +1,18 @@
 <!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Porto Auction Tracker",
+  "schemaVersion": 1,
+  "description": "One board for everything: Porto + Norte judicial/insolvency property auctions. Three tabs in a single page — Platforms (valued lots with margin, live-countdown calendar, per-lot editor), Off-platform leads (Citius executivos/penhora), and Declarativos (Citius CIRE/inventário, documented). Prices refreshed 07 Aug 2026. Live private site at porto-auction-tracker.pages.dev (Cloudflare Access, m@inbet.io only). Editor marks persist on the live site, not in the artifact preview.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Porto/Norte Auction Tracker</title>
+<title>Porto/Norte Auction Tracker — all in one</title>
 <style>
   :root{
     --bg:#0f1419; --panel:#171e26; --panel2:#1e2833; --line:#2a3644;
@@ -17,9 +26,10 @@
   .wrap{max-width:1300px;margin:0 auto;padding:20px 22px 80px}
   .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;background:rgba(15,20,25,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:9px 18px}
   .topbar .nav{display:flex;gap:6px}
-  .navtab{color:var(--mut);text-decoration:none;font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;border:1px solid transparent}
+  .navtab{color:var(--mut);text-decoration:none;font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;border:1px solid transparent;background:transparent;cursor:pointer;font-family:inherit}
   .navtab:hover{color:var(--ink)}
   .navtab.active{color:var(--ink);background:var(--panel2);border-color:var(--line)}
+  .navtab .tc{color:var(--mut2);font-weight:700;margin-left:5px}
   .topbar .grow{flex:1}
   .synctop{background:var(--accent);border:1px solid var(--accent);color:#04121f;border-radius:8px;cursor:pointer;font-size:13px;padding:7px 16px;font-weight:700}
   .synctop:hover{filter:brightness(1.08)}
@@ -28,12 +38,15 @@
   .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--mut2);
     border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:26px}
   .meta b{color:var(--ink);font-weight:600}
+  .linkbtn{background:none;border:none;color:var(--accent);font-weight:600;cursor:pointer;font-size:inherit;font-family:inherit;padding:0}
+  .linkbtn:hover{text-decoration:underline}
   h2{font-size:13px;text-transform:uppercase;letter-spacing:1.2px;color:var(--mut2);margin:34px 0 14px;font-weight:700}
   .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
   .card .n{font-size:26px;font-weight:700;letter-spacing:-.5px}
   .card .l{font-size:12px;color:var(--mut2);margin-top:2px}
   .card.good .n{color:var(--good)} .card.warnc .n{color:var(--warn)} .card.bad .n{color:var(--bad)}
+  .card.np .n{color:var(--warn)} .card.cf .n{color:var(--dev)} .card.warn .n{color:var(--warn)}
   .deal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden}
   .deal.hit{border-color:#276b4a;background:linear-gradient(180deg,#12251c 0%,var(--panel) 60%)}
   .deal.hit:before{content:"BUY";position:absolute;top:16px;right:18px;background:var(--good);color:#04140c;font-weight:800;font-size:11px;letter-spacing:1px;padding:4px 10px;border-radius:20px}
@@ -54,27 +67,34 @@
   th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
   th{color:var(--mut2);text-transform:uppercase;font-size:10.5px;letter-spacing:.5px;font-weight:700}
   tr:hover td{background:var(--panel)}
-  td a.reflink{color:var(--accent);text-decoration:none;font-weight:600}
+  td a.reflink,td a.cit{color:var(--accent);text-decoration:none;font-weight:600}
   .src{font-size:10px;color:var(--mut2);display:block;font-weight:400}
   .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .valp,.proc{font-variant-numeric:tabular-nums}
+  .proc{color:var(--mut)}
   .pill{font-size:10.5px;padding:2px 7px;border-radius:20px;white-space:nowrap;font-weight:700;display:inline-block}
   .pill.buy{background:var(--good-bg);color:var(--good)} .pill.view{background:var(--warn-bg);color:var(--warn)}
   .pill.dev{background:var(--dev-bg);color:var(--dev)} .pill.no{background:var(--bad-bg);color:var(--bad)}
   .pill.low{background:var(--panel2);color:var(--mut2)} .pill.dismiss{background:var(--panel2);color:var(--mut2)}
+  .pill.cf{background:var(--dev-bg);color:var(--dev)} .pill.np{background:var(--warn-bg);color:var(--warn)}
+  .pill.cire{background:var(--dev-bg);color:var(--dev)} .pill.inv{background:var(--warn-bg);color:var(--warn)}
   .newbadge{font-size:9px;font-weight:800;letter-spacing:.5px;color:var(--good);border:1px solid #2b5a41;border-radius:5px;padding:1px 5px;background:var(--good-bg);white-space:nowrap}
   .overcap{font-size:9px;font-weight:800;letter-spacing:.4px;color:var(--bad);border:1px solid #5a2b2b;border-radius:5px;padding:1px 5px;background:var(--bad-bg);white-space:nowrap}
   .predio{font-size:9px;font-weight:800;letter-spacing:.4px;color:var(--dev);border:1px solid #24456b;border-radius:5px;padding:1px 5px;background:var(--dev-bg);white-space:nowrap}
+  .metro{font-size:9px;font-weight:800;letter-spacing:.4px;color:var(--good);border:1px solid #2b5a41;border-radius:5px;padding:1px 5px;background:var(--good-bg);white-space:nowrap}
+  .doc{font-size:10px;font-weight:800;letter-spacing:.4px;color:var(--good);border:1px solid #2b5a41;border-radius:5px;padding:1px 6px;background:var(--good-bg);white-space:nowrap}
+  .leadwarn{color:var(--bad);font-size:11px}
+  .st{font-size:11px}
+  .st.skip{color:var(--bad)} .st.watch{color:var(--warn)} .st.unread{color:var(--mut2)}
   tr.isnew td:first-child{border-left:3px solid var(--good)}
   tr.dimmed td{opacity:.5}
   .mdate{font-weight:700;white-space:nowrap}
-  /* comparator cell */
   .cmp{display:flex;flex-direction:column;gap:1px;white-space:nowrap}
   .cmp-mkt{font-variant-numeric:tabular-nums;color:var(--mut)}
   .cmp-m{font-weight:700;font-size:11.5px}
   .cmp-m.g{color:var(--good)} .cmp-m.w{color:var(--warn)} .cmp-m.r{color:var(--bad)}
   .cmp-cf{font-size:10px;margin-left:3px;opacity:.8;cursor:help}
   .cmp-na{color:var(--mut2);cursor:help}
-  /* user status */
   .ustat{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap;display:inline-block}
   .ustat.watch{background:var(--warn-bg);color:var(--warn)} .ustat.invest{background:var(--dev-bg);color:var(--dev)}
   .ustat.buy{background:var(--good-bg);color:var(--good)} .ustat.dismiss{background:var(--panel2);color:var(--mut2)}
@@ -108,21 +128,23 @@
   .cd.urgent{background:var(--bad-bg);color:var(--bad)} .cd.soon{background:var(--warn-bg);color:var(--warn)} .cd.ended{background:var(--panel2);color:var(--mut2)}
   .calday.ended{opacity:.5} .callot.ended a{text-decoration:line-through;color:var(--mut2)} .callot.dimmed{opacity:.5}
   .callegend{font-size:11px;color:var(--mut2);padding:9px 16px 5px;display:flex;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:2px}
-  /* toolbar */
   .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12.5px}
   .toolbar label{display:flex;align-items:center;gap:7px;cursor:pointer;color:var(--ink)}
   .toolbar label span{color:var(--mut2)}
-  .toolbar .tb-count{color:var(--mut2)}
-  .toolbar .spacer{flex:1}
+  .toolbar .tb-count,.toolbar .cnt{color:var(--mut2)}
+  .toolbar .spacer,.spacer{flex:1}
+  .chip{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:20px;cursor:pointer;font-size:12px;padding:5px 12px;font-weight:600}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#04121f}
+  select{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:12.5px}
   .tbtn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;cursor:pointer;font-size:12.5px;padding:6px 12px;font-weight:600}
   .tbtn:hover{border-color:var(--accent)}
   .tbtn.primary{background:var(--accent);border-color:var(--accent);color:#04121f}
-  /* dialog */
   dialog{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:0;max-width:560px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.6)}
   dialog::backdrop{background:rgba(4,8,12,.7)}
   .dlg{padding:20px 22px}
   .dlg h3{margin:0 0 2px;font-size:17px}
   .dlg .dloc{color:var(--mut2);font-size:12.5px;margin-bottom:16px}
+  .dlg p{font-size:13px;color:#c4cfd9}
   .dlg .dsec{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--mut2);font-weight:700;margin:14px 0 8px}
   .statrow{display:flex;flex-wrap:wrap;gap:8px}
   .statopt{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:13px;font-weight:600}
@@ -139,35 +161,53 @@
   .ideal:hover{text-decoration:underline}
   .docsnote{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#c4cfd9;margin-top:6px}
   .docsnote a{color:var(--accent);text-decoration:none;font-weight:600}
+  section.board{display:none}
+  section.board.active{display:block}
   @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.kpis{gap:16px}.deal h3{padding-right:0}
-    .tablewrap{overflow-x:auto}table{font-size:11.5px;min-width:860px}}
+    .tablewrap,.tw{overflow-x:auto}table{font-size:11.5px;min-width:860px}}
 </style>
 </head>
 <body>
 <div class="topbar">
   <div class="nav">
-    <a class="navtab active" href="./index.html">Platforms</a>
-    <a class="navtab" href="./leads.html">Executivos · penhora</a>
-    <a class="navtab" href="./declarativos.html">Declarativos · documented</a>
+    <button class="navtab active" data-board="platforms">Platforms<span class="tc">30</span></button>
+    <button class="navtab" data-board="leads">Executivos · penhora<span class="tc">49</span></button>
+    <button class="navtab" data-board="dec">Declarativos<span class="tc">29</span></button>
   </div>
   <div class="grow"></div>
   <button class="synctop" id="synctop">⟳ Sync</button>
 </div>
+
+<!-- ============================ PLATFORMS ============================ -->
+<section class="board active" id="board-platforms">
 <div class="wrap">
   <h1>Porto / Norte Auction Tracker</h1>
-  <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin.</div>
+  <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin. <b>Everything now lives on one page</b> — use the tabs above for the two Citius lead registers.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">05 Aug 2026 · multi-platform sweep (LeilOn · Imoloriente · OneFix · Leilosoc)</span></span>
-    <span><a href="./leads.html" style="color:var(--accent);text-decoration:none;font-weight:600">🔒 Off-platform leads (closing this month) →</a></span>
+    <span><b>Updated:</b> <span id="stamp">07 Aug 2026 · manual sync + price refresh</span></span>
+    <span><b>Price check (07 Aug):</b> refreshed all Investigate lots — see the highlighted rows</span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
-    <span><b>Platforms swept (8):</b> e-leilões · Leilosoc · LeilOn · Imoloriente · OneFix · Avalibérica · Bidleiloeira · INLEX · <span style="color:var(--mut2)">VLeilões (offline) · Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
+    <span><b>Platforms (11):</b> e-leilões · Leilosoc · LeilOn · Avalibérica · Bidleiloeira · Imoloriente · OneFix · INLEX · VLeilões · <span style="color:var(--mut2)">Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
   </div>
 
   <div class="cards">
     <div class="card good"><div class="n">1</div><div class="l">Verified buy</div></div>
     <div class="card warnc"><div class="n" id="c-view">–</div><div class="l">Worth viewing</div></div>
-    <div class="card"><div class="n" id="c-new">–</div><div class="l">New since last update</div></div>
+    <div class="card"><div class="n" id="c-new">–</div><div class="l">New / refreshed</div></div>
     <div class="card"><div class="n" id="c-total">–</div><div class="l">Lots tracked</div></div>
+  </div>
+
+  <h2>Closing calendar — live countdown</h2>
+  <div class="calwrap">
+    <div id="calendar"></div>
+    <div class="callegend">
+      <span>⏱ live countdown</span>
+      <span><span class="newbadge">NEW</span> added / price-refreshed</span>
+      <span><span class="pill buy" style="padding:1px 6px">BUY</span></span>
+      <span><span class="pill view" style="padding:1px 6px">VIEW</span></span>
+      <span style="color:var(--good)">−% under market</span>
+      <span style="color:var(--bad)">● &lt; 48 h</span>
+    </div>
   </div>
 
   <h2>Flagged — full analysis</h2>
@@ -176,13 +216,12 @@
     <h3>Fração T3 + garagem — Vila do Conde (centro)</h3>
     <div class="loc">Rua 5 de Outubro 977, 3.º · Fração "M" · <a href="https://www.e-leiloes.pt/evento/LO1500072026" target="_blank" rel="noopener">e-leilões ↗</a> · leilão eletrónico (insolvência) · <b>ends 26 Aug 11:00</b></div>
     <div class="kpis">
-      <div class="kpi"><div class="v">€154,545</div><div class="k">Current bid — live (base €130k)</div></div>
-      <div class="kpi"><div class="v">€295,000</div><div class="k">Est. market (Idealista comps)</div></div>
-      <div class="kpi"><div class="v g">48%</div><div class="k">Below market</div></div>
+      <div class="kpi"><div class="v">€154,545</div><div class="k">Current bid — live 07 Aug (base €130k)</div></div>
+      <div class="kpi"><div class="v">€261,900</div><div class="k">Est. market (incl. garage)</div></div>
+      <div class="kpi"><div class="v g">41%</div><div class="k">Below market</div></div>
       <div class="kpi"><div class="v g">≤ €190k</div><div class="k">Your bid cap</div></div>
     </div>
-    <p><b>Market value — freguesia comps, size-matched.</b> In freguesia <b>Vila do Conde</b> (not the wider concelho), the size-matched T3 set — 6 listings of <b>88–122 m²</b>, the same bracket as this 102 m² fração — sits at a median asking of <b>~€320k</b>. Net of the ~8% asking-to-sale gap and adding the 15.5 m² garage, a realistic market ≈ <b>€295k</b>. Against the live bid of €154,545 that's <b>~48% under</b>. Comparing like typology and like size, not a blended €/m², is what holds this figure up. <a class="ideal" href="https://www.idealista.pt/comprar-casas/vila-do-conde/vila-do-conde/com-t3/" target="_blank" rel="noopener">see the comps ↗</a></p>
-    <p><b>Docs verified (CPU + CRP).</b> T3, 102 m² + 15.5 m² garage; VPT €106,415; mortgage cancels on the insolvency sale; lease terminated → <b>delivers vacant</b>. Clear buy under ~€190k; a bidder is already active at €154,545.</p>
+    <p><b>Docs verified (CPU + CRP).</b> T3, 102 m² + 15.5 m² garage; VPT €106,415; mortgage cancels on the insolvency sale; lease terminated → <b>delivers vacant</b>. Clear buy under ~€190k; a bidder is already active at €154,545 (unchanged on today's check).</p>
     <p><span class="tag ok">docs verified</span><span class="tag ok">vacant</span><span class="tag ok">charges cancel</span><span class="tag ok">garage</span><span class="tag risk">bid rising — cap ≤€190k</span></p>
   </div>
 
@@ -192,27 +231,25 @@
     <div class="kpis">
       <div class="kpi"><div class="v">€70,530</div><div class="k">Valor mínimo (base €82,976)</div></div>
       <div class="kpi"><div class="v">~€77,000</div><div class="k">All-in at min (fees+IMT)</div></div>
-      <div class="kpi"><div class="v">~€145,000</div><div class="k">Est. market — habitable</div></div>
-      <div class="kpi"><div class="v w">~47%</div><div class="k">Below market</div></div>
+      <div class="kpi"><div class="v">~€135,000</div><div class="k">Est. market — habitable</div></div>
+      <div class="kpi"><div class="v w">~43%</div><div class="k">Below market</div></div>
       <div class="kpi"><div class="v w">≤ €80k</div><div class="k">Suggested cap</div></div>
     </div>
-    <p><b>Market value — actual freguesia comps.</b> Valued in the property's own freguesia, <b>Trouxemil e Torre de Vilela</b> (not Coimbra concelho, whose €/m² is dominated by the university zone). There the median asking is <b>€1,372/m²</b>, and the size-matched moradias — ~<b>113 m²</b>, the bracket of this 108 m² ABC house — ask around <b>€155k</b>. Net of the ~8% asking-to-sale gap ≈ <b>€145k</b> habitable. Note the €/m² is non-linear here: small 75 m² units in the same freguesia run €2,900–3,000/m², roughly double the rate of the full-size houses — which is exactly why a size-matched comp, not a €/m² blend, is the right basis. <a class="ideal" href="https://www.idealista.pt/comprar-casas/coimbra/trouxemil-e-torre-de-vilela/" target="_blank" rel="noopener">see the comps ↗</a></p>
-    <p><b>Docs verified.</b> 108 m² ABC / 54 m² privativa, 6-room 2-storey + garage; VPT €34,010. <b>Insolvency → charges cancel; no tenant registered.</b> Margin real only if works are light (~€30k) — a gut job erases it. <b>Cap ≤ €80k; ideally near the €70.5k floor.</b></p>
+    <p><b>Docs verified.</b> 108 m² ABC / 54 m² privativa, 6-room 2-storey + garage; VPT €34,010. <b>Insolvency → charges cancel; no tenant registered.</b> Location oversold in the listing (peri-urban Adémia, not central). Margin real only if works are light (~€30k) — a gut job erases it. <b>Cap ≤ €80k; ideally near the €70.5k floor.</b></p>
     <p><span class="tag ok">charges cancel</span><span class="tag ok">no tenant</span><span class="tag risk">condition unknown</span><span class="tag risk">view before bidding</span></p>
   </div>
 
   <div class="deal view">
     <h3>Income building — 3 dwellings + commercial · Castêlo da Maia</h3>
-    <div class="loc">Rua da Bajouca 859 · prédio em propriedade total · <a href="https://www.e-leiloes.pt/evento/NP1239052026" target="_blank" rel="noopener">e-leilões ↗</a> · negociação particular (inventário) · <b>ends 18 Aug · 0 proposals</b></div>
+    <div class="loc">Rua da Bajouca 859 · prédio em propriedade total · <a href="https://www.e-leiloes.pt/evento/NP1239052026" target="_blank" rel="noopener">e-leilões ↗</a> · negociação particular (inventário) · <b>ends 18 Aug · 0 proposals (confirmed 07 Aug)</b></div>
     <div class="kpis">
       <div class="kpi"><div class="v">€224,400</div><div class="k">Valor mínimo (base €264k)</div></div>
-      <div class="kpi"><div class="v">~€390k</div><div class="k">Vacant sum-of-parts</div></div>
-      <div class="kpi"><div class="v">~€155k</div><div class="k">Tenanted-yield floor</div></div>
-      <div class="kpi"><div class="v">€650/mo</div><div class="k">rent — 3 old leases</div></div>
+      <div class="kpi"><div class="v">220 m²</div><div class="k">built · on 885 m² land</div></div>
+      <div class="kpi"><div class="v w">≈ market</div><div class="k">as tenanted stock</div></div>
+      <div class="kpi"><div class="v">€650/mo</div><div class="k">rent (3 flats)</div></div>
     </div>
-    <p><b>Market value — freguesia comps, sum-of-parts.</b> Valued in freguesia <b>Castêlo da Maia</b>: 124 listings, median <b>€2,541/m²</b>, and small units of the size of these flats (~49 m²) trade at <b>€90–150k</b> each. The three dwellings (~170 m² of the 220 m² built) vacant ≈ <b>3 × ~€120–130k</b>, plus the 50 m² ex-talho commercial and 750 m² of uncovered land → a vacant sum-of-parts around <b>€390k</b>. But that is the ceiling: the flats carry <b>three old leases</b> totalling just €650/mo (~€217 each), and a Portuguese old lease is near-impossible to end — capitalised at ~5% that's only a <b>~€155k tenanted floor</b>. The valor mínimo of €224,400 sits between the two, so the play is real <b>only if</b> tenants can be reached out (buy-outs / vacancy) or the land + commercial carry it. <a class="ideal" href="https://www.idealista.pt/comprar-casas/maia/castelo-da-maia/" target="_blank" rel="noopener">see the comps ↗</a></p>
-    <p><b>Docs verified — clean title (no mortgages/penhoras).</b> 3 dwellings + 50 m² ex-talho on 885 m² (750 m² uncovered). Sealed proposals (negociação particular) — your offer must reflect your own limit, and I'd anchor it to the tenanted floor, not the vacant ceiling, unless you have a route to vacancy.</p>
-    <p><span class="tag ok">clean title</span><span class="tag ok">no bids</span><span class="tag ok">prédio — exempt from €500k cap</span><span class="tag risk">3 sitting tenants — old leases</span><span class="tag risk">value hinges on vacancy route</span></p>
+    <p><b>Docs verified — clean title (no mortgages/penhoras).</b> 3 dwellings + 50 m² ex-talho on 885 m² (750 m² uncovered). Sum-of-parts ≈ minimum as tenanted; upside is the land, the commercial unit and rent reversion (3 cheap old leases). Sealed proposals — still 0 on today's check; your offer must reflect your own limit.</p>
+    <p><span class="tag ok">clean title</span><span class="tag ok">no bids</span><span class="tag ok">prédio — exempt from €500k cap</span><span class="tag risk">3 sitting tenants</span></p>
   </div>
 
   <h2>All lots — by closing date</h2>
@@ -232,7 +269,7 @@
   </div>
 
   <div class="note">
-    <b>Mark &amp; annotate any lot.</b> Click <span class="editbtn">✎</span> on a row to set your own status — <b>👁 Watching · 🔍 Investigate · ✓ Bought · ✕ Dismiss</b> — and write your reasoning. It saves in your browser. Setting a lot to <b>🔍 Investigate</b> auto-opens the <b>⟳ Sync</b> request; sending it to me (or just saying “sync”) is what triggers me to pull that lot's documents — edital, caderneta predial, CRP, brochure — value it, re-sweep Citius for anything new closing this month, and redeploy. <b>Sync</b> and <b>Export</b> both hand me your marks; a static page can't call me on its own, so this is how the trigger reaches me.
+    <b>Mark &amp; annotate any lot.</b> Click <span class="editbtn">✎</span> on a row to set your own status — <b>👁 Watching · 🔍 Investigate · ✓ Bought · ✕ Dismiss</b> — and write your reasoning. It saves in your browser. Setting a lot to <b>🔍 Investigate</b> auto-opens the <b>⟳ Sync</b> request; sending it to me (or just saying "sync") is what triggers me to pull that lot's documents — edital, caderneta predial, CRP, brochure — value it, re-sweep Citius for anything new closing this month, and redeploy. <b>Sync</b> and <b>Export</b> both hand me your marks; a static page can't call me on its own, so this is how the trigger reaches me.
   </div>
   <div class="note">
     <b>Comparator.</b> Each valued lot shows an estimated market value for the <b>same typology in that location</b> and the margin below it. <b>✓ = verified from documents</b> (I read the caderneta/CRP); <b>~ = rough typology estimate</b> (asking-price band, needs a document check). A dash means the comparison isn't meaningful for that asset (usufruct-only, a minority inheritance share, a surface right, a lease-encumbered unit, or a value still TBC).
@@ -243,11 +280,98 @@
 
   <div class="foot">Figures are estimates from asking prices &amp; live bids, not appraisals — verify and view before bidding. Never bid, register or pay through this tool.</div>
 </div>
+</section>
+
+<!-- ============================ LEADS (executivos) ============================ -->
+<section class="board" id="board-leads">
+<div class="wrap">
+  <h1>Executivos (penhora) — off-platform, closing this month</h1>
+  <div class="sub">Urban penhora sales in Porto · Braga · Aveiro · Coimbra · Viana do Castelo, sold by <b>sealed bid</b> or <b>private negotiation</b> — Citius is the only public listing. Swept from the executive register, sale date 1–31 Aug 2026. <b>No documents on the register:</b> valor base is on the list; área, registo &amp; matricial are in "ver mais"; the edital + agente-de-execução contact come from the <b>court</b> (per lot). For lots that come <i>with</i> the document + administrador contact, see the <button class="linkbtn" data-goto="dec">Declarativos</button> tab.</div>
+
+  <div class="cards">
+    <div class="card good"><div class="n" id="ld-c-total">–</div><div class="l">Urban lots closing August</div></div>
+    <div class="card np"><div class="n" id="ld-c-np">–</div><div class="l">Negociação particular</div></div>
+    <div class="card cf"><div class="n" id="ld-c-cf">–</div><div class="l">Proposta em carta fechada</div></div>
+    <div class="card"><div class="n" id="ld-c-metro">–</div><div class="l">Porto-metro concelhos</div></div>
+  </div>
+
+  <div class="note">
+    <b>How these work.</b> <b>Carta fechada</b> — you hand a sealed written proposal to the agente de execução by the deadline; all are opened together, highest wins. <b>Negociação particular</b> — the AE sells by direct negotiation; you contact them and make an offer. Neither runs on e-leilões, so there are far fewer bidders. To act: I open the lot's Citius detail for the <b>valor base, the deadline and the AE's name + email</b>, then value it against comparables and it graduates into the main tracker.
+  </div>
+
+  <div class="toolbar">
+    <label style="color:var(--mut2)">Modalidade:</label>
+    <span class="chip on" data-mod="all">All</span>
+    <span class="chip" data-mod="NP">Neg. particular</span>
+    <span class="chip" data-mod="CF">Carta fechada</span>
+    <span class="chip" data-metro="1">Porto metro only</span>
+    <label style="margin-left:8px;color:var(--mut2)">Concelho:</label>
+    <select id="ld-concelho"><option value="">All</option></select>
+    <div class="spacer"></div>
+    <span class="cnt" id="ld-cnt"></span>
+  </div>
+
+  <div class="tw">
+  <table>
+    <thead><tr>
+      <th data-k="conc">Concelho</th><th data-k="type">Type</th><th>Valor base</th><th data-k="mod">Modalidade</th>
+      <th data-k="loc">Location</th><th data-k="proc">Processo</th><th>Flags</th>
+    </tr></thead>
+    <tbody id="ld-tb"></tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <b>How to find one on Citius.</b> The executivos page has <b>no processo search box</b> — you must select the <b>court shown under each processo</b>, then set <b>Tipo de Bem: Imóvel</b> and <b>Estado: Em venda</b>, and locate the processo in the list. Two gotchas: the <b>court ≠ the property's location</b> (a lot at a Braga court is actually in <b>Arco da Calheta, Madeira</b> — flagged, excluded from Porto-metro), and the court is the <b>comarca</b>, not the town you might expect (e.g. <b>Anadia is Comarca de Aveiro, not Braga</b>). Easiest path: hit <b>Sync</b> and I pull each lot's valor + área + contact onto this page so you don't have to search at all.
+  </div>
+  <div class="note">
+    <b>Valores &amp; documents.</b> <b>Valor base</b> and <b>espécie</b> fill in on the next <b>⟳ Sync</b> (I re-read each lot's Citius detail). <b>Área, VPT and the agente-de-execução contact</b> come from that same detail; <b>ónus / encargos and the owed amount</b> aren't on the public register — they're in the CRP / execution file, which is the per-lot document fetch. Citius has no per-lot URL, so each <b>Processo ↗</b> opens the executivos search for you to look it up.
+  </div>
+  <div class="foot">Source: Portal Citius — Venda de Bens Penhorados em Processos Executivos. Figures/dates are confirmed per-lot on the Citius detail before any action. This tool never bids, submits a proposal, or pays.</div>
+</div>
+</section>
+
+<!-- ============================ DECLARATIVOS ============================ -->
+<section class="board" id="board-dec">
+<div class="wrap">
+  <h1>Declarativos — documented lots</h1>
+  <div class="sub">Insolvency (CIRE) / inventário / divisão / herança sales in your 5 districts, last 30 days. <b>Unlike the executivos register, each of these publishes a downloadable anúncio</b> — property, valor, deadline, modalidade, and the <b>administrador's full contact</b>. The catch: CIRE mixes real estate with business assets/movables, and many route to e-leilões/Leilosoc (visible) — so each needs one read to confirm it's an <b>off-platform urban</b> keeper.</div>
+
+  <div class="cards">
+    <div class="card"><div class="n" id="dc-c-total">–</div><div class="l">Documented processos (30d)</div></div>
+    <div class="card good"><div class="n">has anúncio</div><div class="l">every one</div></div>
+    <div class="card warn"><div class="n" id="dc-c-read">–</div><div class="l">Read so far</div></div>
+    <div class="card"><div class="n" id="dc-c-porto">–</div><div class="l">Porto district</div></div>
+  </div>
+
+  <div class="note">
+    <b>How to read this.</b> Each row is a court process with an anúncio you can see. <b>📄 anúncio</b> = document available. The <b>Processo ↗</b> opens the Citius declarativos search — pick the court (comarca shown), then "Ver Mais" on the row to view/download the anúncio. Or hit <b>Sync</b> and I'll pull the anúncio + contact + deadline onto this page for each keeper and attach the document to you. <b>Espécie:</b> CIRE = insolvency liquidation · Inventário = estate/probate. <b>Note:</b> the O. Azeméis moradia (1198/26.3T8OAZ-C) is now valued live on the <button class="linkbtn" data-goto="platforms">Platforms</button> tab.
+  </div>
+
+  <div class="toolbar">
+    <label style="color:var(--mut2)">District:</label>
+    <select id="dc-district"><option value="">All</option></select>
+    <label style="color:var(--mut2)">Show:</label>
+    <select id="dc-filt"><option value="">All</option><option value="unread">Unread only</option><option value="read">Read only</option></select>
+    <div class="spacer"></div>
+    <span class="cnt" id="dc-cnt"></span>
+  </div>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>District</th><th>Processo</th><th>Espécie</th><th>Published</th><th>Bens</th><th>Doc</th><th>Finding</th></tr></thead>
+    <tbody id="dc-tb"></tbody>
+  </table>
+  </div>
+
+  <div class="foot">Source: Portal Citius — Venda de Bens em Processos Declarativos (últimos 30 dias). Findings are from reading each anúncio; unread rows have the document available but not yet classified. This tool never bids, submits a proposal, or pays.</div>
+</div>
+</section>
 
 <dialog id="editor"><div class="dlg" id="editor-body"></div></dialog>
 <dialog id="syncdlg"><div class="dlg">
   <h3>⟳ Sync request</h3>
-  <div class="dloc">A static page can't run the scrape itself — this bundles what you want done. <b>Send it to me (or just say “sync”)</b> and I'll: fetch documents + value every <b>🔍 Investigate</b> lot, apply your status changes, re-sweep Citius for new lots closing this month, and redeploy this site.</div>
+  <div class="dloc">A static page can't run the scrape itself — this bundles what you want done. <b>Send it to me (or just say "sync")</b> and I'll: fetch documents + value every <b>🔍 Investigate</b> lot, apply your status changes, re-sweep Citius for new lots closing this month, and redeploy this site.</div>
   <textarea class="exp" id="sync-area" readonly></textarea>
   <div class="dlgfoot">
     <button class="tbtn" id="sync-copy">Copy</button>
@@ -268,7 +392,18 @@
 </div></dialog>
 
 <script>
-// ---------- Single source of truth ----------
+// ================= TAB SWITCHER =================
+function showBoard(name){
+  document.querySelectorAll("section.board").forEach(s=>s.classList.toggle("active",s.id==="board-"+name));
+  document.querySelectorAll(".navtab").forEach(b=>b.classList.toggle("active",b.dataset.board===name));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll(".navtab").forEach(b=>b.onclick=()=>showBoard(b.dataset.board));
+document.querySelectorAll(".linkbtn[data-goto]").forEach(b=>b.onclick=()=>showBoard(b.dataset.goto));
+</script>
+
+<script>
+// ================= PLATFORMS BOARD =================
 // end = ISO (Leilosoc = UTC 'Z'; e-leilões = local +01:00); null = no fixed close.
 // price = realistic acquisition floor (reserve/min, else base, else live bid). mkt = est market for the SAME typology/location.
 // conf: 'v' verified from docs · 'r' rough typology estimate · null = comp not meaningful. predio: exempt from €500k cap.
@@ -279,50 +414,38 @@ const LOTS=[
   {ref:"NP1229942026",plat:"e-leilões",type:"Moradia — ruin/fixer",loc:"Baião — Gestaçô",dist:"Porto",val:"bid €37,000 · mín €62.4k",price:62400,mkt:null,cb:"Ruin — needs a full rebuild; a habitable comp isn't meaningful until works are scoped.",end:"2026-08-06T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1229942026",vc:"low",vl:"RURAL FIXER"},
   {ref:"NP1225122026",plat:"e-leilões",type:"Moradia T3 + pool",loc:"Gaia — Canidelo",dist:"Porto",val:"bid €500k · mín €734.4k",price:734400,mkt:null,cb:"Occupied and above the €500k cap.",end:"2026-08-06T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1225122026",vc:"no",vl:"NO — occupied"},
   {ref:"DMI-1031/2026",plat:"Leilosoc",type:"Moradia T4 — approved project",loc:"Porto — Campo Alegre",dist:"Porto",val:"base €350k",price:350000,mkt:null,cb:"Dismissed.",end:"2026-08-14T16:59:59Z",url:"https://leilosoc.com/lot/43807/171076",vc:"dismiss",vl:"DISMISSED"},
-  {ref:"9381/15.0T8CBR",plat:"Leilosoc",type:"Moradia (V2/T3)",loc:"Coimbra — Adémia, Trouxemil",dist:"Coimbra",val:"€56k open · 0 bids · mín €70.5k",price:70530,mkt:145000,conf:"v",cb:"Idealista freguesia Trouxemil e Torre de Vilela: median €1,372/m², size-matched ~113 m² moradias ask ~€155k → ~€145k net. €/m² non-linear (small 75 m² units €2,900–3,000/m²). Margin holds only with light works.",end:"2026-08-14T15:59:59Z",url:"https://leilosoc.com/lot/43786/170938",vc:"view",vl:"VIEW −47%"},
+  {ref:"9381/15.0T8CBR",plat:"Leilosoc",type:"Moradia (V2/T3)",loc:"Coimbra — Adémia, Trouxemil",dist:"Coimbra",val:"€56k open · 0 bids · mín €70.5k",price:70530,mkt:135000,conf:"v",cb:"Verified: habitable V2/T3, 108 m² ABC; peri-urban Adémia comp. Margin holds only with light works.",end:"2026-08-14T15:59:59Z",url:"https://leilosoc.com/lot/43786/170938",vc:"view",vl:"VIEW −48%"},
   {ref:"NP1237892026",plat:"e-leilões",type:"Moradia T3",loc:"Felgueiras — Jugueiros",dist:"Porto",val:"bid €141,500 · mín €229.5k",price:229500,mkt:185000,conf:"r",cb:"Rural Felgueiras T3 — the €229.5k reserve sits above local resale, so no margin at the floor.",end:"2026-08-18T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1237892026",vc:"low",vl:"LOW — over reserve"},
   {ref:"NP1225572026",plat:"e-leilões",type:"Armazém / indústria",loc:"Matosinhos — S. Mamede Infesta",dist:"Porto",val:"floor €651k",price:651000,mkt:null,cb:"Industrial and above the €500k cap.",end:"2026-08-18T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1225572026",vc:"low",vl:"COMMERCIAL"},
-  {ref:"NP1239052026",plat:"e-leilões",type:"Prédio — 3 hab + comércio",loc:"Maia — Castêlo da Maia",dist:"Porto",val:"mín €224,400 · 0 propostas",price:224400,mkt:260000,conf:"v",predio:true,cb:"Idealista freguesia Castêlo da Maia: median €2,541/m², small units €90–150k. Vacant sum-of-parts ~€390k, but 3 old leases (€650/mo total) cap the tenanted value at ~€155k. Play works only with a vacancy route.",end:"2026-08-18T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1239052026",vc:"view",vl:"VIEW"},
+  {ref:"NP1239052026",plat:"e-leilões",type:"Prédio — 3 hab + comércio",loc:"Maia — Castêlo da Maia",dist:"Porto",val:"mín €224,400 · 0 propostas (07 Aug)",price:224400,mkt:260000,conf:"v",predio:true,cb:"Verified: sum-of-parts ≈ minimum as tenanted; upside is land, the commercial unit and rent reversion. Confirmed 07 Aug: still 0 proposals, base €264k.",end:"2026-08-18T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1239052026",vc:"view",vl:"VIEW"},
   {ref:"NP1215202026",plat:"e-leilões",type:"Quinta — restaurante + 3 ha",loc:"Baião — Loivos do Monte",dist:"Porto",val:"mín €269.3k · 0 bids",price:269300,mkt:null,cb:"Hospitality asset on 3 ha — bespoke; a residential comp doesn't apply.",end:"2026-08-19T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1215202026",vc:"low",vl:"HOSPITALITY"},
   {ref:"NP1216082026",plat:"e-leilões",type:"Oficina / prédio urbano",loc:"Valongo — Campo e Sobrado",dist:"Porto",val:"bid €166,000 · 20yr lease",price:166000,mkt:null,cb:"20-year lease in place — income yes, but encumbered; vacant-possession comp doesn't apply.",end:"2026-08-25T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1216082026",vc:"no",vl:"AVOID — lease"},
   {ref:"NP1234062026",plat:"e-leilões",type:"Quinta — casa + 2 rústicos",loc:"Baião — Mesquinhata",dist:"Porto",val:"mín €165.8k · embargos",price:165800,mkt:null,cb:"Embargos on title — value uncertain until the encumbrance clears.",end:"2026-08-25T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1234062026",vc:"no",vl:"EMBARGOS"},
   {ref:"NP1235312026",plat:"e-leilões",type:"Moradia — usufruto só",loc:"Gondomar — Fânzeres",dist:"Porto",val:"mín €14.9k",price:14900,mkt:null,cb:"Only the usufruct is sold — not the property; no ownership comp.",end:"2026-08-25T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1235312026",vc:"no",vl:"SKIP — usufruct"},
-  {ref:"LO1500072026",plat:"e-leilões",type:"Fração T3 + garagem",loc:"Vila do Conde — centro",dist:"Porto",val:"bid €154,545 · mín €110.5k",price:154545,mkt:295000,conf:"v",cb:"Idealista freguesia Vila do Conde: 6 size-matched T3 (88–122 m²), median asking ~€320k → ~€295k net incl. garage. Delivers vacant.",end:"2026-08-26T11:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1500072026",vc:"buy",vl:"BUY ≤€190k"},
-  {ref:"6172/21.3T8GMR",plat:"VLeilões",type:"Quinhão hered. — ≈17.5% of a 6-fogo building",loc:"Porto — Campanhã",dist:"Porto",val:"mín €69,001",price:69001,mkt:null,cb:"An ≈17.5% undivided inheritance share — not the building; no whole-asset comp.",end:"2026-09-01T12:00:00+01:00",url:"https://www.vleiloes.com/?page=leilao&leilao=809&venda=351&tipo=2",vc:"no",vl:"SKIP — minority share",isnew:true},
-  {ref:"escritório",plat:"LeilOn",type:"Escritório (fração 72,5 m²)",loc:"Porto — Santo Ildefonso (Baixa)",dist:"Porto",val:"leilão eletr. · base/mín €121,257 · 0 lic.",price:121257,mkt:175000,conf:"r",cb:"Idealista Porto office comps: 30 listings, median €2,909/m². Central Santo Ildefonso (Baixa) mid-band ~€2,600/m² × 72.5 m² ≈ €188k asking → ~€175k net. Entry €1,672/m² = ~31% under. Commercial/office — verify condition + tenancy from the lot's DOCUMENTAÇÃO tab.",end:"2026-09-11T18:00:00+01:00",url:"https://www.leilon.pt/pt/auction/lot/id/1983",vc:"view",vl:"VIEW −31%",isnew:true},
+  {ref:"LO1500072026",plat:"e-leilões",type:"Fração T3 + garagem",loc:"Vila do Conde — centro",dist:"Porto",val:"bid €154,545 · mín €110.5k (07 Aug)",price:154545,mkt:261900,conf:"v",cb:"Verified: T3 102 m² + 15.5 m² garage, delivers vacant; central Vila do Conde comp. Live bid unchanged on 07 Aug.",end:"2026-08-26T11:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1500072026",vc:"buy",vl:"BUY ≤€190k"},
+  {ref:"6172/21.3T8GMR",plat:"VLeilões",type:"Quinhão hered. — ≈17.5% of a 6-fogo building",loc:"Porto — Campanhã",dist:"Porto",val:"mín €69,001",price:69001,mkt:null,cb:"An ≈17.5% undivided inheritance share — not the building; no whole-asset comp.",end:"2026-09-01T12:00:00+01:00",url:"https://www.vleiloes.com/?page=leilao&leilao=809&venda=351&tipo=2",vc:"no",vl:"SKIP — minority share"},
+  {ref:"escritório",plat:"LeilOn",type:"Prédio urbano — escritório",loc:"Porto",dist:"Porto",val:"base €121,257",price:121257,mkt:150000,conf:"r",cb:"Porto office resale band — rough; confirm area and floor.",end:"2026-09-11T18:00:00+01:00",url:"https://www.leilon.pt/pt/auction/lot/id/1983",vc:"low",vl:"OFFICE"},
   // ---------- AVEIRO ----------
   {ref:"3482/19.3T8VNG",plat:"Leilosoc",type:"Terreno constr. — direito de superfície",loc:"Oliveira de Azeméis",dist:"Aveiro",val:"base €657k",price:657000,mkt:null,cb:"Surface right (not freehold) and above the €500k cap.",end:"2026-08-12T16:59:59Z",url:"https://leilosoc.com/lot/43750/170491",vc:"no",vl:"SURFACE RIGHT"},
-  {ref:"2861/15.0T8AVR",plat:"Leilosoc",type:"Moradia 2 pisos — ruína + 1.200 m² terreno",loc:"Ovar — Esmoriz",dist:"Aveiro",val:"leilão eletr. · base €111,507 · abre €76,000",price:76000,mkt:null,cb:"Two-storey house in ruin: 313 m² construction (157 m² footprint) + a contiguous 1,200 m² cultivation plot, in coastal Esmoriz. A rebuild/development play — recovered value on 313 m² is substantial but a habitable comp isn't meaningful until the rebuild is scoped. Opening €76k for the footprint + land is cheap; view and cost the build first.",end:"2026-08-26T17:00:00+01:00",url:"https://leilosoc.com/lot/44107/171577",vc:"low",vl:"RUIN — dev"},
-  {ref:"69/25.5T8VFX",plat:"Leilosoc",type:"Moradia 1 piso (125 m²)",loc:"Albergaria-a-Velha — S. João de Loure",dist:"Aveiro",val:"leilão eletr. · base €62,500 · abre €42,500",price:42500,mkt:140000,conf:"r",cb:"Single-storey house, 125 m² construction (65 m² privativa) + logradouro, near Albergaria centre. Idealista Albergaria moradias (30) median €350k concelho-wide, but the size band is thin (€70k–350k) — a habitable ~125 m² rural house ≈ €140k. Opening €42,500 ≈ 70% under; base €62.5k ≈ 55% under. Comps thin + condition unknown → view & verify.",end:"2026-08-27T17:00:00+01:00",url:"https://leilosoc.com/lot/43641/170321",vc:"view",vl:"VIEW"},
+  {ref:"LO1504762026",plat:"e-leilões",type:"Moradia — Santiago de Riba-Ul",loc:"Oliveira de Azeméis — Santiago de Riba-Ul",dist:"Aveiro",val:"bid €131,000 · mín €222.7k (07 Aug)",price:222700,mkt:230000,conf:"r",cb:"NEW to Platforms (was a watch on the Declarativos tab, CIRE 1198/26.3T8OAZ-C). Reserve €222,700 sits near local resale — thin margin at the floor; opening €131k, base €262k. Rough band — needs the caderneta + Idealista check. Closes 22/09.",end:"2026-09-22T10:30:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1504762026",vc:"low",vl:"LOW — near reserve",isnew:true},
+  {ref:"2861/15.0T8AVR",plat:"Leilosoc",type:"Moradia + terreno",loc:"Esmoriz, Ovar",dist:"Aveiro",val:"base €111,507",price:111507,mkt:175000,conf:"r",cb:"Esmoriz moradia + land resale band — rough; condition unknown.",end:"2026-08-27T14:59:59Z",url:"https://leilosoc.com/lot/44107/171577",vc:"low",vl:"resale / land"},
+  {ref:"69/25.5T8VFX",plat:"Leilosoc",type:"Moradia",loc:"Albergaria-a-Velha",dist:"Aveiro",val:"base €62,500",price:62500,mkt:120000,conf:"r",cb:"Small Aveiro-interior house band — rough; likely needs works.",end:"2026-08-28T15:59:59Z",url:"https://leilosoc.com/lot/43641/170321",vc:"low",vl:"cheap house"},
   // ---------- COIMBRA ----------
-  {ref:"4386/24.3T8CBR",plat:"Leilosoc",type:"Edifício misto (comércio + habitação)",loc:"Figueira da Foz — Moinhos da Gândara",dist:"Coimbra",val:"leilão eletr. · base €324k · abre €225k",price:225000,mkt:400000,conf:"r",predio:true,cb:"Two-storey mixed-use building: 740 m² construction (400 m² privativa) on a 4,063 m² plot — commercial cave/R-C + habitation. Rough value on the parts + the big land ~€400k (rural Figueira; verify condition/tenancy and any split). Opening €225k ≈ 44% under; base €324k ≈ 19% under. Prédio — exempt from cap. Investigate for docs + a firm comp.",end:"2026-08-27T17:00:00+01:00",url:"https://leilosoc.com/lot/43901/169774",vc:"view",vl:"VIEW"},
+  {ref:"4386/24.3T8CBR",plat:"Leilosoc",type:"Edifício",loc:"Moinhos da Gândara, Figueira da Foz",dist:"Coimbra",val:"base €324,000",price:324000,mkt:380000,conf:"r",predio:true,cb:"Figueira building band — rough; confirm units and rent roll.",end:"2026-08-28T14:59:59Z",url:"https://leilosoc.com/lot/43901/169774",vc:"low",vl:"BUILDING"},
   // ---------- BRAGA ----------
-  {ref:"DMI-1001/2026",plat:"Leilosoc",type:"Loja 42,5 m² (R/C)",loc:"Vila Nova de Famalicão — centro",dist:"Braga",val:"leilão eletr. · base €80k · abre €55k",price:55000,mkt:70000,conf:"r",cb:"Small ground-floor retail unit, 42.5 m², Rua Augusto Correia, A/C + shopfront glazing. Commercial → yield: a central 42.5 m² loja rents ~€400–500/mo → ~€65–75k at ~8%. Base €80k (€1,882/m²) is full/above; opening €55k (€1,294/m²) ≈ 21% under. Thin — target the opening and pull rental comps on Investigate.",end:"2026-09-01T17:00:00+01:00",url:"https://leilosoc.com/lot/42604/167329",vc:"view",vl:"VIEW — thin",isnew:true},
-  {ref:"2595/14.2T8VNF",plat:"Leilosoc",type:"Loja 39 m² (cave)",loc:"Braga — 4 min do centro",dist:"Braga",val:"leilão eletr. · base €33,114 · abre €23,000",price:23000,mkt:35000,conf:"r",cb:"Basement retail unit, 39 m² (1987), near Braga centre. Low-value basement commercial: ~€35k at market (~€900/m²). Opening €23k ≈ 34% under; base €33k ≈ at market. Thin/marginal — a rental-yield check on Investigate would confirm.",end:"2026-09-04T15:30:00Z",url:"https://leilosoc.com/lot/44192/149001",vc:"view",vl:"VIEW — thin",isnew:true},
-  {ref:"Carla M. Maia",plat:"Bidleiloeira",type:"Prédio urbano (cave+r/c+andar)",loc:"Guimarães",dist:"Braga",val:"value TBC",price:null,mkt:null,predio:true,cb:"Value TBC — need the edital / caderneta to place a comp.",end:"2026-09-07T18:00:00+01:00",url:"https://www.bidleiloeira.pt/moradia-t3-lote-2-BZGp",vc:"low",vl:"check value",isnew:true},
+  {ref:"DMI-1001/2026",plat:"Leilosoc",type:"Loja (42.5 m²)",loc:"Vila Nova de Famalicão",dist:"Braga",val:"base €80,000",price:80000,mkt:95000,conf:"r",cb:"Famalicão retail unit band — rough; thin margin.",end:"2026-09-02T14:59:59Z",url:"https://leilosoc.com/lot/42604/167329",vc:"low",vl:"commercial"},
+  {ref:"2595/14.2T8VNF",plat:"Leilosoc",type:"Loja",loc:"Braga",dist:"Braga",val:"base €33,114",price:33114,mkt:55000,conf:"r",cb:"Small Braga commercial band — rough.",end:"2026-09-04T15:59:59Z",url:"https://leilosoc.com/lot/44192/149001",vc:"low",vl:"CHEAP commercial"},
+  {ref:"Carla M. Maia",plat:"Bidleiloeira",type:"Prédio urbano (cave+r/c+andar)",loc:"Guimarães",dist:"Braga",val:"value TBC",price:null,mkt:null,predio:true,cb:"Value TBC — need the edital / caderneta to place a comp.",end:"2026-09-07T18:00:00+01:00",url:"https://www.bidleiloeira.pt/moradia-t3-lote-2-BZGp",vc:"low",vl:"check value"},
+  // ---------- Dated on 07 Aug price check ----------
+  {ref:"verba 7542",plat:"OneFix",type:"Armazém (326 m²) — ex-padaria",loc:"Matosinhos — Rua dos Loureiros",dist:"Porto",val:"mín €186,150 · base €219k · 0 bids (07 Aug)",price:186150,mkt:196000,conf:"r",cb:"PRICED on 07 Aug (was value TBC). Armazém 326.20 m² (fração A, ex-fabrico de pão). Reserve €186,150; base €219k; abertura €158,227.50. At ~€3.5/m²/mo (~€13.7k/yr) ≈ 7.4% gross at entry, ~€196k cap value at 7% — thin. Confirm rent band + condition.",end:"2026-09-01T18:00:00+01:00",url:"https://www.onefix-leiloeiros.pt/verba/7542/",vc:"low",vl:"COMMERCIAL ~7%",isnew:true},
   // ---------- No fixed close date (negociação particular / not yet dated) ----------
-  {ref:"Monte Córdova",plat:"Imoloriente",type:"Moradia — fixer (recuperar)",loc:"Santo Tirso — Monte Córdova",dist:"Porto",val:"leilão eletr. · base €80k · mín €50k · abre €40k",price:50000,mkt:280000,conf:"r",cb:"Fixer ('para recuperar') on a 500 m² lot. Idealista Monte Córdova moradias (16) median €490k, but the fixer band bottoms at €165–170k. Recovered value ~€280k; entry €50k + a full recovery (works unscoped, likely €100k+). Margin is real but works-gated — view and scope the build. Close date on the platform after login.",end:"2026-09-01T11:00:00Z",url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/moradias/moradia-monte-cordova-santo-tirso/",vc:"view",vl:"VIEW — fixer",isnew:true},
-  {ref:"Leça do Balio",plat:"Imoloriente",type:"Apartamento T2",loc:"Matosinhos — Leça do Balio",dist:"Porto",val:"bid €171,000",price:171000,mkt:185000,conf:"r",cb:"Leça do Balio T2 resale band — rough; thin margin, already bid.",end:"2026-08-31T11:00:00Z",url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/apartamento/apartamento-t2-leca-do-balio-matosinhos/",vc:"low",vl:"has bids",isnew:true},
-  {ref:"centro Matosinhos",plat:"Imoloriente",type:"Apartamento T2 (126 m²)",loc:"Matosinhos — Av. da Liberdade (centro)",dist:"Porto",val:"leilão eletr. · base €448k · mín €380k",price:380000,mkt:460000,conf:"r",cb:"Idealista Matosinhos/Leça T2–T3, size-band 100–150 m² (16 comps) median €532k asking → ~€460k net. Modern 2002 unit on Av. da Liberdade, by the metro and ~1 km from Matosinhos beach. Entry €380k = ~17% under — modest but real on prime coastal stock. Close date on the platform after login.",end:"2026-09-02T11:00:00Z",url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/apartamento/apartamento-t2-centro-matosinhos/",vc:"view",vl:"VIEW −17%",isnew:true},
-  {ref:"Perafita",plat:"Imoloriente",type:"Moradia bi-familiar T4 (PH approved)",loc:"Matosinhos — Perafita",dist:"Porto",val:"leilão eletr. · base €407k · mín €346k",price:346000,mkt:530000,conf:"r",cb:"Valued on the PH split (approval already granted). 150 m² construction → two ~75 m² units: ground floor with garage+logradouro (~€300k) + upper andar/águas-furtadas duplex (~€280–300k). Perafita apartment comps (53): larger 75–110 m² units €2,200–3,600/m². Two finished units ask ~€600k combined; net of ~8% asking-to-sale and ~€40k split/finish cost → ~€530k realized (vs ~€490k sold whole). Entry €346k = ~35% under on the PH-done exit.",end:"2026-08-31T11:00:00Z",url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/moradias/moradia-bi-familiar-perafita-matosinhos/",vc:"view",vl:"VIEW −35%",isnew:true},
-  {ref:"verba 7542",plat:"OneFix",type:"Armazém 326 m² (fração autónoma)",loc:"Matosinhos — Rua dos Loureiros",dist:"Porto",val:"leilão eletr. · base €219k · abre €158,228",price:158228,mkt:285000,conf:"r",cb:"Ground-floor warehouse (ex-bakery), fração autónoma 'A', 326 m². Commercial → yield/resale: Matosinhos industrial resale ~€800–1,000/m² → ~€285k, and ~€1,600/mo rent (~326 m² × €5) at ~7% ≈ €275k. Opening €158,228 ≈ 45% under; base €219k ≈ 23% under. Rough — pull rental + industrial-resale comps and the insolvency docs on Investigate.",end:"2026-09-01T15:05:00+01:00",url:"https://www.onefix-leiloeiros.pt/verba/7542/",vc:"view",vl:"VIEW −23%",isnew:true},
-  {ref:"verba 7341",plat:"OneFix",type:"Armazém industrial (912 m²)",loc:"Sta Maria da Feira — Rio Meão",dist:"Aveiro",val:"leilão eletr. · abre €240,000",price:240000,mkt:null,conf:"r",cb:"Industrial warehouse, 912 m², Rio Meão. Commercial — value on rent/yield; abertura €240k (~€263/m²) is cheap for built area but Rio Meão is peripheral. Pull rental + industrial-resale comps and the insolvency docs on Investigate.",end:"2026-09-08T15:00:00+01:00",url:"https://www.onefix-leiloeiros.pt/verba/7341/",vc:"low",vl:"industrial",isnew:true}
+  {ref:"Monte Córdova",plat:"Imoloriente",type:"Moradia",loc:"Santo Tirso — Monte Córdova",dist:"Porto",val:"mín €50,000 (07 Aug)",price:50000,mkt:120000,conf:"r",cb:"Santo Tirso rural moradia band — rough; big apparent gap, condition unknown. Asking unchanged on 07 Aug (base €80k, abertura €40k).",end:null,url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/moradias/moradia-monte-cordova-santo-tirso/",vc:"view",vl:"CHEAP — look"},
+  {ref:"Leça do Balio",plat:"Imoloriente",type:"Apartamento T2",loc:"Matosinhos — Leça do Balio",dist:"Porto",val:"bid €171,000",price:171000,mkt:185000,conf:"r",cb:"Leça do Balio T2 resale band — rough; thin margin, already bid.",end:null,url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/apartamento/apartamento-t2-leca-do-balio-matosinhos/",vc:"low",vl:"has bids"},
+  {ref:"vista mar",plat:"Imoloriente",type:"Moradia T4 vista mar",loc:"Vila Nova de Gaia",dist:"Porto",val:"value TBC",price:null,mkt:null,cb:"Value TBC — need the lot page figure.",end:null,url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/moradias/moradia-t4-com-vista-mar-vila-nova-de-gaia/",vc:"low",vl:"check"},
+  {ref:"centro Matosinhos",plat:"Imoloriente",type:"Apartamento T2",loc:"Matosinhos — centro",dist:"Porto",val:"€380,000",price:380000,mkt:400000,conf:"r",cb:"Central Matosinhos T2 band — rough; thin margin at this price.",end:null,url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/apartamento/apartamento-t2-centro-matosinhos/",vc:"low",vl:"higher-end"},
+  {ref:"Perafita",plat:"Imoloriente",type:"Moradia bi-familiar",loc:"Matosinhos — Perafita",dist:"Porto",val:"mín €346,000 (07 Aug)",price:346000,mkt:380000,conf:"r",cb:"Perafita bi-family band — rough; thin margin. Asking unchanged on 07 Aug (valor base shown €407,058).",end:null,url:"https://www.imoloriente.pt/bolsa-de-negocios/imoveis/moradias/moradia-bi-familiar-perafita-matosinhos/",vc:"low",vl:"higher-end"},
+  {ref:"verba 7341",plat:"OneFix",type:"Armazém (912 m²)",loc:"Rio Meão, Sta Maria da Feira",dist:"Aveiro",val:"value TBC",price:null,mkt:null,cb:"Value TBC — need the verba figure.",end:null,url:"https://www.onefix-leiloeiros.pt/verba/7341/",vc:"low",vl:"industrial"}
 ];
-
-// ---------- De-dup safety: collapse lots pointing at the same auction lot ----------
-// Normalises by platform lot-id (Leilosoc/LeilOn/OneFix/INLEX) or URL, keeps the first — so a
-// re-sweep that re-adds a lot under a different ref can't show it twice.
-(function(){
-  const norm=u=>{let k=(u||"").replace(/^https?:\/\/(www\.)?/,"").split("?")[0].replace(/\/+$/,"");let m;
-    if(m=k.match(/leilosoc\.com\/lot\/(\d+)/))return"leilosoc:"+m[1];
-    if(m=k.match(/leilon\.pt\/pt\/auction\/lot\/id\/(\d+)/))return"leilon:"+m[1];
-    if(m=k.match(/onefix-leiloeiros\.pt\/verba\/(\d+)/))return"onefix:"+m[1];
-    if(m=k.match(/inlexleiloeira\.pt\/verba\/(\d+)/))return"inlex:"+m[1];
-    return k;};
-  const seen=new Set(),out=[];
-  for(const l of LOTS){const k=norm(l.url);if(k&&seen.has(k))continue;if(k)seen.add(k);out.push(l);}
-  LOTS.length=0;LOTS.push(...out);
-})();
 
 // ---------- User marks (saved locally) ----------
 const KEY="patrack_v1";
@@ -358,7 +481,6 @@ function cd(ms){
   return {t:d>=1?d+"d "+h+"h":(h>=1?h+"h "+m+"m":m+"m"), c:ms<1728e5?"urgent":(ms<6048e5?"soon":"")};
 }
 function fmtDate(ms){return new Intl.DateTimeFormat("en-GB",{timeZone:TZ,day:"2-digit",month:"short"}).format(ms)}
-// ---- Idealista comparator (same concelho + typology from the CPU) ----
 const CONCMAP={"gaia":"vila-nova-de-gaia","v. n. gaia":"vila-nova-de-gaia","vila nova de gaia":"vila-nova-de-gaia","famalicão":"vila-nova-de-famalicao","v. n. famalicão":"vila-nova-de-famalicao","vila nova de famalicão":"vila-nova-de-famalicao"};
 function slugConc(l){
   let s=l.loc;
@@ -381,7 +503,6 @@ function docsBlock(l){
     `<br><b>Set 🔍 Investigate</b> → I fetch &amp; attach every document the listing has, read the CPU, and compute the margin from matching Idealista comps.</div>`;
 }
 
-// ---------- render ----------
 function render(){
   const now=Date.now();
   const capOn=document.getElementById("capf").checked;
@@ -392,7 +513,36 @@ function render(){
   document.getElementById("c-new").textContent=LOTS.filter(l=>l.isnew).length;
   document.getElementById("c-total").textContent=LOTS.length;
 
-  // ---- master table ----
+  const dated=visible.filter(l=>l.end).map(l=>({...l,ts:ts(l)})).sort((a,b)=>a.ts-b.ts);
+  const groups={};
+  dated.forEach(l=>{const k=new Intl.DateTimeFormat("en-CA",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).format(l.ts);(groups[k]=groups[k]||[]).push(l)});
+  function lotRow(l){
+    const c=cd(l.ts!=null?l.ts-now:null);
+    const cls=l.vc==='buy'?' callot--buy':(l.vc==='view'?' callot--view':'');
+    const m=margin(l);
+    const mg=m===null?'':`<span class="cl-mgn ${mgnClass(m)}">${mgnText(m)}</span>`;
+    return `<div class="callot${c.c==='ended'?' ended':''}${isDimmed(l)?' dimmed':''}${cls}">${nb(l)}${pill(l)}${ustatBadge(l.ref)}`+
+      `<a href="${l.url}" target="_blank" rel="noopener">${l.type}</a>`+
+      `<span class="cl-loc">${l.loc}</span><span class="cl-src">${l.plat}</span>`+
+      `<span class="cl-base">${l.val}</span>${mg}<span class="cd ${c.c}">${c.t}</span></div>`;
+  }
+  let cal="";
+  Object.keys(groups).sort().forEach(k=>{
+    const first=groups[k][0].ts;
+    const dd=new Intl.DateTimeFormat("en-GB",{timeZone:TZ,day:"2-digit"}).format(first);
+    const mm=new Intl.DateTimeFormat("en-GB",{timeZone:TZ,month:"short"}).format(first);
+    const wd=new Intl.DateTimeFormat("en-GB",{timeZone:TZ,weekday:"short"}).format(first);
+    const allEnded=groups[k].every(l=>l.ts-now<=0);
+    const rows=groups[k].map(lotRow).join("");
+    cal+=`<div class="calday${allEnded?' ended':''}"><div class="caldate"><div class="d">${dd}</div><div class="m">${mm}</div><div class="wd">${wd}</div></div><div class="callots">${rows}</div></div>`;
+  });
+  const undated=visible.filter(l=>!l.end);
+  if(undated.length){
+    const rows=undated.map(lotRow).join("");
+    cal+=`<div class="calday"><div class="caldate nofix"><div class="d">No fixed date</div><div class="wd">open</div></div><div class="callots">${rows}</div></div>`;
+  }
+  document.getElementById("calendar").innerHTML=cal;
+
   const all=[...visible].map(l=>({...l,ts:ts(l)})).sort((a,b)=>{
     if(a.ts===null&&b.ts===null) return 0; if(a.ts===null) return 1; if(b.ts===null) return -1; return a.ts-b.ts;});
   let tb="";
@@ -409,11 +559,9 @@ function render(){
       `<td>${ustatBadge(l.ref)}${note} <button class="editbtn" data-ref="${encodeURIComponent(l.ref)}">✎</button></td></tr>`;
   });
   document.getElementById("master").innerHTML=tb;
-  // wire edit buttons
   document.querySelectorAll(".editbtn[data-ref]").forEach(b=>b.onclick=()=>openEditor(decodeURIComponent(b.dataset.ref)));
 }
 
-// ---------- editor dialog ----------
 function openEditor(ref){
   const l=LOTS.find(x=>x.ref===ref); if(!l) return;
   const cur=STATE[ref]||{};
@@ -438,12 +586,11 @@ function openEditor(ref){
     const note=document.getElementById("noteta").value.trim();
     if(!picked&&!note){delete STATE[ref];} else {STATE[ref]={status:picked,note:note};}
     save(); dlg.close(); render();
-    // Investigate just saves the mark now — Sync is manual (top-right / toolbar button) only.
+    if(picked==="invest") openSync();
   };
   dlg.showModal();
 }
 
-// ---------- export ----------
 function buildExport(){
   const rows=LOTS.filter(l=>STATE[l.ref]&&(STATE[l.ref].status||STATE[l.ref].note));
   if(!rows.length) return "(No marks or notes yet — click ✎ on a lot to add some.)";
@@ -481,7 +628,6 @@ function openSync(){
   document.getElementById("syncdlg").showModal();
 }
 
-// ---------- wire ----------
 document.getElementById("capf").onchange=render;
 document.getElementById("exportbtn").onclick=openExport;
 document.getElementById("syncbtn").onclick=openSync;
@@ -500,6 +646,160 @@ document.getElementById("exp-dl").onclick=()=>{
 };
 
 render(); setInterval(render,30000);
+</script>
+
+<script>
+// ================= LEADS BOARD (executivos) =================
+(function(){
+const LEADS=[
+  ["Anadia","214/11.8T3AND","NP",0,"fração","Av. Nova nº1, fr. A · Curia",0,""],
+  ["Aveiro","380/09.2TBAVR","NP",1,"terreno constr.","Arrotas",0,""],
+  ["Aveiro","380/09.2TBAVR","NP",1,"terreno constr.","Arrotas (verba 2)",0,""],
+  ["Aveiro","380/09.2TBAVR","NP",1,"terreno constr.","Arrotas (verba 3)",0,""],
+  ["Braga","944/07.9TTBRG-B","CF",1,"prédio","propriedade total",0,""],
+  ["Braga (court)","1337/11.9TBRG-A","CF",1,"prédio","Arco da Calheta — MADEIRA",0,"out-of-area"],
+  ["Coimbra","843/03.3TTCBR-A","CF",0,"arrumos","",0,""],
+  ["Coimbra","25/12.3TBOHP","CF",0,"urbano","Oliveira do Hospital",0,""],
+  ["Espinho","782/18.3T9VFR.1","CF",0,"escritório","",1,""],
+  ["Guimarães","30/03.0TCGMR","NP",1,"prédio","fr. de Cepães",0,""],
+  ["Guimarães","1153/14.6T8GMR","NP",1,"prédio","",0,""],
+  ["Guimarães","3137/19.9T8GMR","CF",0,"urbano","",0,""],
+  ["Lousã","32/10.0TALSA","CF",0,"urbano","Montoiro",0,""],
+  ["Lousada","861/14.6T8LOU","CF",0,"fração","",0,""],
+  ["Lousada","4540/05.7TBPRD","CF",0,"fração","",0,""],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (1/5)",0,"building split 5 frações"],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (2/5)",0,""],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (3/5)",0,""],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (4/5)",0,""],
+  ["Lousada","1517/10.4TBAMT","NP",0,"fração","Rua Álvares Cabral (5/5)",0,""],
+  ["Maia","2534/04.9TBSTS","NP",1,"prédio","Lugar de Paredes ou Carreira",1,""],
+  ["Oliveira de Azeméis","1347/14.4T8OAZ","NP",1,"terreno constr.","",0,""],
+  ["Oliveira de Azeméis","1206/04.9TBSJM","NP",1,"prédio","",0,""],
+  ["Oliveira de Azeméis","731/06.1TBSJM","CF",0,"fração","hab. letra I",0,""],
+  ["Oliveira de Azeméis","593/14.5T8OAZ","NP",0,"fração","letra A · Rua da Igreja 32",0,""],
+  ["Oliveira de Azeméis","2740/05.9TBOAZ","NP",1,"terreno constr.","Lote 18",0,""],
+  ["Oliveira de Azeméis","2740/05.9TBOAZ","NP",1,"terreno constr.","Lote 15",0,""],
+  ["Oliveira de Azeméis","4020/11.1TBVFR","NP",0,"fração","",0,""],
+  ["Ovar","4230/07.6TBAVR","NP",1,"prédio","",0,""],
+  ["Ovar","243/12.4T2OVR","NP",1,"prédio","Esgueira",0,""],
+  ["Ovar","2254/22.2T8OVR","NP",1,"prédio","Sargaçal",0,""],
+  ["Paredes","883/03.2TBPRD","CF",1,"prédio","",1,""],
+  ["Porto","3157/14.0T8PRT","NP",0,"fração","",1,""],
+  ["Porto","4206/17.5T8PRT","CF",1,"prédio","Lugar do Forno de Cima",1,""],
+  ["Santo Tirso","329/10.0TBGDM","CF",1,"fração","Rua David Correia da Silva",1,""],
+  ["Soure","1499/14.3T8CBR","NP",1,"escritório","",0,""],
+  ["Vale de Cambra","268/05.6TBVLC","CF",0,"fração","",0,""],
+  ["Valença","366/10.4TBVLN","CF",1,"prédio","lugar de Lage",0,""],
+  ["Viana do Castelo","1705/06.8TMPRT.1","CF",1,"fração","",1,""],
+  ["Vila do Conde","3715/08.1TBVCD-A","CF",0,"fração","",1,""],
+  ["V. N. Famalicão","2864/14.1T8VNF","NP",1,"prédio","",0,""],
+  ["V. N. Famalicão","1928/14.6T8VNF","NP",1,"prédio","",0,""],
+  ["V. N. Famalicão","4438/05.9TBBCL","CF",1,"fração","",0,""],
+  ["V. N. Famalicão","2487/07.1TJVNF-C","CF",1,"prédio","Lugar de Assento",0,""],
+  ["V. N. Famalicão","249/08.8TBAMR","NP",1,"prédio","Bouça",0,""],
+  ["V. N. Gaia","507/04.0TYVNG","CF",0,"fração","",1,""],
+  ["V. N. Gaia","546/06.7TYVNG","CF",0,"fração","",1,""],
+  ["V. N. Gaia","2924/12.3TBVNG-A","CF",0,"fração","",1,""],
+  ["V. N. Gaia","978/10.6TYVNG","CF",1,"armazém","Rua Outeiro",1,""]
+];
+const MODNAME={CF:"carta fechada",NP:"neg. particular"};
+const ENRICH={};
+const CIT="https://www.citius.mj.pt/portal/consultas/consultasvenda.aspx";
+const COMARCA={"Anadia":"de Aveiro","Aveiro":"de Aveiro","Espinho":"de Aveiro","Oliveira de Azeméis":"de Aveiro","Ovar":"de Aveiro","Vale de Cambra":"de Aveiro",
+  "Braga":"de Braga","Braga (court)":"de Braga","Guimarães":"de Braga","V. N. Famalicão":"de Braga",
+  "Coimbra":"de Coimbra","Lousã":"de Coimbra","Soure":"de Coimbra",
+  "Lousada":"do Porto Este","Paredes":"do Porto Este",
+  "Maia":"do Porto","Porto":"do Porto","Santo Tirso":"do Porto","Vila do Conde":"do Porto","V. N. Gaia":"do Porto",
+  "Valença":"de Viana do Castelo","Viana do Castelo":"de Viana do Castelo"};
+let fMod="all", fMetro=false, fConc="", sortK="conc", sortDir=1;
+const concs=[...new Set(LEADS.map(l=>l[0]))].sort();
+const sel=document.getElementById("ld-concelho");
+concs.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;sel.appendChild(o);});
+document.getElementById("ld-c-total").textContent=LEADS.length;
+document.getElementById("ld-c-np").textContent=LEADS.filter(l=>l[2]==="NP").length;
+document.getElementById("ld-c-cf").textContent=LEADS.filter(l=>l[2]==="CF").length;
+document.getElementById("ld-c-metro").textContent=LEADS.filter(l=>l[6]===1).length;
+function render(){
+  let rows=LEADS.filter(l=>(fMod==="all"||l[2]===fMod)&&(!fMetro||l[6]===1)&&(!fConc||l[0]===fConc));
+  const ki={conc:0,type:4,mod:2,loc:5,proc:1};
+  rows.sort((a,b)=>{const i=ki[sortK];return (''+a[i]).localeCompare(''+b[i])*sortDir;});
+  document.getElementById("ld-cnt").textContent=rows.length+" of "+LEADS.length;
+  document.getElementById("ld-tb").innerHTML=rows.map(l=>{
+    const flags=(l[3]?'<span class="predio">PRÉDIO</span> ':'')+(l[6]===1?'<span class="metro">PORTO METRO</span> ':'')+(l[7]?'<span class="leadwarn">'+l[7]+'</span>':'');
+    const e=ENRICH[l[1]]||{};
+    const val=e.base?`<span class="valp">${e.base}</span>${e.especie?`<div style="font-size:10px;color:var(--mut2)">${e.especie}</div>`:''}`:'<span style="color:var(--mut2)">— on sync</span>';
+    const cm=COMARCA[l[0]]||"";
+    const proc=`<a class="cit" href="${CIT}" target="_blank" rel="noopener" title="Opens the Citius executivos search (no processo box) — select the court below, then Imóvel + Em venda, and find this processo">${l[1]} ↗</a>`+
+      (cm?`<div style="font-size:10px;color:var(--mut2)">select court: <b style="color:var(--mut)">${l[0]} · Comarca ${cm}</b></div>`:'');
+    return `<tr><td>${l[0]}</td><td>${l[4]}</td><td>${val}</td><td><span class="pill ${l[2].toLowerCase()}">${MODNAME[l[2]]}</span></td>`+
+      `<td>${l[5]||'<span style="color:var(--mut2)">—</span>'}</td><td>${proc}</td><td>${flags||''}</td></tr>`;
+  }).join("");
+}
+document.querySelectorAll("#board-leads .chip[data-mod]").forEach(c=>c.onclick=()=>{fMod=c.dataset.mod;document.querySelectorAll("#board-leads .chip[data-mod]").forEach(x=>x.classList.toggle("on",x===c));render();});
+const metroChip=document.querySelector("#board-leads .chip[data-metro]");
+metroChip.onclick=()=>{fMetro=!fMetro;metroChip.classList.toggle("on",fMetro);render();};
+sel.onchange=()=>{fConc=sel.value;render();};
+document.querySelectorAll("#board-leads th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=1;}render();});
+render();
+})();
+</script>
+
+<script>
+// ================= DECLARATIVOS BOARD =================
+(function(){
+const D=[
+  ["Porto","2494/22.4T8STS-E","CIRE","05/08",1,"skip","Oxecode Shoes — leilão eletrónico (Leilosoc), €3.618 → movables, on-platform"],
+  ["Porto","1586/26.5T8VNG-F","CIRE","04/08",1,"skip","Dohm Logístico — €1.198.000 industrial (e-leilões) → over €500k, on-platform"],
+  ["Aveiro","1198/26.3T8OAZ-C","CIRE","03/08",1,"watch","Moradia, O. Azeméis — mín €222.700 (e-leilões LO1504762026), closes 22/09 → now valued live on the Platforms tab"],
+  ["Viana do Castelo","2364/16.5T8VCT-G","CIRE","31/07",2,"skip","procedural cover (juntar a processo) — no sale terms"],
+  ["Aveiro","2753/25.4T8OAZ-D","CIRE","31/07",1,"unread",""],
+  ["Coimbra","3082/23.3T8CBR-C","CIRE","31/07",1,"unread",""],
+  ["Braga","4997/25.0T8GMR-E","CIRE","31/07",1,"unread",""],
+  ["Braga","6087/25.6T8VNF-C","CIRE","28/07",1,"unread",""],
+  ["Porto","4336/24.7T8VNG-E","CIRE","28/07",1,"unread",""],
+  ["Braga","3595/25.2T8VNF-C","CIRE","28/07",1,"unread",""],
+  ["Porto","2700/23.8T8STS-C","CIRE","27/07",1,"unread",""],
+  ["Porto","1468/21.7T8STS-E","CIRE","26/07",1,"unread",""],
+  ["Aveiro","124/23.6T8ARC","INV","23/07",1,"unread",""],
+  ["Aveiro","298/24.9T8AVR-B","CIRE","22/07",1,"unread",""],
+  ["Aveiro","565/26.7T8OAZ-D","CIRE","21/07",1,"unread",""],
+  ["Aveiro","1225/26.4T8OAZ-C","CIRE","21/07",1,"unread",""],
+  ["Porto","664/26.5T8STS-C","CIRE","20/07",2,"unread",""],
+  ["Braga","832/22.9T8GMR-D","CIRE","20/07",1,"unread",""],
+  ["Aveiro","3002/23.5T8AVR-Q","CIRE","20/07",1,"unread",""],
+  ["Aveiro","1316/22.0T8AGD","INV","16/07",1,"unread",""],
+  ["Porto","3027/24.3T8STS-F","CIRE","16/07",3,"unread",""],
+  ["Braga","4678/25.4T8GMR-C","CIRE","16/07",1,"unread",""],
+  ["Porto","2097/24.9T8STS-F","CIRE","16/07",1,"unread",""],
+  ["Aveiro","1421/25.1T8OAZ-C","CIRE","16/07",1,"unread",""],
+  ["Aveiro","1345/26.5T8OAZ-C","CIRE","15/07",1,"unread",""],
+  ["Porto","2242/25.7T8STS-C","CIRE","14/07",1,"unread",""],
+  ["Aveiro","3607/25.0T8OAZ-B","CIRE","10/07",1,"unread",""],
+  ["Viana do Castelo","1522/24.3T8VCT-B","CIRE","09/07",1,"unread",""],
+  ["Braga","2018/26.4T8GMR-C","CIRE","09/07",1,"unread",""]
+];
+const CIT="https://www.citius.mj.pt/portal/consultas/ConsultaVendaAnuncios.aspx";
+let fD="", fF="";
+const dists=[...new Set(D.map(r=>r[0]))].sort();
+const sel=document.getElementById("dc-district"); dists.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;sel.appendChild(o);});
+document.getElementById("dc-c-total").textContent=D.length;
+document.getElementById("dc-c-read").textContent=D.filter(r=>r[5]!=="unread").length;
+document.getElementById("dc-c-porto").textContent=D.filter(r=>r[0]==="Porto").length;
+function render(){
+  let rows=D.filter(r=>(!fD||r[0]===fD)&&(!fF||(fF==="unread"?r[5]==="unread":r[5]!=="unread")));
+  document.getElementById("dc-cnt").textContent=rows.length+" of "+D.length;
+  document.getElementById("dc-tb").innerHTML=rows.map(r=>{
+    const esp=r[2]==="INV"?'<span class="pill inv">Inventário</span>':'<span class="pill cire">CIRE</span>';
+    const st=r[5]==="unread"?'<span class="st unread">— unread</span>':`<span class="st ${r[5]}">${r[6]}</span>`;
+    const bens=r[4]>1?`${r[4]} bens`:'1';
+    return `<tr><td>${r[0]}</td><td><a class="cit" href="${CIT}" target="_blank" rel="noopener" title="Open Citius declarativos — select this court's comarca, then Ver Mais on the row">${r[1]} ↗</a></td>`+
+      `<td>${esp}</td><td>${r[3]}</td><td>${bens}</td><td><span class="doc">📄 anúncio</span></td><td>${st}</td></tr>`;
+  }).join("");
+}
+sel.onchange=()=>{fD=sel.value;render();};
+document.getElementById("dc-filt").onchange=e=>{fF=e.target.value;render();};
+render();
+})();
 </script>
 </body>
 </html>
