@@ -163,6 +163,13 @@
   .docsnote a{color:var(--accent);text-decoration:none;font-weight:600}
   section.board{display:none}
   section.board.active{display:block}
+  .savetoast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;transition:opacity .35s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .savetoast.ok{background:var(--good);color:#04140c}
+  .savetoast.bad{background:var(--bad);color:#2a0a06}
+  .storagewarn{background:#3a1414;color:#ffd9d2;border-bottom:1px solid #5a2b2b;padding:10px 18px;font-size:12.8px;text-align:center}
+  .storagewarn a{color:#ffd9d2;font-weight:700}
+  .dsavehint{font-size:11.5px;color:var(--mut2);margin-top:12px}
+  .dsavehint.ok{color:var(--good)} .dsavehint.bad{color:var(--bad);font-weight:700}
   @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.kpis{gap:16px}.deal h3{padding-right:0}
     .tablewrap,.tw{overflow-x:auto}table{font-size:11.5px;min-width:860px}}
 </style>
@@ -537,11 +544,36 @@ const LOTS=[
 
 ];
 
-// ---------- User marks (saved locally) ----------
+// ---------- User marks (saved locally) — hardened persistence ----------
 const KEY="patrack_v1";
-let STATE={};
-try{STATE=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){STATE={}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(STATE))}catch(e){}}
+function loadState(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){return {}}}
+let STATE=loadState();
+// is localStorage actually writable here? (blocked in the in-app artifact preview)
+const STORAGE_OK=(function(){try{const t="__patrack_probe";localStorage.setItem(t,"1");const ok=localStorage.getItem(t)==="1";localStorage.removeItem(t);return ok;}catch(e){return false;}})();
+// write ONE lot's status, reloading latest from disk first (multi-tab safe), then verify the write
+function persistStatus(ref,status,note){
+  let s=loadState();
+  const n=(note||"").trim();
+  if(!status && !n){ delete s[ref]; } else { s[ref]={status:status||"",note:n}; }
+  STATE=s;
+  try{ const str=JSON.stringify(s); localStorage.setItem(KEY,str); return localStorage.getItem(KEY)===str; }
+  catch(e){ return false; }
+}
+function save(){ try{ const str=JSON.stringify(STATE); localStorage.setItem(KEY,str); return localStorage.getItem(KEY)===str; }catch(e){ return false; } }
+function flashSave(ok){
+  let el=document.getElementById("savetoast");
+  if(!el){el=document.createElement("div");el.id="savetoast";document.body.appendChild(el);}
+  el.textContent=ok?"✓ Saved":"⚠ NOT saved here — open the live site";
+  el.className="savetoast "+(ok?"ok":"bad");
+  el.style.opacity="1";
+  clearTimeout(window.__stt); window.__stt=setTimeout(()=>{el.style.opacity="0";}, ok?1400:5000);
+}
+// if this view can't persist (artifact preview / blocked storage), warn loudly so marks aren't lost silently
+if(!STORAGE_OK){
+  const b=document.createElement("div"); b.className="storagewarn";
+  b.innerHTML="⚠ <b>This view can't save your marks</b> — your browser is blocking storage here (common in the in-app preview). Open the live site <a href='https://porto-auction-tracker.pages.dev' target='_blank' rel='noopener'>porto-auction-tracker.pages.dev</a> and set Investigate / Dismiss there so they stick.";
+  (document.body||document.documentElement).insertBefore(b, document.body?document.body.firstChild:null);
+}
 const USTAT={watch:"👁 Watching",invest:"🔍 Investigate",buy:"✓ Bought",dismiss:"✕ Dismiss"};
 
 // ---------- helpers ----------
@@ -689,20 +721,26 @@ function openEditor(ref){
     docsBlock(l)+
     `<div class="dsec">Your status</div><div class="statrow" id="statrow">${opts}</div>`+
     `<div class="dsec">Your reasoning / notes</div><textarea id="noteta" placeholder="Why watch / investigate / dismiss? What to check, target price, condition, anything for me to act on…">${cur.note||''}</textarea>`+
-    `<div class="dlgfoot"><button class="tbtn" id="ed-cancel">Cancel</button><button class="tbtn primary" id="ed-save">Save</button></div>`;
+    `<div class="dsavehint" id="dsavehint">Saves instantly when you pick a status.</div>`+
+    `<div class="dlgfoot"><button class="tbtn" id="ed-cancel">Close</button><button class="tbtn primary" id="ed-save">Done</button></div>`;
   let picked=cur.status||"";
+  const noteVal=()=>{const t=document.getElementById("noteta");return t?t.value:"";};
+  function markSaved(ok){const h=document.getElementById("dsavehint");if(h){h.textContent=ok?"✓ Saved on this device.":"⚠ Could NOT save here — open the live site to keep marks.";h.className="dsavehint "+(ok?"ok":"bad");}flashSave(ok);}
   document.querySelectorAll("#statrow .statopt").forEach(b=>b.onclick=()=>{
     picked=b.dataset.s;
     document.querySelectorAll("#statrow .statopt").forEach(x=>x.classList.remove("sel"));
     b.classList.add("sel");
+    markSaved(persistStatus(ref,picked,noteVal()));   // persist the instant you click — no reliance on a Save button
+    render();
+    if(picked==="invest") openSync();
   });
   const dlg=document.getElementById("editor");
+  const ta=document.getElementById("noteta");
+  if(ta){ ta.addEventListener("input",()=>{persistStatus(ref,picked,noteVal());});
+          ta.addEventListener("blur",()=>{markSaved(persistStatus(ref,picked,noteVal()));}); }
   document.getElementById("ed-cancel").onclick=()=>dlg.close();
   document.getElementById("ed-save").onclick=()=>{
-    const note=document.getElementById("noteta").value.trim();
-    if(!picked&&!note){delete STATE[ref];} else {STATE[ref]={status:picked,note:note};}
-    save(); dlg.close(); render();
-    if(picked==="invest") openSync();
+    markSaved(persistStatus(ref,picked,noteVal())); dlg.close(); render();
   };
   dlg.showModal();
 }
