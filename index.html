@@ -205,19 +205,6 @@
     <div class="card"><div class="n" id="c-total">–</div><div class="l">Lots tracked</div></div>
   </div>
 
-  <h2>Closing calendar — live countdown</h2>
-  <div class="calwrap">
-    <div id="calendar"></div>
-    <div class="callegend">
-      <span>⏱ live countdown</span>
-      <span><span class="newbadge">NEW</span> added / price-refreshed</span>
-      <span><span class="pill buy" style="padding:1px 6px">BUY</span></span>
-      <span><span class="pill view" style="padding:1px 6px">VIEW</span></span>
-      <span style="color:var(--good)">−% under market</span>
-      <span style="color:var(--bad)">● &lt; 48 h</span>
-    </div>
-  </div>
-
   <h2>Flagged — full analysis</h2>
 
   <div class="deal hit">
@@ -698,7 +685,7 @@ function render(){
     const rows=undated.map(lotRow).join("");
     cal+=`<div class="calday"><div class="caldate nofix"><div class="d">No fixed date</div><div class="wd">open</div></div><div class="callots">${rows}</div></div>`;
   }
-  document.getElementById("calendar").innerHTML=cal;
+  {const calEl=document.getElementById("calendar"); if(calEl) calEl.innerHTML=cal;}
 
   const all=[...visible].map(l=>({...l,ts:ts(l)})).sort((a,b)=>{
     if(a.ts===null&&b.ts===null) return 0; if(a.ts===null) return 1; if(b.ts===null) return -1; return a.ts-b.ts;});
