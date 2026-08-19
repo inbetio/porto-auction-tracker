@@ -192,7 +192,7 @@
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin. <b>Everything now lives on one page</b> — use the tabs above for the two Citius lead registers.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">19 Aug 2026 · live prices rechecked (Investigate/Buy/View lots); 2 e-leilões lots closed 18 Aug</span></span>
+    <span><b>Updated:</b> <span id="stamp">19 Aug 2026 · prices rechecked; lots now auto-drop from the board 3 days after they close</span></span>
     <span><b>17 Aug full sweep:</b> every e-leilões <i>urbano</i> closing ≤ 16 Sep across the 5 districts — now 135 lots; ended auctions + direitos/quinhões/partes-de-fração/usufruto removed; rústico/garagens dropped. Most are un-triaged (grey) — sort via the editor. Leilosoc + small platforms kept in-window, not re-swept this pass.</span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
     <span><b>Platforms (11):</b> e-leilões · Leilosoc · LeilOn · Avalibérica · Bidleiloeira · Imoloriente · OneFix · INLEX · VLeilões · <span style="color:var(--mut2)">Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
@@ -649,13 +649,17 @@ function docsBlock(l){
 
 function render(){
   const now=Date.now();
+  // Auto-remove: a lot drops off the board 3 days after its close date (undated lots stay).
+  const ENDED_CUTOFF=now-3*86400*1000;
+  const ACTIVE=LOTS.filter(l=>{const t=ts(l);return t===null||t>=ENDED_CUTOFF;});
   const capOn=document.getElementById("capf").checked;
-  const visible=LOTS.filter(l=>!(capOn&&overCap(l)));
-  const hidden=LOTS.length-visible.length;
+  const visible=ACTIVE.filter(l=>!(capOn&&overCap(l)));
+  const hidden=ACTIVE.length-visible.length;
   document.getElementById("capcount").textContent = hidden?`${hidden} lot${hidden>1?'s':''} over €500k hidden`:'';
-  document.getElementById("c-view").textContent=LOTS.filter(l=>l.vc==="view").length;
-  document.getElementById("c-new").textContent=LOTS.filter(l=>l.isnew).length;
-  document.getElementById("c-total").textContent=LOTS.length;
+  document.getElementById("c-view").textContent=ACTIVE.filter(l=>l.vc==="view").length;
+  document.getElementById("c-new").textContent=ACTIVE.filter(l=>l.isnew).length;
+  document.getElementById("c-total").textContent=ACTIVE.length;
+  {const tb=document.querySelector('.navtab[data-board="platforms"] .tc'); if(tb) tb.textContent=ACTIVE.length;}
 
   const dated=visible.filter(l=>l.end).map(l=>({...l,ts:ts(l)})).sort((a,b)=>a.ts-b.ts);
   const groups={};
