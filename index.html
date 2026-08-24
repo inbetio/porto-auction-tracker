@@ -177,7 +177,7 @@
 <body>
 <div class="topbar">
   <div class="nav">
-    <button class="navtab active" data-board="platforms">Platforms<span class="tc">137</span></button>
+    <button class="navtab active" data-board="platforms">Platforms<span class="tc">146</span></button>
     <button class="navtab" data-board="leads">Executivos · penhora<span class="tc">49</span></button>
     <button class="navtab" data-board="dec">Declarativos<span class="tc">29</span></button>
   </div>
@@ -192,7 +192,7 @@
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin. <b>Everything now lives on one page</b> — use the tabs above for the two Citius lead registers.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">22 Aug 2026 · marks safety net: auto-restore on load + baked backup re-synced twice daily</span></span>
+    <span><b>Updated:</b> <span id="stamp">24 Aug 2026 · swept next 30 days — +9 new e-leilões lots (closing 22 Sep)</span></span>
     <span><b>17 Aug full sweep:</b> every e-leilões <i>urbano</i> closing ≤ 16 Sep across the 5 districts — now 135 lots; ended auctions + direitos/quinhões/partes-de-fração/usufruto removed; rústico/garagens dropped. Most are un-triaged (grey) — sort via the editor. Leilosoc + small platforms kept in-window, not re-swept this pass.</span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
     <span><b>Platforms (11):</b> e-leilões · Leilosoc · LeilOn · Avalibérica · Bidleiloeira · Imoloriente · OneFix · INLEX · VLeilões · <span style="color:var(--mut2)">Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
@@ -391,6 +391,16 @@ document.querySelectorAll(".linkbtn[data-goto]").forEach(b=>b.onclick=()=>showBo
 // conf: 'v' verified from docs · 'r' rough typology estimate · null = comp not meaningful. predio: exempt from €500k cap.
 const TZ="Europe/Lisbon";
 const LOTS=[
+  // ===== 24 Aug — new e-leilões batch (closing 22 Sep) =====
+  {ref:"LO1504672026",plat:"e-leilões",type:"Moradia",loc:"Sta Marta de Portuzelo, Viana do Castelo",dist:"Viana do Castelo",val:"bid €288,743 — reserve MET · mín €283,054",price:283054,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Moradia c/ piscina, 165 m², Portuzelo. Bid above reserve. Not yet valued — Investigate.",end:"2026-09-22T10:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1504672026",vc:"low",vl:"Moradia"},
+  {ref:"LO1503982026",plat:"e-leilões",type:"Apartamento",loc:"Meixomil, Paços de Ferreira",dist:"Porto",val:"bid €72,842 · mín €114,325",price:114325,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Apartamento T2, 59.65 m², Meixomil. Not yet valued — Investigate.",end:"2026-09-22T10:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1503982026",vc:"low",vl:"Apartamento T2"},
+  {ref:"LO1503232026",plat:"e-leilões",type:"Casa + comércio",loc:"Regilde, Felgueiras",dist:"Porto",val:"bid €115,000 · mín €195,500",price:195500,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Casa cave+r/c c/ quintal, afectação a comércio, 255 m², Regilde. Not yet valued — Investigate.",end:"2026-09-22T10:30:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1503232026",vc:"low",vl:"Casa/comércio"},
+  {ref:"LO1501142026",plat:"e-leilões",type:"Moradia",loc:"Avanca, Estarreja",dist:"Aveiro",val:"bid €82,097 · mín €132,792",price:132792,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Moradia T5 c/ logradouro, 210 m², Avanca. Not yet valued — Investigate.",end:"2026-09-22T10:30:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1501142026",vc:"low",vl:"Moradia T5"},
+  {ref:"LO1503622026",plat:"e-leilões",type:"Moradia",loc:"Arentim, Braga",dist:"Braga",val:"bid €130,648 · mín €213,435",price:213435,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Moradia, Arentim (Braga). Not yet valued — Investigate.",end:"2026-09-22T10:30:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1503622026",vc:"low",vl:"Moradia"},
+  {ref:"LO1504332026",plat:"e-leilões",type:"Apartamento",loc:"Lobão, Santa Maria da Feira",dist:"Aveiro",val:"bid €122,412 · mín €204,000",price:204000,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Apartamento T2, 135 m², Lobão. Not yet valued — Investigate.",end:"2026-09-22T11:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1504332026",vc:"low",vl:"Apartamento T2"},
+  {ref:"LO1504872026",plat:"e-leilões",type:"Apartamento",loc:"Gondomar (S. Cosme)",dist:"Porto",val:"bid €82,762 — reserve MET · mín €64,311",price:64311,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Apartamento T2, 96.83 m², Gondomar S. Cosme. Bid above reserve. Not yet valued — Investigate.",end:"2026-09-22T11:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1504872026",vc:"low",vl:"Apartamento T2"},
+  {ref:"LO1506322026",plat:"e-leilões",type:"Edifício/Ind.",loc:"Nine, Vila Nova de Famalicão",dist:"Braga",val:"mín €397,516 · base €467,665 · 0 bids",price:397516,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Edifício industrial c/ logradouro, 1064 m², Nine. Large industrial — Investigate.",end:"2026-09-22T11:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1506322026",vc:"low",vl:"Edifício industrial"},
+  {ref:"NP1227482026",plat:"e-leilões",type:"Escritório",loc:"Valença",dist:"Viana do Castelo",val:"bid €18,200 · mín €29,911",price:29911,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Escritório, 54 m², Valença centro. Not yet valued — Investigate.",end:"2026-09-22T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1227482026",vc:"low",vl:"escritório"},
   // ===== 18 Aug — new from other-platform sweep (Leilosoc / LeilOn) =====
   {ref:"43807/171076",plat:"Leilosoc",type:"Moradia",loc:"Massarelos / Campo Alegre, Porto",dist:"Porto",val:"abertura €240,000 · base €350,000",price:240000,mkt:null,isnew:true,cb:"NEW (18 Aug sweep, Leilosoc). Moradia V4 (147 m²) com jardim, Rua de Entre Campos, Massarelos — prime central Porto. Sold as a reconstruction/expansion play WITH an architecture project already approved by CM Porto (2-floor moradia). Entry floor €240k (opening), base €350k, no bid. Rehab/dev opportunity — finished value in Massarelos is high but needs full construction budget; not yet valued. Investigate.",end:"2026-09-23T16:59:59+01:00",url:"https://leilosoc.com/lot/43807/171076",vc:"dev",vl:"DEV — approved project, central Porto"},
   {ref:"LN-1983",plat:"LeilOn",type:"Escritório",loc:"Cedofeita, Porto",dist:"Porto",val:"base €121,257 · abertura €121,257",price:121257,mkt:null,isnew:true,cb:"NEW (18 Aug sweep, LeilOn). Fração autónoma 'O' destinada a escritório, freguesia de Cedofeita — central Porto. Entry floor = base = €121,257, no bid, no reserve above base. Office fração; area not stated on listing — not yet valued. Investigate.",end:"2026-09-11T00:00:00+01:00",url:"https://www.leilon.pt/pt/auction/lot/id/1983",vc:"low",vl:"escritório"},
