@@ -192,7 +192,7 @@
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin. <b>Everything now lives on one page</b> — use the tabs above for the two Citius lead registers.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">22 Aug 2026 · current prices refreshed on Buy/View/Investigate lots</span></span>
+    <span><b>Updated:</b> <span id="stamp">22 Aug 2026 · prices refreshed · your marks now auto-restore if a browser clears them</span></span>
     <span><b>17 Aug full sweep:</b> every e-leilões <i>urbano</i> closing ≤ 16 Sep across the 5 districts — now 135 lots; ended auctions + direitos/quinhões/partes-de-fração/usufruto removed; rústico/garagens dropped. Most are un-triaged (grey) — sort via the editor. Leilosoc + small platforms kept in-window, not re-swept this pass.</span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
     <span><b>Platforms (11):</b> e-leilões · Leilosoc · LeilOn · Avalibérica · Bidleiloeira · Imoloriente · OneFix · INLEX · VLeilões · <span style="color:var(--mut2)">Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
@@ -546,6 +546,11 @@ function loadState(){try{const raw=localStorage.getItem(KEY);const o=raw?JSON.pa
 let STATE=loadState();
 // is localStorage actually writable here? (blocked in the in-app artifact preview)
 const STORAGE_OK=(function(){try{const t="__patrack_probe";localStorage.setItem(t,"1");const ok=localStorage.getItem(t)==="1";localStorage.removeItem(t);return ok;}catch(e){return false;}})();
+// Auto-restore: if this browser has NO saved marks (fresh device, or storage cleared — e.g. after a
+// Cloudflare Access re-login), write the baked classification seed into localStorage so the user's
+// Investigate/Dismiss marks become real, editable entries again — no re-classifying by hand.
+// Only fires when storage is empty; never clobbers a device that already has the user's own marks.
+(function(){ if(!STORAGE_OK) return; try{ const raw=localStorage.getItem(KEY); const o=raw?JSON.parse(raw):null; if(!o || !Object.keys(o).length){ localStorage.setItem(KEY, JSON.stringify(SEED_STATE)); STATE=loadState(); } }catch(e){} })();
 // write ONE lot's status, reloading latest from disk first (multi-tab safe), then verify the write
 function persistStatus(ref,status,note){
   let s=loadState();
