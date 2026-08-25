@@ -177,7 +177,7 @@
 <body>
 <div class="topbar">
   <div class="nav">
-    <button class="navtab active" data-board="platforms">Platforms<span class="tc">146</span></button>
+    <button class="navtab active" data-board="platforms">Platforms<span class="tc">147</span></button>
     <button class="navtab" data-board="leads">Executivos · penhora<span class="tc">49</span></button>
     <button class="navtab" data-board="dec">Declarativos<span class="tc">29</span></button>
   </div>
@@ -192,7 +192,7 @@
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin. <b>Everything now lives on one page</b> — use the tabs above for the two Citius lead registers.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">25 Aug 2026 · prices checked · daily check now runs weekday mornings only</span></span>
+    <span><b>Updated:</b> <span id="stamp">25 Aug 2026 · added Avalibérica parking pair (Senhora da Hora) — reserve above market</span></span>
     <span><b>17 Aug full sweep:</b> every e-leilões <i>urbano</i> closing ≤ 16 Sep across the 5 districts — now 135 lots; ended auctions + direitos/quinhões/partes-de-fração/usufruto removed; rústico/garagens dropped. Most are un-triaged (grey) — sort via the editor. Leilosoc + small platforms kept in-window, not re-swept this pass.</span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
     <span><b>Platforms (11):</b> e-leilões · Leilosoc · LeilOn · Avalibérica · Bidleiloeira · Imoloriente · OneFix · INLEX · VLeilões · <span style="color:var(--mut2)">Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
@@ -391,6 +391,8 @@ document.querySelectorAll(".linkbtn[data-goto]").forEach(b=>b.onclick=()=>showBo
 // conf: 'v' verified from docs · 'r' rough typology estimate · null = comp not meaningful. predio: exempt from €500k cap.
 const TZ="Europe/Lisbon";
 const LOTS=[
+  // ===== 25 Aug — added at user request (Avalibérica) =====
+  {ref:"AV-9379-PT",plat:"Avalibérica",type:"Estacionamento ×2",loc:"Senhora da Hora, Matosinhos",dist:"Porto",val:"mín €17,510 cada · base €20,600 (Frações P+T)",price:17510,mkt:10000,conf:"r",isnew:true,cb:"Two covered parking spaces (Frações P & T), Trav. Bernardo Santareno 99 (cave), Senhora da Hora — PLD Distribuição Informática insolvency. Market ~€10k each (your read) vs €17,510 reserve → reserve ~75% ABOVE market. In this e-auction round the €17,510 mínimo is the hard floor (no sub-min bids); a ~€10k acquisition is only possible if the round closes deserta and it moves to venda por proposta / negociação particular (below-min proposal, seller discretion). Also on the same auction: comércio fração cave+sub-loja, mín €475,575 — over cap.",end:"2026-09-15T18:00:00+01:00",url:"https://www.avaliberica.pt/auction-list.php?id=9379",vc:"no",vl:"reserve > market (parking)"},
   // ===== 24 Aug — new e-leilões batch (closing 22 Sep) =====
   {ref:"LO1504672026",plat:"e-leilões",type:"Moradia",loc:"Sta Marta de Portuzelo, Viana do Castelo",dist:"Viana do Castelo",val:"bid €288,743 — reserve MET · mín €283,054",price:283054,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Moradia c/ piscina, 165 m², Portuzelo. Bid above reserve. Not yet valued — Investigate.",end:"2026-09-22T10:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1504672026",vc:"low",vl:"Moradia"},
   {ref:"LO1503982026",plat:"e-leilões",type:"Apartamento",loc:"Meixomil, Paços de Ferreira",dist:"Porto",val:"bid €72,842 · mín €114,325",price:114325,mkt:null,isnew:true,cb:"NEW (24 Aug sweep). Apartamento T2, 59.65 m², Meixomil. Not yet valued — Investigate.",end:"2026-09-22T10:00:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1503982026",vc:"low",vl:"Apartamento T2"},
