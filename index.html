@@ -177,7 +177,7 @@
 <body>
 <div class="topbar">
   <div class="nav">
-    <button class="navtab active" data-board="platforms">Platforms<span class="tc">147</span></button>
+    <button class="navtab active" data-board="platforms">Platforms<span class="tc">150</span></button>
     <button class="navtab" data-board="leads">Executivos · penhora<span class="tc">49</span></button>
     <button class="navtab" data-board="dec">Declarativos<span class="tc">29</span></button>
   </div>
@@ -192,7 +192,7 @@
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin. <b>Everything now lives on one page</b> — use the tabs above for the two Citius lead registers.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">25 Aug 2026 · added Avalibérica parking pair (Senhora da Hora) — reserve above market</span></span>
+    <span><b>Updated:</b> <span id="stamp">27 Aug 2026 · swept 30 days incl. Porto-metro parking — labels preserved</span></span>
     <span><b>17 Aug full sweep:</b> every e-leilões <i>urbano</i> closing ≤ 16 Sep across the 5 districts — now 135 lots; ended auctions + direitos/quinhões/partes-de-fração/usufruto removed; rústico/garagens dropped. Most are un-triaged (grey) — sort via the editor. Leilosoc + small platforms kept in-window, not re-swept this pass.</span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
     <span><b>Platforms (11):</b> e-leilões · Leilosoc · LeilOn · Avalibérica · Bidleiloeira · Imoloriente · OneFix · INLEX · VLeilões · <span style="color:var(--mut2)">Leiloatrium/Paterfamília (blank) · Finanças (login)</span></span>
@@ -391,6 +391,10 @@ document.querySelectorAll(".linkbtn[data-goto]").forEach(b=>b.onclick=()=>showBo
 // conf: 'v' verified from docs · 'r' rough typology estimate · null = comp not meaningful. predio: exempt from €500k cap.
 const TZ="Europe/Lisbon";
 const LOTS=[
+  // ===== 27 Aug — sweep incl. Porto-metro parking =====
+  {ref:"NP1229782026",plat:"e-leilões",type:"Prédio T4",loc:"Lavra, Matosinhos",dist:"Porto",val:"bid €320,000 · mín €517,990",price:517990,mkt:null,predio:true,isnew:true,cb:"NEW (27 Aug sweep). Prédio urbano T4, Lavra (coastal Matosinhos, Porto metro). Reserve €517,990 — above the €500k comfort but tagged prédio (exempt). Likely a single T4 house registered as prédio; confirm if multi-unit. Not yet valued — Investigate.",end:"2026-09-24T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1229782026",vc:"low",vl:"PRÉDIO T4"},
+  {ref:"EL-VLG-GAR13",plat:"e-leilões",type:"Garagens ×13",loc:"Valongo (cave)",dist:"Porto",val:"mín €3,655–€5,440 cada · 13 lugares",price:3655,mkt:null,isnew:true,cb:"NEW (27 Aug sweep). 13 individual covered garage spaces (lugares em cave), same building, Valongo (Porto metro) — income play. Reserves €3,655–€5,440 each; several already bid near/above reserve. Est. rent ~€30–35/mo → ~9–11% gross at ~€4k entry. Refs: LO1496732026, LO1496562026, LO1496612026, LO1496632026, LO1496682026, LO1496742026, LO1496752026, LO1496532026, LO1496542026, LO1496552026, LO1496572026, LO1496592026, LO1496622026. Rough (rent est).",end:"2026-09-08T10:30:00+01:00",url:"https://www.e-leiloes.pt/evento/LO1496732026",vc:"low",vl:"parking ×13 · income"},
+  {ref:"NP1237922026",plat:"e-leilões",type:"Garagem",loc:"S. Mamede Infesta / Sra da Hora, Matosinhos",dist:"Porto",val:"mín €9,000 · base €10,588",price:9000,mkt:10000,conf:"r",isnew:true,cb:"NEW (27 Aug sweep). Lugar de garagem 10 m², S. Mamede de Infesta / Senhora da Hora, Matosinhos (Porto metro, near metro). Reserve €9,000 ≈ market (~€10k). Est. rent ~€40–50/mo → ~5–7% gross at reserve. Income play. Rough.",end:"2026-09-15T14:30:00+01:00",url:"https://www.e-leiloes.pt/evento/NP1237922026",vc:"view",vl:"parking ~6% gross"},
   // ===== 25 Aug — added at user request (Avalibérica) =====
   {ref:"AV-9379-PT",plat:"Avalibérica",type:"Estacionamento ×2",loc:"Senhora da Hora, Matosinhos",dist:"Porto",val:"mín €17,510 cada · base €20,600 (Frações P+T)",price:17510,mkt:10000,conf:"r",isnew:true,cb:"Two covered parking spaces (Frações P & T), Trav. Bernardo Santareno 99 (cave), Senhora da Hora — PLD Distribuição Informática insolvency. Market ~€10k each (your read) vs €17,510 reserve → reserve ~75% ABOVE market. In this e-auction round the €17,510 mínimo is the hard floor (no sub-min bids); a ~€10k acquisition is only possible if the round closes deserta and it moves to venda por proposta / negociação particular (below-min proposal, seller discretion). Also on the same auction: comércio fração cave+sub-loja, mín €475,575 — over cap.",end:"2026-09-15T18:00:00+01:00",url:"https://www.avaliberica.pt/auction-list.php?id=9379",vc:"no",vl:"reserve > market (parking)"},
   // ===== 24 Aug — new e-leilões batch (closing 22 Sep) =====
