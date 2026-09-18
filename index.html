@@ -3,7 +3,7 @@
 {
   "name": "Porto Auction Tracker",
   "schemaVersion": 1,
-  "description": "One board for everything: Porto + Norte judicial/insolvency property auctions. Three tabs in a single page — Platforms (valued lots with margin, live-countdown calendar, per-lot editor), Off-platform leads (Citius executivos/penhora), and Declarativos (Citius CIRE/inventário, documented). Prices refreshed 07 Aug 2026. Live private site at porto-auction-tracker.pages.dev (Cloudflare Access, m@inbet.io only). Editor marks persist on the live site, not in the artifact preview.",
+  "description": "One board for everything: Porto + Norte judicial/insolvency property auctions. Three tabs in a single page — Platforms (valued lots with margin, live-countdown calendar, per-lot editor), Off-platform leads (Citius executivos/penhora), and Carta fechada (Citius sealed-bid property, live). Prices refreshed 07 Aug 2026. Live private site at porto-auction-tracker.pages.dev (Cloudflare Access, m@inbet.io only). Editor marks persist on the live site, not in the artifact preview.",
   "mcpTools": [],
   "mcpServerNames": []
 }
@@ -179,7 +179,7 @@
   <div class="nav">
     <button class="navtab active" data-board="platforms">Platforms<span class="tc">171</span></button>
     <button class="navtab" data-board="leads">Executivos · penhora<span class="tc">49</span></button>
-    <button class="navtab" data-board="dec">Declarativos<span class="tc">29</span></button>
+    <button class="navtab" data-board="cf">Carta fechada<span class="tc">28</span></button>
   </div>
   <div class="grow"></div>
   <a class="navtab" href="./dossier.html" target="_blank" rel="noopener" style="text-decoration:none">🔍 Investigate dossier ↗</a>
@@ -192,8 +192,9 @@
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin. <b>Everything now lives on one page</b> — use the tabs above for the two Citius lead registers.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">18 Sep 2026 · parking rules widened · 3 parking lots added · 109 live</span></span>
-    <span><b>18 Sep — parking rules widened:</b> you flagged the Famalicão estacionamento (Vias &amp; Rumos verba 10114) as a miss. It had been found on the 15 Sep sweep and dropped under the old <i>Porto-metro-only</i> parking rule but never surfaced — that omission was the error, not the rule. Two rules have now changed: parking is kept across <b>all 5 districts</b>, and <b>parking usufructs are tracked</b> (flagged with their term) while usufruct stays excluded for houses and buildings. Re-auditing every live parking lot in the 5 districts found only 5, of which 3 are now on the board: the Famalicão bay (€5,950, ~6% gross), the Bonfim garage (€29,750), and newly <b>NP1231412026 — a 16 m² bay on Rua da Areosa, Paranhos, Porto at €3,826</b>, between the Pólo Universitário and Hospital de São João. That last one pays back in ~5 years on local rents, but it is a usufruto whose TERM IS NOT STATED — ask the agente (Mário Fernandes, 1269@solicitador.net) before it closes 30 Sep.</span>
+    <span><b>Updated:</b> <span id="stamp">18 Sep 2026 · third tab is now Carta fechada — 28 live sealed-bid lots · parking rules widened · 109 live on Platforms</span></span>
+    <span><b>18 Sep — Declarativos tab replaced by Carta fechada:</b> the old third tab held CIRE/inventário court processes from late July, six weeks stale. It now holds <b>sealed-bid property sales, swept live</b>. Carta fechada does not exist on e-leilões (which runs only leilão eletrónico and negociação particular) and is effectively absent from the other platforms — it lives on <b>Citius</b>, so the sweep goes there: all <b>67 concelho courts</b> of the 5 districts, filtered to Tipo de Bem = Imóvel, Modalidade = carta fechada, Estado = Em venda. 77 found, <b>28 kept</b> after dropping fractional shares, usufructs, rústico and over-cap. The old declarativos data is archived, not deleted.</span>
+    <span><b>18 Sep — parking rules widened:</b> you flagged the Famalicão estacionamento (Vias &amp; Rumos verba 10114) as a miss — found on the 15 Sep sweep, dropped under the old Porto-metro-only rule, never surfaced. Parking is now kept across <b>all 5 districts</b> and <b>usufructs are tracked</b> for parking (flagged with their term). Three parking lots now on the board, including <b>NP1231412026, a 16 m² bay on Rua da Areosa, Paranhos at €3,826</b> — a usufruto whose term is not stated; ask the agente (Mário Fernandes, 1269@solicitador.net) before it closes 30 Sep.</span>
     <span><b>15 Sep sweep:</b> 327 property lots across the 5 districts from 12 source portals → 258 closing in window → 162 after dropping rústico, fractional shares and usufruct → <b>20 new</b> after dedup. Duplicates blocked: the Lobão T3 second round, Leilosoc 171076 and 172379 (already held under Leilosoc refs), the Ervedal twins, the Anadia prédio, the Figueira São Julião prédio, and the Paredes lemon-plantation plot (aggregator had it as building land — it is rústico). Verified as genuinely separate despite looking identical: the two Taipas lojas (registo 335-CM vs 335-CX) and the two Tavarede plots.</span>
     <span><b>9 Sep full sweep:</b> every e-leilões <i>urbano</i> closing ≤ 10 Oct across the 5 districts — 2,208 events scanned, <b>34 new lots</b> added; direitos/quinhões/partes-de-fração/usufruto, rústico, vehicles, quotas de sociedade and fractional shares dropped. <b>Parking kept</b> in the Porto metro concelhos (income). Duplicate listings merged on processo + verba — 2 found (Porto office, Lobão T2). The 8 Sep batch resolved: 5 sold, 5 unsold below reserve, 2 cancelled. New lots are un-triaged (grey) — sort via the editor.</span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts · full ownership — <b>except parking</b>, which from 18 Sep is kept across <b>all 5 districts</b> (not just Porto metro) and <b>may be a usufruto</b>, flagged with its term</span>
@@ -282,7 +283,7 @@
 <section class="board" id="board-leads">
 <div class="wrap">
   <h1>Executivos (penhora) — off-platform, closing this month</h1>
-  <div class="sub">Urban penhora sales in Porto · Braga · Aveiro · Coimbra · Viana do Castelo, sold by <b>sealed bid</b> or <b>private negotiation</b> — Citius is the only public listing. Swept from the executive register, sale date 1–31 Aug 2026. <b>No documents on the register:</b> valor base is on the list; área, registo &amp; matricial are in "ver mais"; the edital + agente-de-execução contact come from the <b>court</b> (per lot). For lots that come <i>with</i> the document + administrador contact, see the <button class="linkbtn" data-goto="dec">Declarativos</button> tab.</div>
+  <div class="sub">Urban penhora sales in Porto · Braga · Aveiro · Coimbra · Viana do Castelo, sold by <b>sealed bid</b> or <b>private negotiation</b> — Citius is the only public listing. Swept from the executive register, sale date 1–31 Aug 2026. <b>No documents on the register:</b> valor base is on the list; área, registo &amp; matricial are in "ver mais"; the edital + agente-de-execução contact come from the <b>court</b> (per lot). For lots that come <i>with</i> the document + administrador contact, see the <button class="linkbtn" data-goto="cf">Carta fechada</button> tab.</div>
 
   <div class="cards">
     <div class="card good"><div class="n" id="ld-c-total">–</div><div class="l">Urban lots closing August</div></div>
@@ -328,39 +329,39 @@
 </section>
 
 <!-- ============================ DECLARATIVOS ============================ -->
-<section class="board" id="board-dec">
+<section class="board" id="board-cf">
 <div class="wrap">
-  <h1>Declarativos — documented lots</h1>
-  <div class="sub">Insolvency (CIRE) / inventário / divisão / herança sales in your 5 districts, last 30 days. <b>Unlike the executivos register, each of these publishes a downloadable anúncio</b> — property, valor, deadline, modalidade, and the <b>administrador's full contact</b>. The catch: CIRE mixes real estate with business assets/movables, and many route to e-leilões/Leilosoc (visible) — so each needs one read to confirm it's an <b>off-platform urban</b> keeper.</div>
+  <h1>Carta fechada — sealed-bid property, live now</h1>
+  <div class="sub">Every <b>venda mediante proposta em carta fechada</b> of an <i>imóvel</i> currently <b>Em venda</b> across all 67 concelho courts of the 5 districts, swept live from the Citius executivos register. No public bidding and no countdown: you submit a <b>sealed written proposal</b> to the court or agente de execução, and proposals are opened together. That means <b>less visible competition than an e-leilão</b> — and no way to see what anyone else offered.</div>
 
   <div class="cards">
-    <div class="card"><div class="n" id="dc-c-total">–</div><div class="l">Documented processos (30d)</div></div>
-    <div class="card good"><div class="n">has anúncio</div><div class="l">every one</div></div>
-    <div class="card warn"><div class="n" id="dc-c-read">–</div><div class="l">Read so far</div></div>
-    <div class="card"><div class="n" id="dc-c-porto">–</div><div class="l">Porto district</div></div>
+    <div class="card"><div class="n" id="cf-c-total">–</div><div class="l">Sealed-bid lots (in scope)</div></div>
+    <div class="card good"><div class="n" id="cf-c-cheap">–</div><div class="l">Under &euro;25k</div></div>
+    <div class="card"><div class="n" id="cf-c-porto">–</div><div class="l">Porto district</div></div>
+    <div class="card warn"><div class="n" id="cf-c-raw">77</div><div class="l">Found before scope filter</div></div>
   </div>
 
   <div class="note">
-    <b>How to read this.</b> Each row is a court process with an anúncio you can see. <b>📄 anúncio</b> = document available. The <b>Processo ↗</b> opens the Citius declarativos search — pick the court (comarca shown), then "Ver Mais" on the row to view/download the anúncio. Or hit <b>Sync</b> and I'll pull the anúncio + contact + deadline onto this page for each keeper and attach the document to you. <b>Espécie:</b> CIRE = insolvency liquidation · Inventário = estate/probate. <b>Note:</b> the O. Azeméis moradia (1198/26.3T8OAZ-C) is now valued live on the <button class="linkbtn" data-goto="platforms">Platforms</button> tab.
+    <b>How to read this.</b> <b>Valor base</b> is the court's base value — the published floor for proposals, not a market estimate; nothing here is valued against comparables yet, so treat every figure as a starting point, not a margin. Sorted cheapest first. <b>Processo ↗</b> opens the Citius executivos search — select the court shown, set <i>Modalidade</i> to &ldquo;Venda mediante proposta em carta fechada&rdquo;, then <b>ver mais</b> on the row for the full description, the proposal deadline and the agente de execução. <b>The deadline is not in the list view</b> — it is inside each record, so check it before doing anything else. 49 of the 77 found were dropped as fractional shares, usufructs, rústico or over-cap.
   </div>
 
   <div class="toolbar">
     <label style="color:var(--mut2)">District:</label>
-    <select id="dc-district"><option value="">All</option></select>
-    <label style="color:var(--mut2)">Show:</label>
-    <select id="dc-filt"><option value="">All</option><option value="unread">Unread only</option><option value="read">Read only</option></select>
+    <select id="cf-district"><option value="">All</option></select>
+    <label style="color:var(--mut2)">Max &euro;:</label>
+    <select id="cf-max"><option value="">Any</option><option value="25000">25k</option><option value="50000">50k</option><option value="100000">100k</option><option value="250000">250k</option></select>
     <div class="spacer"></div>
-    <span class="cnt" id="dc-cnt"></span>
+    <span class="cnt" id="cf-cnt"></span>
   </div>
 
   <div class="tw">
   <table>
-    <thead><tr><th>District</th><th>Processo</th><th>Espécie</th><th>Published</th><th>Bens</th><th>Doc</th><th>Finding</th></tr></thead>
-    <tbody id="dc-tb"></tbody>
+    <thead><tr><th>District</th><th>Concelho</th><th>Valor base</th><th>Bem</th><th>Processo</th></tr></thead>
+    <tbody id="cf-tb"></tbody>
   </table>
   </div>
 
-  <div class="foot">Source: Portal Citius — Venda de Bens em Processos Declarativos (últimos 30 dias). Findings are from reading each anúncio; unread rows have the document available but not yet classified. This tool never bids, submits a proposal, or pays.</div>
+  <div class="foot">Source: Portal Citius &mdash; Venda de Bens Penhorados em Processos Executivos, filtered to Tipo de Bem = Im&oacute;vel, Modalidade = Venda mediante proposta em carta fechada, Estado = Em venda. Swept 18 Sep 2026 across all 67 courts of the 5 districts. Valor base is the court's figure, not a valuation. This tool never bids, submits a proposal, or pays.</div>
 </div>
 </section>
 
@@ -902,57 +903,27 @@ render();
 <script>
 // ================= DECLARATIVOS BOARD =================
 (function(){
-const D=[
-  ["Porto","2494/22.4T8STS-E","CIRE","05/08",1,"skip","Oxecode Shoes — leilão eletrónico (Leilosoc), €3.618 → movables, on-platform"],
-  ["Porto","1586/26.5T8VNG-F","CIRE","04/08",1,"skip","Dohm Logístico — €1.198.000 industrial (e-leilões) → over €500k, on-platform"],
-  ["Aveiro","1198/26.3T8OAZ-C","CIRE","03/08",1,"watch","Moradia, O. Azeméis — mín €222.700 (e-leilões LO1504762026), closes 22/09 → now valued live on the Platforms tab"],
-  ["Viana do Castelo","2364/16.5T8VCT-G","CIRE","31/07",2,"skip","procedural cover (juntar a processo) — no sale terms"],
-  ["Aveiro","2753/25.4T8OAZ-D","CIRE","31/07",1,"unread",""],
-  ["Coimbra","3082/23.3T8CBR-C","CIRE","31/07",1,"unread",""],
-  ["Braga","4997/25.0T8GMR-E","CIRE","31/07",1,"unread",""],
-  ["Braga","6087/25.6T8VNF-C","CIRE","28/07",1,"unread",""],
-  ["Porto","4336/24.7T8VNG-E","CIRE","28/07",1,"unread",""],
-  ["Braga","3595/25.2T8VNF-C","CIRE","28/07",1,"unread",""],
-  ["Porto","2700/23.8T8STS-C","CIRE","27/07",1,"unread",""],
-  ["Porto","1468/21.7T8STS-E","CIRE","26/07",1,"unread",""],
-  ["Aveiro","124/23.6T8ARC","INV","23/07",1,"unread",""],
-  ["Aveiro","298/24.9T8AVR-B","CIRE","22/07",1,"unread",""],
-  ["Aveiro","565/26.7T8OAZ-D","CIRE","21/07",1,"unread",""],
-  ["Aveiro","1225/26.4T8OAZ-C","CIRE","21/07",1,"unread",""],
-  ["Porto","664/26.5T8STS-C","CIRE","20/07",2,"unread",""],
-  ["Braga","832/22.9T8GMR-D","CIRE","20/07",1,"unread",""],
-  ["Aveiro","3002/23.5T8AVR-Q","CIRE","20/07",1,"unread",""],
-  ["Aveiro","1316/22.0T8AGD","INV","16/07",1,"unread",""],
-  ["Porto","3027/24.3T8STS-F","CIRE","16/07",3,"unread",""],
-  ["Braga","4678/25.4T8GMR-C","CIRE","16/07",1,"unread",""],
-  ["Porto","2097/24.9T8STS-F","CIRE","16/07",1,"unread",""],
-  ["Aveiro","1421/25.1T8OAZ-C","CIRE","16/07",1,"unread",""],
-  ["Aveiro","1345/26.5T8OAZ-C","CIRE","15/07",1,"unread",""],
-  ["Porto","2242/25.7T8STS-C","CIRE","14/07",1,"unread",""],
-  ["Aveiro","3607/25.0T8OAZ-B","CIRE","10/07",1,"unread",""],
-  ["Viana do Castelo","1522/24.3T8VCT-B","CIRE","09/07",1,"unread",""],
-  ["Braga","2018/26.4T8GMR-C","CIRE","09/07",1,"unread",""]
-];
-const CIT="https://www.citius.mj.pt/portal/consultas/ConsultaVendaAnuncios.aspx";
-let fD="", fF="";
-const dists=[...new Set(D.map(r=>r[0]))].sort();
-const sel=document.getElementById("dc-district"); dists.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;sel.appendChild(o);});
-document.getElementById("dc-c-total").textContent=D.length;
-document.getElementById("dc-c-read").textContent=D.filter(r=>r[5]!=="unread").length;
-document.getElementById("dc-c-porto").textContent=D.filter(r=>r[0]==="Porto").length;
+const CF=[["Coimbra", "Lousã", 1372.12, "Artigo urbano 4517, sito no Montoiro, em Miranda do Corvo, con", "32/10.0TALSA", "1240060"], ["Porto", "Vila Nova de Gaia", 5000, "2-Fracção autónoma designada pelas letras DJ correspondente a ", "2924/12.3TBVNG-A", "1179222"], ["Porto", "Porto", 6500, "Prédio urbano sito no Lugar do Forno de Cima, freguesia de Rio", "4206/17.5T8PRT", "62810"], ["Viana do Castelo", "Valença", 7500, "Prédio urbano, compostode casa de um pavimento, sito no lugar ", "366/10.4TBVLN", "7040183"], ["Coimbra", "Coimbra", 9733.5, "Fracção Autómoma designada pelas letras ZB, respeitante a arru", "843/03.3TTCBR-A", "1196387"], ["Porto", "Porto", 12149.55, "prédio urbano, composto por casa de rés do chão e logradouro, ", "2791/14.2T8PRT", "8771301"], ["Porto", "Porto", 20300, "Prédio urbano que corresponde a um terreno para construção, si", "9300/06.5YYPRT", "719553"], ["Porto", "Porto", 24500, "Prédio urbano composto por fracção autónoma, designada pela le", "2578/08.1YYPRT", "948142"], ["Porto", "Porto", 40500, "Fracção autónoma identificada pelas letras AS, correspondente ", "899/18.4T8ENT", "568206"], ["Porto", "Porto", 50729.92, "Fracção D correspondente a uma habitação no primeiro andar A d", "5877/07.6YYPRT", "1037337"], ["Porto", "Paredes", 62000, "Prédio urbano composto de casa de rés-do.chão, com a superfíci", "883/03.2TBPRD", "68170"], ["Braga", "Vila Nova de Famalicão", 62000, "Prédio urbano, designado pela fracção \"AP\", situado na Praça d", "4438/05.9TBBCL", "589019"], ["Aveiro", "Vale de Cambra", 64995, "Fracção autónoma \"CL\", 8.º andar direito, recuado, no 2.º Bloc", "268/05.6TBVLC", "775996"], ["Braga", "Guimarães", 79200, "Fração autónoma designada pelas letras FM correspondente a uma", "3137/19.9T8GMR", "8600714"], ["Porto", "Porto", 91000, "Prédio em prof. total, casa de habitação, sito no Lugar da Cun", "10014/06.1YYPRT", "1021778"], ["Aveiro", "Oliveira de Azeméis", 92500, "Fracção autónoma designada pel letra 'B', correspondente a uma", "3028/26.7T8OAZ", "624728"], ["Porto", "Porto", 94500, "Fração autónoma destinada a habitação designada pela letra O, ", "2345/07.0YYPRT", "6848650"], ["Aveiro", "Oliveira de Azeméis", 105880.74, "Prédio Urbano , conctituido por habitação nº 30, no terceiro a", "4019/25.0T8OAZ", "8536831"], ["Porto", "Lousada", 114143, "Fracção autónoma designada pela letra \"S\", correspondente a um", "4540/05.7TBPRD", "1272287"], ["Braga", "Braga", 123529.41, "Prédio Urbano, sito no Sítio das Florenças, Arco da Calheta, 9", "1337/11.9TaBRG-A", "7661415"], ["Porto", "Vila Nova de Gaia", 132210, "Fracção Autónoma designada pela letra \"O\", correspondente a um", "546/06.7TYVNG", "880809"], ["Porto", "Vila Nova de Gaia", 132572, "Fracção Autónoma -Correspondente à letra D, com afectação para", "507/04.0TYVNG", "859481"], ["Braga", "Braga", 135939.69, "Prédio Urbano em propriedade total sem andares nem divisões su", "944/07.9TTBRG-B", "875952"], ["Porto", "Vila Nova de Gaia", 143917.5, "Prédio Urbano destinado a Armazém, todo amplo com escritóriso ", "978/10.6TYVNG", "1529378"], ["Porto", "Santo Tirso", 146000, "Fracção autónoma, designada por AD, do prédio urbano, sito na ", "329/10.0TBGDM", "1134741"], ["Coimbra", "Coimbra", 170000, "Casa de habitação composta por sub-cave, cave, rés do chão, 1º", "25/12.3TBOHP", "1522975"], ["Porto", "Porto", 190750, "Parcela de terreno para construção - Norte: Luis Loureiro Sul ", "35585/05.6YYPRT-B", "1015866"], ["Aveiro", "Oliveira de Azeméis", 246714.28, "Terreno destinado a construção a confrontara a norte com Eduar", "2351/07.4TBOAZ", "978023"]];
+const CITE="https://www.citius.mj.pt/portal/consultas/ConsultasVenda.aspx";
+let fCD="", fCM="";
+const cdists=[...new Set(CF.map(r=>r[0]))].sort();
+const csel=document.getElementById("cf-district"); cdists.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;csel.appendChild(o);});
+const eur=n=>"\u20ac"+Number(n).toLocaleString("pt-PT",{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById("cf-c-total").textContent=CF.length;
+document.getElementById("cf-c-cheap").textContent=CF.filter(r=>r[2]<25000).length;
+document.getElementById("cf-c-porto").textContent=CF.filter(r=>r[0]==="Porto").length;
 function render(){
-  let rows=D.filter(r=>(!fD||r[0]===fD)&&(!fF||(fF==="unread"?r[5]==="unread":r[5]!=="unread")));
-  document.getElementById("dc-cnt").textContent=rows.length+" of "+D.length;
-  document.getElementById("dc-tb").innerHTML=rows.map(r=>{
-    const esp=r[2]==="INV"?'<span class="pill inv">Inventário</span>':'<span class="pill cire">CIRE</span>';
-    const st=r[5]==="unread"?'<span class="st unread">— unread</span>':`<span class="st ${r[5]}">${r[6]}</span>`;
-    const bens=r[4]>1?`${r[4]} bens`:'1';
-    return `<tr><td>${r[0]}</td><td><a class="cit" href="${CIT}" target="_blank" rel="noopener" title="Open Citius declarativos — select this court's comarca, then Ver Mais on the row">${r[1]} ↗</a></td>`+
-      `<td>${esp}</td><td>${r[3]}</td><td>${bens}</td><td><span class="doc">📄 anúncio</span></td><td>${st}</td></tr>`;
+  let rows=CF.filter(r=>(!fCD||r[0]===fCD)&&(!fCM||r[2]<=parseFloat(fCM)));
+  document.getElementById("cf-cnt").textContent=rows.length+" of "+CF.length;
+  document.getElementById("cf-tb").innerHTML=rows.map(r=>{
+    const cheap=r[2]<25000?' style="color:var(--good);font-weight:600"':'';
+    return `<tr><td>${r[0]}</td><td>${r[1]}</td><td${cheap}>${eur(r[2])}</td>`+
+      `<td title="${r[3].replace(/"/g,'&quot;')}">${r[3]}\u2026</td>`+
+      `<td><a class="cit" href="${CITE}" target="_blank" rel="noopener" title="Open Citius executivos \u2014 select this court, set Modalidade to carta fechada, then ver mais">${r[4]} \u2197</a></td></tr>`;
   }).join("");
 }
-sel.onchange=()=>{fD=sel.value;render();};
-document.getElementById("dc-filt").onchange=e=>{fF=e.target.value;render();};
+csel.onchange=()=>{fCD=csel.value;render();};
+document.getElementById("cf-max").onchange=e=>{fCM=e.target.value;render();};
 render();
 })();
 </script>
