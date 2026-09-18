@@ -179,7 +179,7 @@
   <div class="nav">
     <button class="navtab active" data-board="platforms">Platforms<span class="tc">171</span></button>
     <button class="navtab" data-board="leads">Executivos · penhora<span class="tc">49</span></button>
-    <button class="navtab" data-board="dec">Carta fechada<span class="tc">10</span></button>
+    <button class="navtab" data-board="dec">Declarativos<span class="tc">29</span></button>
   </div>
   <div class="grow"></div>
   <a class="navtab" href="./dossier.html" target="_blank" rel="noopener" style="text-decoration:none">🔍 Investigate dossier ↗</a>
@@ -192,8 +192,8 @@
   <h1>Porto / Norte Auction Tracker</h1>
   <div class="sub">Judicial &amp; insolvency property auctions — urban lots with a published value, across Porto · Braga · Aveiro · Coimbra · Viana do Castelo. Countdowns are live; every valued lot carries a comparable-market read and margin. <b>Everything now lives on one page</b> — use the tabs above for the two Citius lead registers.</div>
   <div class="meta">
-    <span><b>Updated:</b> <span id="stamp">16 Sep 2026 · 41 auctions that closed on 15 Sep removed · 106 live through 15 Oct</span></span>
-    <span><b>16 Sep prune:</b> the whole 15 Sep batch — 41 lots — closed and was removed; the board is forward-only again, starting 16 Sep. Results on the five you had marked Investigate: Gondomar apartment <b>SOLD €187,020</b> against a €46,441 reserve (four times over — heavily contested); Guimarães armazém <b>SOLD €35,000</b> (reserve €31,939); Guimarães loja reached €43,185 but the sale was <b>CANCELLED</b>; Santa Maria da Feira moradia <b>UNSOLD</b> at €159,228 against a €187,000 reserve; and the €9,000 S. Mamede Infesta <b>garagem went UNSOLD at €5,307</b> — watch for a second round or negociação particular, where a below-reserve offer becomes possible. All 164 Investigate/Dismiss marks preserved.</span>
+    <span><b>Updated:</b> <span id="stamp">18 Sep 2026 · Famalicão parking added after you flagged it · 107 live · parking rules under review</span></span>
+    <span><b>18 Sep — parking rule audit:</b> you flagged the Famalicão estacionamento (Vias &amp; Rumos verba 10114) as a miss. It had been found on the 15 Sep sweep and dropped under the <i>parking = Porto metro only</i> rule, but never surfaced to you — that omission was the error. It is now on the board. I then re-ran every live parking lot across the 5 districts: there are only <b>5</b>, and exactly <b>2</b> were being suppressed by rules — this one (Porto-metro rule) and a <b>16 m² bay on Rua Areosa, Paranhos, Porto at €3,826</b> (usufruct rule; NP1231412026, closes 30 Sep, no bids). The Paranhos one is right on your price point and in a dense parking-starved area, but it is a <i>direito de usufruto</i>, not ownership — the income runs only for the usufruct term, so its worth depends entirely on the duration stated in the edital. Not imported pending your call on the rule.</span>
     <span><b>15 Sep sweep:</b> 327 property lots across the 5 districts from 12 source portals → 258 closing in window → 162 after dropping rústico, fractional shares and usufruct → <b>20 new</b> after dedup. Duplicates blocked: the Lobão T3 second round, Leilosoc 171076 and 172379 (already held under Leilosoc refs), the Ervedal twins, the Anadia prédio, the Figueira São Julião prédio, and the Paredes lemon-plantation plot (aggregator had it as building land — it is rústico). Verified as genuinely separate despite looking identical: the two Taipas lojas (registo 335-CM vs 335-CX) and the two Tavarede plots.</span>
     <span><b>9 Sep full sweep:</b> every e-leilões <i>urbano</i> closing ≤ 10 Oct across the 5 districts — 2,208 events scanned, <b>34 new lots</b> added; direitos/quinhões/partes-de-fração/usufruto, rústico, vehicles, quotas de sociedade and fractional shares dropped. <b>Parking kept</b> in the Porto metro concelhos (income). Duplicate listings merged on processo + verba — 2 found (Porto office, Lobão T2). The 8 Sep batch resolved: 5 sold, 5 unsold below reserve, 2 cancelled. New lots are un-triaged (grey) — sort via the editor.</span>
     <span><b>Rule:</b> urban · with value · ≤ €500k (prédios exempt) · 5 districts</span>
@@ -330,44 +330,37 @@
 <!-- ============================ DECLARATIVOS ============================ -->
 <section class="board" id="board-dec">
 <div class="wrap">
-  <h1>Carta fechada — direto ao tribunal</h1>
-  <div class="sub">The Citius declarativos notices that carry a <b>downloadable anúncio</b>. These are the sales where bids go <b>straight to the court secretaria in a sealed envelope</b> — no leiloeira, no platform, no buyer's premium. The anúncio fixes the whole deal: the property, the <b>valor base</b>, the <b>85% floor</b> you must beat, the day and hour the envelopes are opened, and the <b>5% caução</b> (cheque visado) that must travel with the proposal. Every row below was read from its own PDF.</div>
+  <h1>Declarativos — documented lots</h1>
+  <div class="sub">Insolvency (CIRE) / inventário / divisão / herança sales in your 5 districts, last 30 days. <b>Unlike the executivos register, each of these publishes a downloadable anúncio</b> — property, valor, deadline, modalidade, and the <b>administrador's full contact</b>. The catch: CIRE mixes real estate with business assets/movables, and many route to e-leilões/Leilosoc (visible) — so each needs one read to confirm it's an <b>off-platform urban</b> keeper.</div>
 
   <div class="cards">
-    <div class="card"><div class="n" id="cf-c-live">–</div><div class="l">Live sales (bids still open)</div></div>
-    <div class="card bad"><div class="n" id="cf-c-soon">–</div><div class="l">Opening within 14 days</div></div>
-    <div class="card good"><div class="n" id="cf-c-mine">–</div><div class="l">In your 5 districts</div></div>
-    <div class="card warn"><div class="n" id="cf-c-cheap">–</div><div class="l">Cheapest urban entry</div></div>
+    <div class="card"><div class="n" id="dc-c-total">–</div><div class="l">Documented processos (30d)</div></div>
+    <div class="card good"><div class="n">has anúncio</div><div class="l">every one</div></div>
+    <div class="card warn"><div class="n" id="dc-c-read">–</div><div class="l">Read so far</div></div>
+    <div class="card"><div class="n" id="dc-c-porto">–</div><div class="l">Porto district</div></div>
   </div>
 
   <div class="note">
-    <b>How this works.</b> Proposals are delivered to the court's secretaria <i>before</i> the stated hour — there is no online bidding and no extension. Each proposal needs a <b>cheque visado à ordem da secretaria for 5% of the valor anunciado</b> (or a bank guarantee), and postal proposals must carry CC/BI copy, NIF, marital regime and a contact or they are refused. <b>The floor is 85% of the valor base</b>, so the "Mínimo" column is what you actually have to beat. <b>Finding a row back on Citius:</b> the common key is the <b>Referência</b> — it prints on the Citius row as "Referência: 146287655" and is on every row here. But "Todos" returns ~16.000 registos at 10 per page, so Ctrl+F only ever searches the page you are on: <b>select the comarca shown on the row first</b>, then Ctrl+F the referência. Or just use <b>📄 anúncio (PDF)</b>, which opens the copy saved on this site the day the row was swept. That copy is the reliable one: Citius' own "Descarregar Ficheiro" address carries a <code>q=</code> token tied to the search session that produced it, so it stops working within the hour and cannot be bookmarked or shared. <b>Espécie:</b> Inventário = estate/probate · Divisão de Coisa Comum = co-owners forcing a sale · Herança = vacant estate. Charges: in these sales mortgages and penhoras do <i>not</i> automatically cancel the way they do in execução — read the "créditos reclamados" line and check the CRP before bidding.
+    <b>How to read this.</b> Each row is a court process with an anúncio you can see. <b>📄 anúncio</b> = document available. The <b>Processo ↗</b> opens the Citius declarativos search — pick the court (comarca shown), then "Ver Mais" on the row to view/download the anúncio. Or hit <b>Sync</b> and I'll pull the anúncio + contact + deadline onto this page for each keeper and attach the document to you. <b>Espécie:</b> CIRE = insolvency liquidation · Inventário = estate/probate. <b>Note:</b> the O. Azeméis moradia (1198/26.3T8OAZ-C) is now valued live on the <button class="linkbtn" data-goto="platforms">Platforms</button> tab.
   </div>
 
   <div class="toolbar">
     <label style="color:var(--mut2)">District:</label>
-    <select id="cf-district"><option value="">All</option></select>
+    <select id="dc-district"><option value="">All</option></select>
     <label style="color:var(--mut2)">Show:</label>
-    <select id="cf-filt">
-      <option value="live">Live only</option>
-      <option value="mine">My 5 districts</option>
-      <option value="urban">Urban only</option>
-      <option value="">Everything (incl. closed)</option>
-    </select>
-    <label style="color:var(--mut2)">Find:</label>
-    <input id="cf-q" type="search" placeholder="referência, processo, freguesia…" style="background:var(--panel2);border:1px solid var(--line);color:inherit;border-radius:7px;padding:5px 9px;font:inherit;font-size:12px;min-width:210px">
+    <select id="dc-filt"><option value="">All</option><option value="unread">Unread only</option><option value="read">Read only</option></select>
     <div class="spacer"></div>
-    <span class="cnt" id="cf-cnt"></span>
+    <span class="cnt" id="dc-cnt"></span>
   </div>
 
   <div class="tw">
   <table>
-    <thead><tr><th>Opens</th><th>District · Concelho</th><th>Property</th><th>Valor base</th><th>Mínimo (85%)</th><th>Caução 5%</th><th>Processo</th></tr></thead>
-    <tbody id="cf-tb"></tbody>
+    <thead><tr><th>District</th><th>Processo</th><th>Espécie</th><th>Published</th><th>Bens</th><th>Doc</th><th>Finding</th></tr></thead>
+    <tbody id="dc-tb"></tbody>
   </table>
   </div>
 
-  <div class="foot">Source: Portal Citius — Venda de Bens em Processos Declarativos, rows carrying "Descarregar Ficheiro". Each anúncio PDF is served from this site (<code>/anuncios/&lt;referência&gt;.pdf</code>), captured on the sweep date; the court's own copy remains authoritative. Every figure here was read out of the court's own anúncio PDF, not from a listing. Areas and matriz/CRP numbers are as written in the anúncio; nothing here is an appraisal. Always read the full anúncio and the certidão predial before preparing a proposal. This tool never bids, submits a proposal, or pays.</div>
+  <div class="foot">Source: Portal Citius — Venda de Bens em Processos Declarativos (últimos 30 dias). Findings are from reading each anúncio; unread rows have the document available but not yet classified. This tool never bids, submits a proposal, or pays.</div>
 </div>
 </section>
 
@@ -412,6 +405,8 @@ document.querySelectorAll(".linkbtn[data-goto]").forEach(b=>b.onclick=()=>showBo
 // conf: 'v' verified from docs · 'r' rough typology estimate · null = comp not meaningful. predio: exempt from €500k cap.
 const TZ="Europe/Lisbon";
 const LOTS=[
+  // ===== 18 Sep — added after user flagged it (Porto-metro parking rule had suppressed it) =====
+  {ref:"VR-10114",plat:"Vias & Rumos",type:"Estacionamento coberto (19 m²)",loc:"Calendário, Vila Nova de Famalicão",dist:"Braga",val:"mín €5,950 · abertura €5,000 · base €7,000 · sem licitações",price:5950,mkt:5200,conf:"r",isnew:true,cb:"ADDED 18 SEP AFTER YOU FLAGGED IT — I had found this on the 15 Sep sweep and dropped it under the Porto-metro-only parking rule, then failed to tell you. That omission was the mistake; the rule itself worked as written. Fração CF, estacionamento COBERTO E NÃO FECHADO, 19 m² bruta privativa, sub-cave direita traseiras, Rua Amélia Rey Colaço Lote 4 nº 439, Lugar do Penedo, Calendário. Matriz urbana 3881, CRP Calendário 1101, proc 539/26.8T8STS (Juízo de Comércio de Santo Tirso). Income read: open/covered parking in Famalicão lets for roughly €25–40/mo → ~€360/yr at the midpoint → ~6.0% gross at the €5,950 reserve, ~7.2% at the €5,000 opening bid. Capitalised at 7% that is ~€5,100, so the reserve sits slightly ABOVE a yield-based value. Weaker than your Porto-metro garages (9–11% at ~€4k) on three counts: Famalicão is a thinner rental market, it is not enclosed (lower rent, lower security), and a rear sub-cave bay is the least desirable position in any block. No bids yet. Ends 7 Oct 16:00.",end:"2026-10-07T16:00:00+01:00",url:"https://viaserumos.pt/verba/10114/",vc:"low",vl:"~6% gross · reserve at/over yield value"},
   // ===== 15 Sep — Avalibérica verba 62192 (same auction as the parking, different lot) =====
   {ref:"AV-9379-LOJA",plat:"Avalibérica",type:"Loja 96 m² (cave + sub-loja)",loc:"Senhora da Hora, Matosinhos",dist:"Porto",val:"mín €475,575 · base €559,500 · sem licitações",price:475575,mkt:190000,conf:"r",isnew:true,cb:"NEW (15 Sep sweep) — this is the commercial fração sitting on the SAME Avalibérica auction 9379 as the two Senhora da Hora parking spaces already on your board (AV-9379-PT). I had previously noted it as 'over cap' — that was wrong: at €475,575 it is inside the €500k rule, so it belongs on the board. But the number is bad: 96 m² at €475,575 is €4.954/m², and 96 m² of Senhora da Hora retail lets for roughly €900–1.300/mo = €10,8–15,6k/yr, which capitalises at 7% to only ~€155–225k. The reserve is roughly 2–3× a yield-based value. Proc 1904/25.3T8STS.",end:"2026-09-16T12:00:00+01:00",url:"https://www.avaliberica.pt/auction-list.php?id=9379#auctionDiv_62192",vc:"no",vl:"reserve ~2–3× yield value"},
   // ===== 15 Sep — aggregator sweep via Martelo (new, closing through 15 Oct) =====
@@ -902,233 +897,59 @@ render();
 </script>
 
 <script>
+// ================= DECLARATIVOS BOARD =================
 (function(){
-/* CF_DATA_START — regenerated by the daily Citius carta-fechada sweep. Do not hand-edit. */
-const CF_SWEPT = "2026-09-17";
-const CF=[
- {ref:"485943088", pdf:"anuncios/485943088.pdf", comarca:"Comarca do Porto", proc:"3913/23.8T8GDM", dist:"Porto", conc:"Gondomar", freg:"Foz do Sousa",
-  court:"Juízo de Família e Menores de Gondomar - Juiz 2", esp:"Inventário", pub:"2026-06-25",
-  open:"2026-09-22T10:00", kind:"urban", base:1389170, min:1180794.5,
-  title:"Casa de cave e r/ch + terreno bravio 5.200 m²",
-  bens:[
-   {d:"Prédio urbano — casa de cave e rés-do-chão. CRP Gondomar n.º 815, matriz urbana 6588.", base:1338850, min:1138022.5},
-   {d:"Prédio rústico — terreno bravio 5.200 m². CRP Gondomar n.º 815, matriz rústica 597.", base:50320, min:42772}
-  ],
-  posse:"Fernando Jorge Vieira Alves Pereira — Rua 25 de Abril 185, 4420-356 Gondomar",
-  contact:"Gondomar — Rua Padre Augusto Maia, 4420-245 · 224664330 · gondomar.judicial@tribunais.org.pt",
-  flag:"dig",
-  note:"The one in your own district, and the nearest deadline. €1.34M of avaliação on what the anúncio calls a cave + rés-do-chão is not a house price — the urban and the rústico share CRP description 815, so the value is almost certainly in the land, not the building. Worth pulling the certidão and the avaliação pericial before 22 Sep. The 5.200 m² rústico alone at €42.772 is the cheap half."},
-
- {ref:"100798940", pdf:"anuncios/100798940.pdf", comarca:"Comarca de Coimbra", proc:"208/25.6T8FIG", dist:"Coimbra", conc:"Figueira da Foz", freg:"Tavarede",
-  court:"Juízo Local Cível da Figueira da Foz - Juiz 1", esp:"Divisão de Coisa Comum", pub:"2026-07-01",
-  open:"2026-09-21T13:30", kind:"rustic", base:761971, min:646675.75,
-  title:"Três prédios rústicos — um deles a €619k",
-  bens:[
-   {d:"Rústico, Vale Porco, Tavarede. Matriz rústica 516, CRP Figueira da Foz 687.", min:3026.85},
-   {d:"Rústico, Vale Porco, Tavarede. Matriz rústica 523, CRP Figueira da Foz 2373.", min:619060.95},
-   {d:"Rústico, João do Lírio, Tavarede. Matriz rústica 292, CRP Figueira da Foz 2473.", min:24587.95}
-  ],
-  posse:"Na posse de requerentes e requeridos",
-  contact:"Figueira da Foz — Passeio Infante D. Henrique, 3080-154 · 233401740 · figfoz.judicial@tribunais.org.pt",
-  flag:"dig",
-  note:"A rústico carrying a €619.060,95 floor is not farmland — at that price Tavarede article 523 is being valued as building land on the Figueira edge. The anúncio gives no area, so the €/m² is unknown until the certidão. The other two verbas (€3.027 and €24.588) are ordinary small plots. Opens first of the whole list."},
-
- {ref:"145623805", pdf:"anuncios/145623805.pdf", comarca:"Comarca de Aveiro", proc:"1316/22.0T8AGD", dist:"Aveiro", conc:"Águeda", freg:"Valongo do Vouga",
-  court:"Juízo Local Cível de Águeda", esp:"Inventário", pub:"2026-07-16",
-  open:"2026-09-23T14:00", kind:"rustic", base:4700, min:4700,
-  title:"Dois eucaliptais — 4.900 m² e 2.400 m²",
-  bens:[
-   {d:"Verba 42 — rústico a eucaliptal, 4.900 m², sítio da Cruz. Matriz rústica 1668, CRP Águeda 6033.", min:3100},
-   {d:"Verba 60 — rústico a eucaliptal, 2.400 m², sítio da Cruz. Matriz rústica 2908, CRP Águeda 6566.", min:1600}
-  ],
-  posse:"Mandatário: Dr. Manuel Costa dos Santos, Rua do Comércio 39-1.º, Sever do Vouga · 234551668",
-  contact:"Águeda — R. Fernando Caldeira, 3750-147 · 234610310 · agueda.judicial@tribunais.org.pt",
-  flag:"skip",
-  note:"€3.100 for 4.900 m² and €1.600 for 2.400 m² is ~€0,63/m² — cheap, but an interessado (José Carlos Fernandes Vidal) has already filed for adjudicação at exactly those two amounts, so you would be bidding against a party who only has to match. Caução is tiny (€155 / €80). Only worth a proposal if you want the eucalyptus for its own sake."},
-
- {ref:"101060259", pdf:"anuncios/101060259.pdf", comarca:"Comarca de Viseu", proc:"818/24.9T8LMG", dist:"Viseu", conc:"Lamego", freg:"Almacave e Sé",
-  court:"Juízo Local Cível de Lamego", esp:"Inventário (Competência Exclusiva)", pub:"2026-07-02",
-  open:"2026-09-23T13:45", kind:"urban", base:192000, min:163200,
-  title:"Fração U — apartamento 1.º Dto, Urbanização das Lages",
-  bens:[{d:"Fração autónoma U, Rua 25 de Abril, Urbanização das Lages, Bloco centro, 1.º Direito, Lamego. Matriz 2343, CRP Lamego 897.", base:192000, min:163200}],
-  posse:"Cabeça de casal: Maria Helena Sequeira Ribeiro Rosário — Rua da Ortigosa, Ed. Satélite A, 104, Lamego",
-  contact:"Lamego — Av. Infantaria 9, 5100-147 · 254093540 · lamego.judicial@tribunais.org.pt",
-  flag:"outside",
-  note:"Outside your 5 districts and the number is not obviously cheap: €163.200 for an apartment in central Lamego is close to asking prices there, and the anúncio gives no area or typology, so there is nothing to underwrite against. Listed for completeness."},
-
- {ref:"145780003", pdf:"anuncios/145780003.pdf", comarca:"Comarca de Aveiro", proc:"124/23.6T8ARC", dist:"Aveiro", conc:"Arouca", freg:"Rossas",
-  court:"Juízo de Competência Genérica de Arouca", esp:"Inventário (Competência Exclusiva)", pub:"2026-07-23",
-  open:"2026-10-08T13:45", kind:"urban", base:190000, min:161500,
-  title:"Prédio misto \"Três Leiras do Pai Mendes\" — casa de 3 pisos + lavradio",
-  bens:[{d:"Verba 70 — prédio misto: casa de habitação de 3 pisos e terreno lavradio com anexos para arrumos, lugar de Terçoso, Rossas, Arouca. Matrizes urbana 451 e rústica 2011, CRP Arouca 2958, desanexado do prédio 33.922.", base:190000, min:161500}],
-  posse:"Cabeça de casal: Ana Maria de Almeida Tavares — Casal Bom, Santa Eulália, 4540-564 Arouca",
-  contact:"Arouca — R. Dr. Gil da Costa, 4540-134 · 256940000 · arouca.judicial@tribunais.org.pt",
-  flag:"watch",
-  note:"The most conventional buy on the list: a three-storey house with working land attached, one clean verba, in your district, inside the €500k rule. €161.500 is the number to beat. The anúncio gives no areas — the matriz pair (urbana 451 + rústica 2011) and CRP 2958 are what to pull before committing. Rossas is ~45 min from Porto."},
-
- {ref:"115579923", pdf:"anuncios/115579923.pdf", comarca:"Comarca de Leiria", proc:"252/23.8T8FVN", dist:"Leiria", conc:"Pedrógão Grande", freg:"Pedrógão Grande",
-  court:"Juízo de Competência Genérica de Figueiró dos Vinhos", esp:"Divisão de Coisa Comum", pub:"2026-09-14",
-  open:"2026-10-14T14:00", kind:"urban", base:900000, min:765000,
-  title:"Prédio de 3 pisos, 947 m² ABP + armazém 260 m² + rústico 2.517 m²",
-  bens:[
-   {d:"Urbano — edifício de 3 pisos (r/ch serviços 6 divisões; 1.º, 2.º e 3.º andares direito/esquerdo em habitação; sótão), Cruz do Convento. Terreno 287,45 m², implantação 287,03 m², área bruta privativa 947,33 m². Art. 2639 (atual 4625).", base:775000, min:658750},
-   {d:"Urbano — propriedade total afeta a arrecadações e arrumos, 260 m². Art. 4522, não descrito na Conservatória.", base:50000, min:42500},
-   {d:"Rústico — cultura com oliveiras, videiras, poço e sobreiro, 2.517 m². Art. 16.487, CRP 9642.", base:75000, min:63750}
-  ],
-  posse:"Requerente Jorge Dinis Tomás da Silva; requeridos Aires e Albano Dinis Tomás da Silva",
-  contact:"Figueiró dos Vinhos — Av. José Malhoa, 3260-402 · 236093540 · figvinhos.judicial@tribunais.org.pt",
-  flag:"outside",
-  note:"Structurally the most interesting asset on the list — a genuine multi-unit prédio (r/ch serviços + four habitation units + sótão, 947 m² ABP) — but it sits in Pedrógão Grande, far outside your zone, and the anúncio states créditos reclamados, so charges need checking. The 260 m² arrecadações at €42.500 is not registered at the Conservatória at all."},
-
- {ref:"145984090", pdf:"anuncios/145984090.pdf", comarca:"Comarca de Aveiro", proc:"428/21.2T8AND", dist:"Aveiro", conc:"Anadia", freg:"Amoreira da Gândara",
-  court:"Juízo de Competência Genérica de Anadia", esp:"Inventário", pub:"2026-09-04",
-  open:"2026-10-14T14:15", kind:"urban", base:63000, min:53550,
-  title:"Casa de habitação de r/ch, Travessa do Porto 3",
-  bens:[{d:"Prédio urbano — casa de habitação de rés-do-chão, 2 divisões e 8 vãos, Travessa do Porto n.º 3, Amoreira da Gândara (3780-011). Matriz urbana 237 da UF de Amoreira da Gândara, Paredes do Bairro e Ancas (ex-art. 341), CRP Anadia 1837.", base:63000, min:53550}],
-  posse:"Alberto Ferreira da Silva — Rua S. Simão 19, 3770-033 Mamarrosa",
-  contact:"Anadia — Praça Visconde Seabra, 3780-211 · 231100010 · anadia.judicial@tribunais.org.pt",
-  flag:"watch",
-  note:"The cheapest urban buy in your own five districts: €53.550 takes a village house outright. Two divisions and eight vãos means small and almost certainly needing everything done — treat it as a shell plus a works budget, not a habitable house. Caução is only €2.678."},
-
- {ref:"146287655", pdf:"anuncios/146287655.pdf", comarca:"Comarca de Aveiro", proc:"3975/24.0T8AVR", dist:"Aveiro", conc:"Aveiro", freg:"—",
-  court:"Juízo Local Cível de Aveiro - Juiz 1", esp:"Inventário", pub:"2026-09-14",
-  open:"2026-10-15T13:30", kind:"right", base:273393.33, min:232384.33,
-  title:"Direito à herança ilíquida e indivisa (não é um imóvel)",
-  bens:[{d:"Verba 1 — direito à herança ilíquida e indivisa do inventariado na herança aberta por óbito de Selma Muuksgaard Ferreira (†23/05/1999), com quem foi casado em comunhão geral.", base:273393.33, min:232384.33}],
-  posse:"Cabeça-de-casal: Katia Cristina Araújo Ferreira da Rocha",
-  contact:"Aveiro — Praça Marquês de Pombal, 3814-502 · 234405300 · aveiro.judicial@tribunais.org.pt",
-  flag:"skip",
-  note:"Not a property. You would be buying a share in an undivided estate — no identified asset, no area, no way to value it, and you inherit whatever partition fight comes with it. €232.384 for an unknown bundle. The tracker's no-comp rule applies: there is nothing to compare it to."},
-
- {ref:"101448433", pdf:"anuncios/101448433.pdf", comarca:"Comarca de Viseu", proc:"194/21.1T8SPS", dist:"Viseu", conc:"São Pedro do Sul", freg:"Vila Maior",
-  court:"Juízo de Competência Genérica de São Pedro do Sul", esp:"Inventário", pub:"2026-09-14",
-  open:"2026-10-26T09:30", kind:"urban", base:62779.25, min:53362.36,
-  title:"LOTE ÚNICO — casa 92,5 m² + 1.867,5 m² de logradouro + 2 rústicos",
-  bens:[
-   {d:"Verba 1 — urbano: edifício destinado a casa de habitação com loja e primeiro andar, superfície coberta 92,5 m² e descoberta 1.867,5 m², Pousadouros, Nespereira Alta, Vila Maior. Matriz urbana 687."},
-   {d:"Verba 2 — rústico \"Pousadouros\": terreno de cultura e vinha, 1.000 m². Matriz 1.463."},
-   {d:"Verba 3 — rústico \"Pousadouros\": terreno de cultura, 950 m². Matriz 1.464."}
-  ],
-  posse:"Cabeça de casal Maria da Luz de Almeida Ferreira Sousa, repr. Dr. Tiago Marques — Rua das Moitinhas, S. Pedro do Sul · 232728405 / 914544850 · tiagomarques-44953p@adv.oa.pt",
-  contact:"São Pedro do Sul — Largo de Camões, 3660-482 · 232720030 · spsul.judicial@tribunais.org.pt",
-  flag:"watch",
-  note:"€53.362 for the whole lot — a house with a shop and first floor, 1.867,5 m² of walled ground around it, and two more plots (1.000 m² of vinha, 950 m² of cultura) next door. That is ~3.900 m² of assembled land with a building on it for the price of a car. Outside your 5 districts (Viseu, ~1h30 from Porto) and it sells as one indivisible lot, but on price per m² it is the standout of the sweep."},
-
- {ref:"141700558", pdf:"anuncios/141700558.pdf", comarca:"Comarca de Faro", proc:"3052/15.5T8LLE", dist:"Faro", conc:"Loulé", freg:"Almancil / S. Clemente",
-  court:"Juízo Local Cível de Loulé - Juiz 2", esp:"Inventário (Herança)", pub:"2026-07-11",
-  open:"2026-10-26T14:00", kind:"rustic", base:179000, min:152150,
-  title:"Rústico 1.200 m² em Almancil + 1.400 m² com moradia em construção",
-  bens:[
-   {d:"Verba 7 — rústico em Caliços, Almancil: terra de cultura e pastagem, atravessada por caminho, três alfarrobeiras e uma oliveira, 1.200 m². Matriz 6682, CRP Loulé 08191/04012000.", base:5000, min:4250},
-   {d:"Verba 8 — rústico em Pinheiro, S. Clemente: courela com vinte amendoeiras, 1.400 m², no qual está em construção uma moradia de 790 m² (implantação 193,37 m²). Matriz urbana P.10018 + rústica 6939, CRP Loulé 3475/170591.", base:174000, min:147900}
-  ],
-  posse:"Cabeça de casal: Maria de Fátima de Sousa Almeida e Lopes",
-  contact:"Loulé — Rua Dr.ª Laura Aires, 8100-851 · 289091141 · loule.judicial@tribunais.org.pt",
-  flag:"outside",
-  note:"Algarve, so outside the thesis — but verba 8 is the kind of thing that does not usually reach a public notice: 1.400 m² in S. Clemente with a 790 m² moradia already under construction, for €147.900. The unknown is how far the build got and whether the licence is alive. Verba 7 is 1.200 m² in Almancil for €4.250."},
-
- /* --- closed, kept so the ledger shows what the feed would have caught --- */
- {ref:"485563367", pdf:"anuncios/485563367.pdf", comarca:"Comarca do Porto", proc:"804/22.3T8GDM", dist:"Porto", conc:"Gondomar", freg:"Melres e Medas",
-  court:"Juízo Local Cível de Gondomar - Juiz 3", esp:"Inventário", pub:"2026-06-19",
-  open:"2026-07-07T11:00", kind:"urban", base:118000, min:100300,
-  title:"Prédio urbano r/ch, Rua do Vale Longo 246, Medas",
-  bens:[{d:"Propriedade total sem andares, r/ch destinado a habitação, Rua do Vale Longo 246, 4515-437 Medas. Matriz 4350. VPT €32.585,57 (2022).", base:118000, min:100300}],
-  posse:"Cabeça de casal Lúcia Macedo da Rocha Alves — obrigada a mostrar o imóvel durante o prazo do edital",
-  contact:"Gondomar — Rua Monte Crasto 10-1.º, 4420-210 · 220123460 · gondomar.judicial@tribunais.org.pt",
-  flag:"closed",
-  note:"Closed 7 Jul. A Gondomar house at €100.300 against a €118.000 avaliação — exactly the lot this feed exists to catch, and it went through while nobody was watching. The reason the daily sweep is worth running."},
-
- {ref:"485563621", pdf:"anuncios/485563621.pdf", comarca:"Comarca do Porto", proc:"804/22.3T8GDM", dist:"Porto", conc:"Gondomar", freg:"Melres e Medas",
-  court:"Juízo Local Cível de Gondomar - Juiz 3", esp:"Inventário", pub:"2026-06-19",
-  open:"2026-07-07T11:00", kind:"urban", base:125000, min:106250,
-  title:"Casa térrea e horta, lugar de Vale Longo, Medas",
-  bens:[{d:"Propriedade total sem andares — casa térrea e horta, lugar de Vale Longo, 4515-437 Medas. Matriz 3328. VPT €16.141,32 (2024).", base:125000, min:106250}],
-  posse:"Cabeça de casal Lúcia Macedo da Rocha Alves",
-  contact:"Gondomar — Rua Monte Crasto 10-1.º, 4420-210 · 220123460 · gondomar.judicial@tribunais.org.pt",
-  flag:"closed",
-  note:"Closed 7 Jul. Verba 2 of the same Gondomar inventário — casa térrea with a horta at €106.250."},
-
- {ref:"100955487", pdf:"anuncios/100955487.pdf", comarca:"Comarca de Viseu", proc:"302/20.0T8SPS", dist:"Viseu", conc:"São Pedro do Sul", freg:"Bordonhos",
-  court:"Juízo de Competência Genérica de São Pedro do Sul", esp:"Inventário (Competência Exclusiva)", pub:"2026-06-22",
-  open:"2026-09-08T10:00", kind:"rustic", base:25500, min:21675,
-  title:"Rústico na Regada, 3.100 m²",
-  bens:[{d:"Prédio rústico sito na Regada, Bordonhos, 3.100 m². Matriz rústica 208, CRP São Pedro do Sul 286.", min:21675}],
-  posse:"Cabeça de casal: Maria Margarida de Oliveira Ribeiro",
-  contact:"São Pedro do Sul — Largo de Camões, 3660-482 · 232720030 · spsul.judicial@tribunais.org.pt",
-  flag:"closed",
-  note:"Closed 8 Sep, a week before this sweep. €21.675 for 3.100 m² is €7/m² — steep for rústico, which is probably why it was announced at all."}
+const D=[
+  ["Porto","2494/22.4T8STS-E","CIRE","05/08",1,"skip","Oxecode Shoes — leilão eletrónico (Leilosoc), €3.618 → movables, on-platform"],
+  ["Porto","1586/26.5T8VNG-F","CIRE","04/08",1,"skip","Dohm Logístico — €1.198.000 industrial (e-leilões) → over €500k, on-platform"],
+  ["Aveiro","1198/26.3T8OAZ-C","CIRE","03/08",1,"watch","Moradia, O. Azeméis — mín €222.700 (e-leilões LO1504762026), closes 22/09 → now valued live on the Platforms tab"],
+  ["Viana do Castelo","2364/16.5T8VCT-G","CIRE","31/07",2,"skip","procedural cover (juntar a processo) — no sale terms"],
+  ["Aveiro","2753/25.4T8OAZ-D","CIRE","31/07",1,"unread",""],
+  ["Coimbra","3082/23.3T8CBR-C","CIRE","31/07",1,"unread",""],
+  ["Braga","4997/25.0T8GMR-E","CIRE","31/07",1,"unread",""],
+  ["Braga","6087/25.6T8VNF-C","CIRE","28/07",1,"unread",""],
+  ["Porto","4336/24.7T8VNG-E","CIRE","28/07",1,"unread",""],
+  ["Braga","3595/25.2T8VNF-C","CIRE","28/07",1,"unread",""],
+  ["Porto","2700/23.8T8STS-C","CIRE","27/07",1,"unread",""],
+  ["Porto","1468/21.7T8STS-E","CIRE","26/07",1,"unread",""],
+  ["Aveiro","124/23.6T8ARC","INV","23/07",1,"unread",""],
+  ["Aveiro","298/24.9T8AVR-B","CIRE","22/07",1,"unread",""],
+  ["Aveiro","565/26.7T8OAZ-D","CIRE","21/07",1,"unread",""],
+  ["Aveiro","1225/26.4T8OAZ-C","CIRE","21/07",1,"unread",""],
+  ["Porto","664/26.5T8STS-C","CIRE","20/07",2,"unread",""],
+  ["Braga","832/22.9T8GMR-D","CIRE","20/07",1,"unread",""],
+  ["Aveiro","3002/23.5T8AVR-Q","CIRE","20/07",1,"unread",""],
+  ["Aveiro","1316/22.0T8AGD","INV","16/07",1,"unread",""],
+  ["Porto","3027/24.3T8STS-F","CIRE","16/07",3,"unread",""],
+  ["Braga","4678/25.4T8GMR-C","CIRE","16/07",1,"unread",""],
+  ["Porto","2097/24.9T8STS-F","CIRE","16/07",1,"unread",""],
+  ["Aveiro","1421/25.1T8OAZ-C","CIRE","16/07",1,"unread",""],
+  ["Aveiro","1345/26.5T8OAZ-C","CIRE","15/07",1,"unread",""],
+  ["Porto","2242/25.7T8STS-C","CIRE","14/07",1,"unread",""],
+  ["Aveiro","3607/25.0T8OAZ-B","CIRE","10/07",1,"unread",""],
+  ["Viana do Castelo","1522/24.3T8VCT-B","CIRE","09/07",1,"unread",""],
+  ["Braga","2018/26.4T8GMR-C","CIRE","09/07",1,"unread",""]
 ];
-/* CF_DATA_END */
-
-const MINE=["Porto","Braga","Aveiro","Coimbra","Viana do Castelo"];
-const CITU="https://www.citius.mj.pt/portal/consultas/ConsultaVendaAnuncios.aspx";
-const eur=n=>n==null?"—":"€"+Math.round(n).toLocaleString("pt-PT");
-const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-function daysTo(iso){ return Math.ceil((new Date(iso)-new Date())/86400000); }
-function openCell(r){
-  const d=new Date(r.open), n=daysTo(r.open);
-  const dt=String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+" "+
-           String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
-  if(n<0) return `<b style="color:var(--mut2)">${dt}</b><br><span class="st unread">closed</span>`;
-  const cls=n<=7?"bad":(n<=14?"warn":"good");
-  const lbl=n===0?"today":(n===1?"tomorrow":n+" days");
-  return `<b>${dt}</b><br><span class="pill ${cls==="bad"?"no":(cls==="warn"?"view":"buy")}">${lbl}</span>`;
-}
-const FLAG={dig:["view","DIG IN"],watch:["buy","WATCH"],skip:["no","SKIP"],outside:["low","OUT OF AREA"],closed:["dismiss","CLOSED"]};
-
-let fD="", fF="live", fQ="";
-const sel=document.getElementById("cf-district");
-[...new Set(CF.map(r=>r.dist))].sort().forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;sel.appendChild(o);});
-
-const live=CF.filter(r=>daysTo(r.open)>=0);
-document.getElementById("cf-c-live").textContent=live.length;
-document.getElementById("cf-c-soon").textContent=live.filter(r=>daysTo(r.open)<=14).length;
-document.getElementById("cf-c-mine").textContent=live.filter(r=>MINE.includes(r.dist)).length;
-const cheap=live.filter(r=>r.kind==="urban").sort((a,b)=>a.min-b.min)[0];
-document.getElementById("cf-c-cheap").textContent=cheap?eur(cheap.min):"—";
-
+const CIT="https://www.citius.mj.pt/portal/consultas/ConsultaVendaAnuncios.aspx";
+let fD="", fF="";
+const dists=[...new Set(D.map(r=>r[0]))].sort();
+const sel=document.getElementById("dc-district"); dists.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;sel.appendChild(o);});
+document.getElementById("dc-c-total").textContent=D.length;
+document.getElementById("dc-c-read").textContent=D.filter(r=>r[5]!=="unread").length;
+document.getElementById("dc-c-porto").textContent=D.filter(r=>r[0]==="Porto").length;
 function render(){
-  let rows=CF.filter(r=>{
-    if(fQ){
-      const hay=[r.ref,r.proc,r.dist,r.conc,r.freg,r.comarca,r.title,r.esp,r.note,...r.bens.map(b=>b.d)].join(" ").toLowerCase();
-      if(!hay.includes(fQ)) return false;
-    }
-    if(fD && r.dist!==fD) return false;
-    if(fF==="live") return daysTo(r.open)>=0;
-    if(fF==="mine") return daysTo(r.open)>=0 && MINE.includes(r.dist);
-    if(fF==="urban") return daysTo(r.open)>=0 && r.kind==="urban";
-    return true;
-  }).sort((a,b)=>a.open.localeCompare(b.open));
-  document.getElementById("cf-cnt").textContent=rows.length+" of "+CF.length;
-  document.getElementById("cf-tb").innerHTML=rows.map(r=>{
-    const f=FLAG[r.flag]||["low",""];
-    const bens=r.bens.map(b=>`<li>${esc(b.d)}${b.min!=null?` <b style="color:var(--accent)">→ ${eur(b.min)}</b>`:""}</li>`).join("");
-    return `<tr>
-      <td style="white-space:nowrap">${openCell(r)}</td>
-      <td><b>${esc(r.dist)}</b><br><span style="color:var(--mut2);font-size:11px">${esc(r.conc)}${r.freg&&r.freg!=="—"?" · "+esc(r.freg):""}</span></td>
-      <td style="min-width:320px"><b>${esc(r.title)}</b> <span class="pill ${f[0]}">${f[1]}</span>
-        <div style="color:var(--mut2);font-size:11px;margin:3px 0 5px">${esc(r.esp)} · publicado ${esc(r.pub.split("-").reverse().join("/"))} · <span class="doc">📄 anúncio lido</span></div>
-        <details><summary style="cursor:pointer;color:var(--accent);font-size:11.5px">bens, posse e contacto</summary>
-          <ul style="margin:6px 0 6px 16px;padding:0;font-size:11.5px;color:#c4cfd9;line-height:1.5">${bens}</ul>
-          <div style="font-size:11px;color:var(--mut2)"><b>Posse / mandatário:</b> ${esc(r.posse)}</div>
-          <div style="font-size:11px;color:var(--mut2)"><b>Tribunal:</b> ${esc(r.contact)}</div>
-        </details>
-        <div style="font-size:11.5px;color:#c4cfd9;margin-top:6px;line-height:1.5">${esc(r.note)}</div></td>
-      <td style="white-space:nowrap">${eur(r.base)}</td>
-      <td style="white-space:nowrap"><b style="color:var(--accent)">${eur(r.min)}</b></td>
-      <td style="white-space:nowrap;color:var(--mut2)">${eur(r.min*0.05)}</td>
-      <td style="white-space:nowrap">
-        <a class="cit" href="${r.pdf}" target="_blank" rel="noopener" title="The court's anúncio, saved here on the day it was swept">📄 anúncio (PDF) ↗</a><br>
-        <span style="font-size:11px">${esc(r.proc)}</span><br>
-        <span style="color:var(--mut2);font-size:10.5px">Referência: <b style="color:#c4cfd9;user-select:all">${esc(r.ref)}</b></span><br>
-        <span style="color:var(--mut2);font-size:10.5px">${esc(r.comarca)}</span><br>
-        <a class="cit" href="${CITU}" target="_blank" rel="noopener" style="font-size:10.5px" title="Citius declarativos — select this comarca, then Ctrl+F the referência">procurar no Citius ↗</a></td>
-    </tr>`;
+  let rows=D.filter(r=>(!fD||r[0]===fD)&&(!fF||(fF==="unread"?r[5]==="unread":r[5]!=="unread")));
+  document.getElementById("dc-cnt").textContent=rows.length+" of "+D.length;
+  document.getElementById("dc-tb").innerHTML=rows.map(r=>{
+    const esp=r[2]==="INV"?'<span class="pill inv">Inventário</span>':'<span class="pill cire">CIRE</span>';
+    const st=r[5]==="unread"?'<span class="st unread">— unread</span>':`<span class="st ${r[5]}">${r[6]}</span>`;
+    const bens=r[4]>1?`${r[4]} bens`:'1';
+    return `<tr><td>${r[0]}</td><td><a class="cit" href="${CIT}" target="_blank" rel="noopener" title="Open Citius declarativos — select this court's comarca, then Ver Mais on the row">${r[1]} ↗</a></td>`+
+      `<td>${esp}</td><td>${r[3]}</td><td>${bens}</td><td><span class="doc">📄 anúncio</span></td><td>${st}</td></tr>`;
   }).join("");
 }
 sel.onchange=()=>{fD=sel.value;render();};
-document.getElementById("cf-filt").onchange=e=>{fF=e.target.value;render();};
-document.getElementById("cf-q").oninput=e=>{fQ=e.target.value.trim().toLowerCase();render();};
+document.getElementById("dc-filt").onchange=e=>{fF=e.target.value;render();};
 render();
 })();
 </script>
