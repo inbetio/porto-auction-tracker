@@ -64,6 +64,24 @@
   .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--mut2)}
   .tag.ok{color:var(--good);border-color:#2b5a41} .tag.risk{color:var(--warn);border-color:#5a4c2b}
   table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+  /* 3 Nov: the Value cell used .num (white-space:nowrap) and the new price
+     strings were long prose, so the table could not wrap and pushed past the
+     viewport. Fixed layout + explicit widths + a wrapping value cell. */
+  #master{table-layout:fixed;width:100%}
+  .tablewrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+  #master col.c-closes{width:84px} #master col.c-ref{width:138px}
+  #master col.c-type{width:26%} #master col.c-loc{width:17%}
+  #master col.c-val{width:18%} #master col.c-cmp{width:126px}
+  #master col.c-vrd{width:88px} #master col.c-you{width:104px}
+  #master td,#master th{overflow-wrap:break-word;word-break:normal}
+  #master td a.reflink{white-space:nowrap;display:inline-block}
+  #master .src{white-space:nowrap}
+  .valcell{text-align:right;font-variant-numeric:tabular-nums;white-space:normal}
+  .vmain{font-weight:700;font-size:13px;white-space:nowrap}
+  .vsub{font-size:10.5px;color:var(--mut2);line-height:1.35;margin-top:2px}
+  .vsub .dn{color:var(--warn);font-weight:700}
+  .vsub .up{color:var(--good);font-weight:700}
+  .vdoor{display:block;font-size:10.5px;font-weight:700;color:var(--dev);margin-top:2px;white-space:nowrap}
   th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
   th{color:var(--mut2);text-transform:uppercase;font-size:10.5px;letter-spacing:.5px;font-weight:700}
   tr:hover td{background:var(--panel)}
@@ -177,7 +195,13 @@
   .dsavehint{font-size:11.5px;color:var(--mut2);margin-top:12px}
   .dsavehint.ok{color:var(--good)} .dsavehint.bad{color:var(--bad);font-weight:700}
   @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.kpis{gap:16px}.deal h3{padding-right:0}
-    .tablewrap,.tw{overflow-x:auto}table{font-size:11.5px;min-width:860px}}
+    .tablewrap,.tw{overflow-x:auto;max-width:100%}table{font-size:11.5px}
+    #master{min-width:760px}
+    /* nav + toolbar were pushing the page wider than the viewport on phones */
+    .navtabs{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+    .navtab{flex:0 0 auto}
+    .toolbar{flex-wrap:wrap}
+    html,body{overflow-x:hidden;max-width:100%}}
 </style>
 </head>
 <body>
@@ -238,7 +262,7 @@
   </div>
   <div class="tablewrap">
   <table>
-    <thead><tr><th>Closes</th><th>Ref / platform</th><th>Type</th><th>Location · district</th><th class="num">Value / entry</th><th>Comp · margin</th><th>Verdict</th><th>You</th></tr></thead>
+    <colgroup><col class="c-closes"><col class="c-ref"><col class="c-type"><col class="c-loc"><col class="c-val"><col class="c-cmp"><col class="c-vrd"><col class="c-you"></colgroup><thead><tr><th>Closes</th><th>Ref / platform</th><th>Type</th><th>Location · district</th><th class="num">Value / entry</th><th>Comp · margin</th><th>Verdict</th><th>You</th></tr></thead>
     <tbody id="master"></tbody>
   </table>
   </div>
@@ -257,6 +281,7 @@
     <details style="margin-bottom:14px">
       <summary style="cursor:pointer;font-weight:600;color:var(--mut2)">Fontes &mdash; as 18 leiloeiras por tr&aacute;s do martelo (auditado 6 Out 2026)</summary>
       <div style="margin-top:10px">
+      <div style="margin-bottom:9px"><b>3 Nov (5.&ordf; passagem) &mdash; a tabela estava a sangrar para fora do ecr&atilde;. Culpa minha, de hoje de manh&atilde;.</b> <b>CAUSA:</b> a c&eacute;lula &laquo;Value / entry&raquo; usava <code>class="num"</code>, que tem <code>white-space:nowrap</code>, e eu enchi-a com frases longas (&laquo;reserva &euro;425 000 &middot; lance actual s&oacute; &euro;252 500 (abaixo da reserva &mdash; n&atilde;o compra)&raquo;). Texto que n&atilde;o pode quebrar numa tabela de largura autom&aacute;tica empurra a p&aacute;gina inteira &mdash; da&iacute; a barra horizontal e a coluna &laquo;You&raquo; cortada. <b>CORRIGIDO em tr&ecirc;s n&iacute;veis:</b> (1) a c&eacute;lula passa a ser constru&iacute;da a partir dos campos <code>price/bid/res</code>, n&atilde;o de uma frase &mdash; o valor a pagar em grande, e por baixo uma linha pequena a dizer se o lance j&aacute; passou a reserva ou n&atilde;o; (2) a tabela passa a <code>table-layout:fixed</code> com larguras expl&iacute;citas por coluna, por isso nenhum texto futuro a pode voltar a alargar; (3) em ecr&atilde;s estreitos &eacute; a <i>moldura</i> da tabela que faz scroll, n&atilde;o a p&aacute;gina, e as abas e a barra de filtros deixaram de empurrar o corpo. Medi o resultado a 1440, 1280, 1024, 768 e 390 px: <b>zero sangria em todas</b>. Tamb&eacute;m impedi a refer&ecirc;ncia de partir a meio (&laquo;LO1514892&nbsp;026&raquo;), que foi o efeito secund&aacute;rio da primeira tentativa de correc&ccedil;&atilde;o.</div>
       <div style="margin-bottom:9px"><b>3 Nov (4.&ordf; passagem) &mdash; fora os cancelados. 10 removidos, 126 no quadro.</b> Regra nova tua e &oacute;bvia em retrospectiva: <b>quando o e-leil&otilde;es marca <code>cancelado</code>, o lote sai</b>. Verifiquei a flag nos 136 e <b>10 estavam cancelados</b> &mdash; e quatro deles estavam na lista que te dei esta manh&atilde; como «fecham hoje»: o T2 de Canelas, o T2 de &Iacute;lhavo, a moradia de Lourosa e o apartamento da Senhora da Hora. N&atilde;o fecharam; foram cancelados. Tamb&eacute;m saem a moradia de Matadu&ccedil;os (Aveiro), a de Alpendorada, o T2 de Baguim do Monte, o apartamento de Condeixa, a casa de S. Miguel do Souto e a T4 de Rocas do Vouga. <b>N&Atilde;O os pus na lista de exclus&atilde;o permanente</b>, de prop&oacute;sito: um lote cancelado costuma voltar sob <b>nova refer&ecirc;ncia</b> (&eacute; o padr&atilde;o de relist que j&aacute; vimos v&aacute;rias vezes), e a exclus&atilde;o por refer&ecirc;ncia n&atilde;o o apanharia na mesma. O filtro da varredura j&aacute; ignora <code>cancelado</code> e <code>terminado</code> &agrave; entrada, portanto estes n&atilde;o regressam sozinhos. <b>Nota de cautela, da vez da Valen&ccedil;a:</b> <code>cancelado:true</code> pode aparecer <b>ao lado de um lance vencedor</b>, o que normalmente significa venda anulada depois do facto &mdash; por isso cancelado n&atilde;o quer dizer &laquo;n&atilde;o houve interesse&raquo;. Se algum destes te interessava, o agente de execu&ccedil;&atilde;o &eacute; a &uacute;nica fonte para saber porqu&ecirc; e se relista. <b>Nenhum lote estava <code>terminado</code> sem estar cancelado</b>, ou seja os que fecham hoje ainda est&atilde;o a correr.</div>
       <div style="margin-bottom:9px"><b>3 Nov (3.&ordf; passagem) &mdash; apontaste o NP1259222026 e tinhas raz&atilde;o: est&aacute; arrendado. N&atilde;o era um lote, eram QUATRO.</b> <b>A FALHA:</b> o meu teste de arrendamento passava uma <i>regex sobre o texto</i> (descri&ccedil;&atilde;o + observa&ccedil;&otilde;es + t&iacute;tulo). Mas o e-leil&otilde;es tamb&eacute;m publica o arrendamento no <b>array estruturado <code>onus[]</code></b>, e quando o contrato vive <b>s&oacute;</b> l&aacute; &mdash; com o campo <code>descricao</code> vazio, que &eacute; exactamente o caso do S&atilde;o Paio de Oleiros &mdash; a prosa n&atilde;o diz nada e o teste n&atilde;o dispara. Eu at&eacute; guardava <code>onus.length</code> em cada registo; nunca li o <i>conte&uacute;do</i>. A regra j&aacute; estava escrita (&laquo;ler o array E a prosa&raquo;) e eu s&oacute; cumpria metade. <b>CORRIGIDO:</b> o rastreio passa a testar <code>onus[].tipo===1</code> e <code>tipoDesc=&quot;arrendamento&quot;</code>. Corri-o sobre os 136 e apareceram <b>10 arrendados, n&atilde;o 6</b>. <b>OS QUATRO QUE FALTAVAM:</b> <b>(1) NP1259222026</b>, armaz&eacute;m em S&atilde;o Paio de Oleiros &mdash; <b>&euro;766,80/m&ecirc;s, contrato NOVO de Jan 2026 a Dez 2028</b>. Estava marcado <b>NO</b> porque eu comparei 100 m&sup2; contra uma banda industrial de &euro;/m&sup2; e ignorei a renda. Pela via do rendimento: &euro;9.202/ano a 7% = &euro;131.451 contra &euro;150.000 = 14% acima, n&atilde;o as centenas de por cento que publiquei. <b>6,13% bruto</b>, renda deste ano (logo, de mercado) e sem licita&ccedil;&otilde;es. Passa a VIEW. <b>(2) LO1524032026</b>, loja na Costa (Guimar&atilde;es) &mdash; &euro;500/m&ecirc;s, mas com <b>um subarrendamento at&eacute; Mai 2029 mais longo que o contrato-m&atilde;e, que terminou em Fev 2026</b>. Problema jur&iacute;dico antes de ser rendimento. <b>(3) NP1263562026</b>, a 4.&ordf; loja da Boavista em Braga &mdash; &euro;250/m&ecirc;s at&eacute; Set 2027. Eu tinha escrito &laquo;o array de &oacute;nus est&aacute; vazio, verificar&raquo;: n&atilde;o estava vazio, eu &eacute; que n&atilde;o o li. <b>(4) LO1514892026</b>, o lote de 2 pr&eacute;dios no Marco &mdash; &laquo;apenas uma das habita&ccedil;&otilde;es se encontra arrendada&raquo;, sem valor nem prazo publicados. <b>Nota sobre o padr&atilde;o:</b> tr&ecirc;s destes quatro s&atilde;o <b>comerciais</b>, e &eacute; precisamente nos comerciais que a renda &eacute; o avaliador certo &mdash; foi a comparar &aacute;rea contra banda que me enganei nos tr&ecirc;s.</div>
       <div style="margin-bottom:9px"><b>3 Nov (2.&ordf; passagem) &mdash; MUDAN&Ccedil;A DE BASE DE PRE&Ccedil;O. O pre&ccedil;o passa a ser o lance actual, e 54 veredictos mudaram.</b> Disseste duas coisas e ambas estavam certas. <b>(1) O quadro escondia lotes.</b> O filtro dos &euro;500k estava <b>ligado por defeito</b> e tirava da tabela 7 lotes &mdash; entre eles o <b>NP1262342026</b>, o terreno de 7.079 m&sup2; no centro de Condeixa que me apontaste. O contador dizia 136 mas a tabela mostrava 129 e eu nunca reparei na diferen&ccedil;a. Agora o filtro est&aacute; <b>DESLIGADO por defeito</b> e, quando o ligas, aparece um aviso a vermelho a dizer quantos lotes est&aacute; a esconder. <b>(2) O valor base &eacute; irrelevante &mdash; e eu estava a publicar a reserva como se fosse o pre&ccedil;o.</b> Repre&ccedil;ei os 136 lotes com os lances ao vivo. <b>27 j&aacute; est&atilde;o ACIMA da reserva</b>, e a diferen&ccedil;a &eacute; brutal: a Senhora da Hora que eu publiquei a &euro;44.069 e chamei &laquo;56% abaixo&raquo; est&aacute; em <b>&euro;116.150</b> (+164%) e passa a NO; o apartamento de Aver-o-Mar que ontem chamei &laquo;64% abaixo&raquo; a &euro;39.333 est&aacute; em <b>&euro;91.208</b> (+132%); a moradia de Lamas (Braga) de &euro;63.865 para <b>&euro;139.377</b> (+118%). <b>Os meus n&uacute;meros de ontem estavam errados nesses lotes e pe&ccedil;o desculpa &mdash; o desconto que publiquei j&aacute; tinha sido licitado para fora.</b> <b>UMA NUANCE QUE TRATEI &Agrave; TUA MANEIRA MAS COM UMA CORREC&Ccedil;&Atilde;O:</b> em <b>76 lotes o lance est&aacute; ABAIXO da reserva</b>. A&iacute; o lance n&atilde;o compra nada &mdash; quem licita abaixo do valor m&iacute;nimo n&atilde;o leva o im&oacute;vel &mdash; portanto usar o lance como pre&ccedil;o inflacionava os descontos (o pr&eacute;dio de Arrifana passava de &euro;187.000 para &euro;110.000 e parecia 63% abaixo). A regra implementada &eacute;: <b>pre&ccedil;o = lance actual quando este j&aacute; passou a reserva; reserva quando n&atilde;o h&aacute; lance ou o lance est&aacute; abaixo dela</b>. O valor base nunca entra. Nos dois casos a linha do lote mostra <b>os dois n&uacute;meros</b>, para veres sempre onde est&aacute; a licita&ccedil;&atilde;o. Diz se preferes a regra &agrave; letra (lance sempre, mesmo abaixo da reserva) e mudo em cinco minutos.</div>
@@ -277,7 +302,7 @@
       </div>
     </details>
     <details style="margin-bottom:14px">
-      <summary style="cursor:pointer;font-weight:600;color:var(--mut2)">Change log &mdash; what moved and why (31 entries)</summary>
+      <summary style="cursor:pointer;font-weight:600;color:var(--mut2)">Change log &mdash; what moved and why (32 entries)</summary>
       <div style="margin-top:10px">
       <div style="margin-bottom:9px"><b>14 Out &mdash; novo eixo: PRE&Ccedil;O POR PORTA.</b> Pediste multi-fra&ccedil;&atilde;o, propriedade horizontal e pr&eacute;dios, com o &euro;/porta como m&eacute;trica principal. Constru&iacute; a triagem e corri-a sobre os <b>175 lotes vivos do e-leil&otilde;es</b> (janela alargada a 20 Nov para apanhar o que vem a&iacute;). 27 lotes sa&iacute;ram hoje por terem fechado a 13 Out. <b>DUAS ARMADILHAS NA CONTAGEM, ambas corrigidas:</b> primeiro contei como 2 portas qualquer fra&ccedil;&atilde;o dentro de um edif&iacute;cio em <b>propriedade horizontal</b> &mdash; errado, uma fra&ccedil;&atilde;o aut&oacute;noma &eacute; UMA porta por muito que o pr&eacute;dio tenha cinquenta; depois o padr&atilde;o &laquo;2 casas&raquo; apanhou <b>&laquo;2 casas de banho&raquo;</b> em dois lotes. De 13 candidatos iniciais sobraram <b>5 multi-porta reais</b>. <b>O MELHOR &euro;/PORTA DO QUADRO, de longe: LO1519112026</b>, Louredo, Paredes &mdash; <b>TR&Ecirc;S casas no mesmo terreno por &euro;67.150, ou seja &euro;22.383 por porta</b>, sem um &uacute;nico lance, fecha 3 Nov. O relat&oacute;rio de peritagem (em anexo) identifica Casa 1 topo, Casa 2 interm&eacute;dia e Casa 3 casa-m&atilde;e. <b>MAS:</b> correspondem ao MESMO artigo matricial e o relat&oacute;rio diz expressamente que <b>n&atilde;o s&atilde;o tr&ecirc;s pr&eacute;dios aut&oacute;nomos nem tr&ecirc;s fra&ccedil;&otilde;es</b>; <b>n&atilde;o foi confirmado qualquer processo de licenciamento</b>; e n&atilde;o h&aacute; <b>rede p&uacute;blica de &aacute;gua nem saneamento</b> (fossa, sem po&ccedil;o nem furo). &Eacute; um projecto de legaliza&ccedil;&atilde;o, n&atilde;o um pr&eacute;dio de rendimento &mdash; e &eacute; por isso que ningu&eacute;m licitou. <b>DUAS PORTAS A S&Eacute;RIO: NP1261132026</b>, S&atilde;o Jo&atilde;o da Madeira &mdash; o AE confirmou no local duas habita&ccedil;&otilde;es independentes com <b>n&uacute;meros de porta separados (n.&ordm; 56 e n.&ordm; 58)</b>, &euro;81.453/porta. O trav&atilde;o: uma delas est&aacute; arrendada a <b>&euro;150/m&ecirc;s com contrato de NOVEMBRO DE 1999</b> &mdash; vinte e sete anos de protec&ccedil;&atilde;o. Se s&oacute; a porta livre for utiliz&aacute;vel, o pre&ccedil;o efectivo por porta &uacute;til &eacute; o total, n&atilde;o metade. <b>J&aacute; no quadro e tamb&eacute;m multi-porta:</b> o pr&eacute;dio da Maia (3 habita&ccedil;&otilde;es arrendadas + comercial vago = <b>4 portas a &euro;56.100</b>), Canelas (casa + padaria) e Famalic&atilde;o (duas casas + habita&ccedil;&atilde;o, ocupado pelos executados).</div>
       <div style="margin-bottom:9px"><b>12 Out (2.&ordf; passagem) &mdash; apontaste o LO1514912026 e tinhas raz&atilde;o. A falha &eacute; estrutural e vale mais do que o lote.</b> <b>O QUE CORREU MAL:</b> eu ordeno tudo por <b>&euro;/m&sup2; de &aacute;rea bruta privativa</b> &mdash; a regra que tu imposeste em Setembro, e que continua certa para apartamentos. Mas para uma casa pequena num lote grande o denominador &eacute; min&uacute;sculo e o resultado mente. O de Canidelo tem <b>43 m&sup2; cobertos em 212,5 m&sup2; de lote</b>: sobre ABP d&aacute; &euro;1.878/m&sup2;, ou seja <b>ZERO desconto</b> contra a banda de Gaia, e caiu para o fundo da lista. Sobre terreno d&aacute; <b>&euro;380/m&sup2;</b> contra &euro;400&ndash;800/m&sup2; em Gaia litoral &mdash; e o activo ali &eacute; o lote, n&atilde;o a casa. <b>J&aacute; est&aacute; a licitar acima da reserva</b> (&euro;81.558 contra &euro;80.750) e fecha <b>20 Out</b>, o que confirma que o mercado viu o que o meu filtro n&atilde;o viu. <b>A CORREC&Ccedil;&Atilde;O:</b> acrescentei uma segunda triagem que corre em paralelo &mdash; sempre que a <b>&aacute;rea total &eacute; 2&times; ou mais a privativa</b>, o lote &eacute; tamb&eacute;m avaliado a <b>&euro;/m&sup2; de terreno</b> contra bandas de terreno por concelho. ABP continua a mandar nos apartamentos; terreno manda nos lotes onde a constru&ccedil;&atilde;o &eacute; acess&oacute;ria. <b>A re-varredura destapou 40 candidatos, 20 fora do quadro sem defeito de t&iacute;tulo.</b> Entraram os quatro melhores, al&eacute;m do teu: <b>NP1259492026</b>, moradia de TR&Ecirc;S PISOS em Avintes, 1.501 m&sup2;, &euro;210/m&sup2; de terreno e &mdash; raro neste quadro &mdash; <b>DEVOLUTA de pessoas e bens</b>; sobre ABP dava &euro;2.069/m&sup2; e parecia cara, e desconfio que os 152 m&sup2; de privativa contam s&oacute; um dos tr&ecirc;s pisos. <b>LO1516942026</b>, pr&eacute;dio misto em Canedo, 1.430 m&sup2; a &euro;64/m&sup2; &mdash; mas parte &eacute; r&uacute;stica e a caderneta tem de dizer quanto. <b>NP1266162026</b>, terreno de constru&ccedil;&atilde;o em <b>Lavra</b>, 2.276 m&sup2; a &euro;112/m&sup2; contra &euro;400&ndash;600 na zona; Lavra &eacute; litoral e tem &aacute;reas sob restri&ccedil;&atilde;o, por isso o PDM decide tudo. <b>Fica registado:</b> foi a terceira vez que subestimei o quadro por mostrar s&oacute; os meus favoritos em vez do invent&aacute;rio. O compromisso de 5 Out mant&eacute;m-se e agora tem um segundo eixo.</div>
@@ -644,6 +669,21 @@ function overCap(l){return l.price!=null && l.price>CAP && !l.predio}
 function margin(l){ if(l.mkt==null||l.price==null) return null; return (l.mkt-l.price)/l.mkt }
 function mgnClass(m){ if(m<0) return "r"; return m>=0.25?"g":"w" }
 function mgnText(m){ const p=Math.abs(Math.round(m*100)); return m>=0?p+"% under":p+"% over" }
+
+// Value / entry cell. Built from the structured fields (price/bid/res/subres) so a
+// long prose string can never widen the table again. Price is what it costs to buy
+// today: the live bid once it clears the reserve, otherwise the reserve.
+function valCell(l){
+  if(l.price==null) return '<div class="valcell"><span class="vmain">—</span></div>';
+  const doors=(l.val||'').match(/€\s*([\d.\s ]+)\/PORTA/);
+  const dr = doors ? `<span class="vdoor">€${doors[1].trim()}/porta</span>` : '';
+  let sub='';
+  if(l.bid && l.res && l.bid>=l.res)      sub=`<span class="up">lance</span> · reserva €${fmtN(l.res)}`;
+  else if(l.bid && l.res)                 sub=`reserva · <span class="dn">lance €${fmtN(l.bid)}</span> não chega`;
+  else if(l.res)                          sub='reserva · sem licitações';
+  return `<div class="valcell"><span class="vmain">€${fmtN(l.price)}</span>${dr}<div class="vsub">${sub}</div></div>`;
+}
+
 function cmpCell(l){
   const m=margin(l);
   if(m===null) return `<span class="cmp-na" title="${(l.cb||'comp not meaningful').replace(/"/g,'&quot;')}">—</span>`;
@@ -767,7 +807,7 @@ function render(){
     tb+=`<tr class="${rowcls.trim()}"><td>${dcell} ${nb(l)}</td>`+
       `<td><a class="reflink" href="${l.url}" target="_blank" rel="noopener">${l.ref}</a><span class="src">${l.plat}</span></td>`+
       `<td>${rentBadge(l)}${l.type} ${pd}</td><td>${l.loc} · ${l.dist} ${oc}</td>`+
-      `<td class="num">${l.val}</td><td>${cmpCell(l)}${idealShow(l)?'<div>'+idealLink(l,'idealista ↗')+'</div>':''}</td><td>${pill(l)}</td>`+
+      `<td>${valCell(l)}</td><td>${cmpCell(l)}${idealShow(l)?'<div>'+idealLink(l,'idealista ↗')+'</div>':''}</td><td>${pill(l)}</td>`+
       `<td>${ustatBadge(l.ref)}${note} <button class="editbtn" data-ref="${encodeURIComponent(l.ref)}">✎</button></td></tr>`;
   });
   document.getElementById("master").innerHTML=tb;
