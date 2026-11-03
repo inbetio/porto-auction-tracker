@@ -64,6 +64,11 @@
   .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--mut2)}
   .tag.ok{color:var(--good);border-color:#2b5a41} .tag.risk{color:var(--warn);border-color:#5a4c2b}
   table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+  .sharebar{font-size:12px;padding:8px 12px;border-radius:8px;margin:10px 0 0;border:1px solid var(--line);color:var(--mut2)}
+  .sharebar.on{border-color:#2b5a41;background:var(--good-bg);color:#bfe3cd}
+  .sharebar.off{border-color:#5a4c2b;background:var(--warn-bg);color:#e8d9b0}
+  .cmt{margin-top:6px;font-size:11.5px;color:var(--mut2);border-left:2px solid var(--line);padding-left:8px}
+  .cmt b{color:var(--ink)}
   /* 3 Nov: the Value cell used .num (white-space:nowrap) and the new price
      strings were long prose, so the table could not wrap and pushed past the
      viewport. Fixed layout + explicit widths + a wrapping value cell. */
@@ -251,6 +256,7 @@
   </div>
 
   <h2>All lots — by closing date</h2>
+  <div id="sharebar" class="sharebar"></div>
   <div class="toolbar">
     <label><input type="checkbox" id="capf"> Max €500k <span>(off by default — tick to hide big-ticket lots)</span></label>
     <label><input type="checkbox" id="rentf"> 🔑 Only arrendado <span>(tenant in place)</span></label>
@@ -627,10 +633,17 @@ const STORAGE_OK=(function(){try{const t="__patrack_probe";localStorage.setItem(
 (function(){ if(!STORAGE_OK) return; try{ const raw=localStorage.getItem(KEY); const o=raw?JSON.parse(raw):null; if(!o || !Object.keys(o).length){ localStorage.setItem(KEY, JSON.stringify(SEED_STATE)); STATE=loadState(); } }catch(e){} })();
 // write ONE lot's status, reloading latest from disk first (multi-tab safe), then verify the write
 function persistStatus(ref,status,note){
+  // Non-owners never write: the server refuses them anyway (403), but we also
+  // stop the local cache from drifting out of step with the shared truth.
+  if(SHARE.on && !SHARE.canEdit){
+    alert('Os veredictos sao de '+SHARE.owner+'. Podes comentar no lote.');
+    return false;
+  }
   let s=loadState();
   const n=(note||"").trim();
   if(!status && !n){ delete s[ref]; } else { s[ref]={status:status||"",note:n}; }
   STATE=s;
+  pushVerdict(ref,status||"",n);   // write through to the shared store (no-op offline)
   try{ const str=JSON.stringify(s); localStorage.setItem(KEY,str); return localStorage.getItem(KEY)===str; }
   catch(e){ return false; }
 }
@@ -749,6 +762,61 @@ function docsBlock(l){
     `<br><b>Set 🔍 Investigate</b> and say "sync" (or keep this session open) → I pull this lot's documents live in your logged-in browser — caderneta, CRP, edital where the platform hosts them, or the full court record where it doesn't — and hand them back.</div>`;
 }
 
+
+/* SHARED_STORE */
+// ---- shared state over Cloudflare Access + KV --------------------------------
+// Verdicts: only the owner may write (enforced server-side in functions/api/verdict.js).
+// Comments: anyone signed in through Access may add one.
+// If the API is unreachable we fall back to the local cache so the page still works.
+var SHARE={on:false,me:null,owner:null,canEdit:false,comments:{},err:null};
+async function loadShared(){
+  try{
+    const r=await fetch('/api/board',{headers:{'accept':'application/json'}});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.error||'not ok');
+    SHARE.on=true; SHARE.me=j.me; SHARE.owner=j.owner; SHARE.canEdit=!!j.canEdit;
+    SHARE.comments=j.comments||{};
+    // server state wins; mirror into the local cache for offline reads
+    const st={}; for(const k in (j.verdicts||{})){st[k]={status:j.verdicts[k].status,note:j.verdicts[k].note||''};}
+    if(Object.keys(st).length){ STATE=st; try{localStorage.setItem(LSKEY,JSON.stringify(st));}catch(e){} }
+  }catch(e){ SHARE.on=false; SHARE.err=String(e.message||e); }
+  shareBanner(); render();
+}
+async function pushVerdict(ref,status,note){
+  if(!SHARE.on) return;               // offline: local cache only
+  if(!SHARE.canEdit) return;
+  try{
+    const r=await fetch('/api/verdict',{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({ref,status,note:note||''})});
+    const j=await r.json();
+    if(!j.ok) alert('Não gravado: '+(j.error||r.status));
+  }catch(e){ alert('Não gravado (offline): '+e.message); }
+}
+async function addComment(ref,text){
+  if(!SHARE.on){ alert('Comentários precisam da ligação ao servidor.'); return; }
+  const r=await fetch('/api/comment',{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({ref,text})});
+  const j=await r.json();
+  if(j.ok){ SHARE.comments=j.comments; render(); } else alert('Erro: '+(j.error||r.status));
+}
+function who(e){ return e? e.split('@')[0] : '?'; }
+function commentsFor(ref){ return (SHARE.comments&&SHARE.comments[ref])||[]; }
+function shareBanner(){
+  var el=document.getElementById('sharebar'); if(!el) return;
+  if(!SHARE.on){
+    el.className='sharebar off';
+    el.innerHTML='⚠ <b>Modo local</b> — não consegui falar com o servidor ('+(SHARE.err||'?')+
+      '). As tuas marcas ficam só neste browser e ninguém mais as vê.';
+    return;
+  }
+  el.className='sharebar on';
+  el.innerHTML = SHARE.canEdit
+    ? '🔗 <b>Partilhado</b> — estás como <b>'+SHARE.me+'</b>. As tuas marcas são as oficiais e toda a gente com acesso as vê.'
+    : '🔗 <b>Partilhado</b> — estás como <b>'+SHARE.me+'</b>. Os veredictos são de '+SHARE.owner+
+      ' e aqui são só de leitura; podes <b>comentar</b> em qualquer lote.';
+}
+
 function render(){
   const now=Date.now();
   // Auto-remove: a lot drops off the board 3 days after its close date (undated lots stay).
@@ -826,6 +894,7 @@ function openEditor(ref){
     `<div class="dsec">Your status</div><div class="statrow" id="statrow">${opts}</div>`+
     `<div class="dsec">Your reasoning / notes</div><textarea id="noteta" placeholder="Why watch / investigate / dismiss? What to check, target price, condition, anything for me to act on…">${cur.note||''}</textarea>`+
     `<div class="dsavehint" id="dsavehint">Saves instantly when you pick a status.</div>`+
+    `<div id="ed-comments"></div>`+
     `<div class="dlgfoot"><button class="tbtn" id="ed-cancel">Close</button><button class="tbtn primary" id="ed-save">Done</button></div>`;
   let picked=cur.status||"";
   const noteVal=()=>{const t=document.getElementById("noteta");return t?t.value:"";};
@@ -842,6 +911,21 @@ function openEditor(ref){
   const ta=document.getElementById("noteta");
   if(ta){ ta.addEventListener("input",()=>{persistStatus(ref,picked,noteVal());});
           ta.addEventListener("blur",()=>{markSaved(persistStatus(ref,picked,noteVal()));}); }
+  // --- comments: anyone signed in through Access may add one ---
+  (function(){
+    const host=document.getElementById('ed-comments'); if(!host) return;
+    const list=commentsFor(ref);
+    host.innerHTML='<div style="font-size:11px;color:var(--mut2);text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px">Comentarios</div>'+
+      (list.length?list.map(c=>'<div class="cmt"><b>'+who(c.by)+'</b> · '+new Date(c.at).toLocaleDateString('pt-PT')+'<br>'+
+        String(c.text).replace(/[<>&]/g,m=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[m]))+'</div>').join('')
+        :'<div class="cmt" style="opacity:.6">sem comentarios</div>')+
+      '<div style="display:flex;gap:6px;margin-top:8px">'+
+      '<input id="cmt-in" placeholder="Escrever um comentario..." style="flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:6px 8px;font-size:12px">'+
+      '<button id="cmt-add" class="editbtn">Enviar</button></div>';
+    const btn=document.getElementById('cmt-add'), inp=document.getElementById('cmt-in');
+    if(btn) btn.onclick=async()=>{ const t=inp.value.trim(); if(!t) return; inp.value='';
+      await addComment(ref,t); openEditor(ref); };
+  })();
   document.getElementById("ed-cancel").onclick=()=>dlg.close();
   document.getElementById("ed-save").onclick=()=>{
     markSaved(persistStatus(ref,picked,noteVal())); dlg.close(); render();
@@ -1028,6 +1112,7 @@ function render(){
 csel.onchange=()=>{fCD=csel.value;render();};
 
 render();
+loadShared();   // pull shared state, then re-render
 })();
 </script>
 </body>
